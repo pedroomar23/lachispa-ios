@@ -14,10 +14,16 @@ final class Register : ObservableObject {
     
     @Published var isLoading : Bool = false
     @Published var isRegister : Bool = false
+    @Published var registerMsg : String = ""
     @Published var message : String = ""
     @Published var alertMsg : Bool = false
+    @Published var failureMsg : Bool = false
     
     let endpointApi = EndpointsApi.shared
+    
+    var isValid : Bool {
+        return registerRequest.email.isEmpty || registerRequest.username.isEmpty || registerRequest.password.isEmpty || registerRequest.password_repeat.isEmpty
+    }
     
     @MainActor
     func registersRequest() {
@@ -34,6 +40,8 @@ final class Register : ObservableObject {
             switch result {
             case let .success(model):
                 registerResponse = model
+                registerMsg = model.message
+                failureMsg = true 
                 isLoading = false
                 isRegister = true
             case let .failure(error):

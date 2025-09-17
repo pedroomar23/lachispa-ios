@@ -9,28 +9,109 @@ import XCTest
 @testable import La_Chispa
 
 final class La_ChispaTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    // MARK: - Test Login
+    
+    func testLoginRequest() async throws {
+        let jsonString = """
+            {
+              "username": "string",
+              "password": "string"
+            }
+        """
+        let decoder = JSONDecoder()
+        let jsonData = jsonString.data(using: .utf8)!
+        let loginJSON = try decoder.decode(LoginRequest.self, from: jsonData)
+        print("Respuesta del JSON: \(loginJSON)")
+        
+        XCTAssertEqual(loginJSON.username, "string")
+        XCTAssertEqual(loginJSON.password, "string")
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testLoginResponse() async throws {
+        let jsonString = """
+            {
+              "id": "string",
+              "created_at": "2025-09-14T18:45:08.198Z",
+              "updated_at": "2025-09-14T18:45:08.198Z",
+              "email": "string",
+              "username": "string",
+              "pubkey": "string",
+              "external_id": "string",
+              "extensions": [],
+              "wallets": [],
+              "admin": false,
+              "super_user": false,
+              "fiat_providers": [],
+              "has_password": false,
+              "extra": {
+                "email_verified": false,
+                "provider": "lnbits",
+                "visible_wallet_count": 10
+              }
+            }
+        """
+        let decoder = JSONDecoder()
+        let jsonData = jsonString.data(using: .utf8)!
+        let loginJson = try decoder.decode(LoginResponse.self, from: jsonData)
+        print("Respuesta del JSON: \(loginJson)")
+        
+        XCTAssertEqual(loginJson.id, "string")
+        XCTAssertEqual(loginJson.created_at, "2025-09-14T18:45:08.198Z")
+        XCTAssertEqual(loginJson.updated_at, "2025-09-14T18:45:08.198Z")
+        XCTAssertEqual(loginJson.email, "string")
+        XCTAssertEqual(loginJson.pubkey, "string")
+        XCTAssertEqual(loginJson.external_id, "string")
+        XCTAssertEqual(loginJson.extensions, [])
+        XCTAssertEqual(loginJson.wallets, [])
+        XCTAssertEqual(loginJson.admin, false)
+        XCTAssertEqual(loginJson.super_user, false)
+        XCTAssertEqual(loginJson.fiat_providers, [])
+        XCTAssertEqual(loginJson.has_password, false)
+        XCTAssertEqual(loginJson.extra.email_verified, false)
+        XCTAssertEqual(loginJson.extra.provider, "lnbits")
+        XCTAssertEqual(loginJson.extra.visible_wallet_count, 10)
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    // MARK: - Test Register
+    
+    func testRegister() async throws {
+        let jsonString = """
+            {
+              "email": "string",
+              "username": "string",
+              "password": "stringst",
+              "password_repeat": "stringst"
+            }
+        """
+        let decoder = JSONDecoder()
+        let jsonData = jsonString.data(using: .utf8)!
+        let registerJSON = try decoder.decode(RegisterRequest.self, from: jsonData)
+        print("Respuesta del JSON: \(registerJSON)")
+        
+        XCTAssertEqual(registerJSON.email, "string")
+        XCTAssertEqual(registerJSON.username, "string")
+        XCTAssertEqual(registerJSON.password, "stringst")
+        XCTAssertEqual(registerJSON.password_repeat, "stringst")
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    // MARK: - Test Change Password
+    
+    func testChangePassword() async throws {
+        let jsonString = """
+            {
+              "reset_key": "string",
+              "password": "stringst",
+              "password_repeat": "stringst"
+            }
+        """
+        let decoder = JSONDecoder()
+        let jsonData = jsonString.data(using: .utf8)!
+        let changeJSON = try decoder.decode(PasswordRequest.self, from: jsonData)
+        print("Respuesta del JSON: \(changeJSON)")
+        
+        XCTAssertEqual(changeJSON.reset_key, "string")
+        XCTAssertEqual(changeJSON.password, "stringst")
+        XCTAssertEqual(changeJSON.password_repeat, "stringst")
     }
-
 }
