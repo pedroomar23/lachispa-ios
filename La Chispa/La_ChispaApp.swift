@@ -9,9 +9,21 @@ import SwiftUI
 
 @main
 struct La_ChispaApp: App {
+    
+    @Environment(\.scenePhase) var scenePhase
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    @StateObject var security = Security()
+   
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            _getApplicationView()
+                .environmentObject(security)
         }
+    }
+    
+    @ViewBuilder
+    private func _getApplicationView() -> some View {
+        Login()
     }
 }

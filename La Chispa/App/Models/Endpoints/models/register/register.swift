@@ -8,10 +8,8 @@
 import Foundation
 
 struct RegisterRequest: Decodable, Hashable, Encodable {
-    let email: String
-    let username: String
-    let password: String
-    let password_repeat: String
+    var email, username, password: String
+    var password_repeat: String
     
     enum CodingKeys: String, CodingKey {
         case email = "email"

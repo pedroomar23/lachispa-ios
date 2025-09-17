@@ -7,3 +7,51 @@
 
 import SwiftUI
 import Combine
+
+final class ChangePassword : ObservableObject {
+    @Published var passRequest : PasswordRequest = PasswordRequest(reset_key: "", password: "", password_repeat: "")
+    @Published var passResponse : PasswordResponse = PasswordResponse(message: "")
+    
+    @Published var isPass : Bool = false
+    @Published var failureMsg : Bool = false
+    @Published var successMsg : Bool = false
+    
+    @Published var message : String = ""
+    @Published var acceptMsg : String = ""
+    
+    @Published var isLoading : Bool = false
+    
+    let endPointApi = EndpointsApi.shared
+    
+    var isValid : Bool {
+        return passRequest.password.isEmpty || passRequest.password_repeat.isEmpty
+    }
+    
+    @MainActor
+    func changePassRequest() {
+        Task {
+            DispatchQueue.main.async { [self] in isLoading = false }
+            await changePassPrivate()
+        }
+    }
+    
+    @MainActor
+    func changePassPrivate() async {
+        await endPointApi.changePass(reset_key: passRequest.reset_key, password: passRequest.password, password_repeat: passRequest.password_repeat) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(model):
+                passResponse = model
+                acceptMsg = model.message
+                successMsg = true
+                isPass = true
+                isLoading = false
+            case let .failure(error):
+                message = error.localizedDescription
+                failureMsg = true
+                isLoading = false
+                print("FailreGetChangePass: \(error.localizedDescription)")
+            }
+        }
+    }
+}
