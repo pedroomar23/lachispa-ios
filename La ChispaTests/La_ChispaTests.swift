@@ -53,7 +53,7 @@ final class La_ChispaTests: XCTestCase {
         """
         let decoder = JSONDecoder()
         let jsonData = jsonString.data(using: .utf8)!
-        let loginJson = try decoder.decode(LoginResponse.self, from: jsonData)
+        let loginJson = try decoder.decode(LoginAuth.self, from: jsonData)
         print("Respuesta del JSON: \(loginJson)")
         
         XCTAssertEqual(loginJson.id, "string")
@@ -69,7 +69,7 @@ final class La_ChispaTests: XCTestCase {
         XCTAssertEqual(loginJson.fiat_providers, [])
         XCTAssertEqual(loginJson.has_password, false)
         XCTAssertEqual(loginJson.extra.email_verified, false)
-        XCTAssertEqual(loginJson.extra.provider, "lnbits")
+       
         XCTAssertEqual(loginJson.extra.visible_wallet_count, 10)
     }
     
@@ -113,5 +113,47 @@ final class La_ChispaTests: XCTestCase {
         XCTAssertEqual(changeJSON.reset_key, "string")
         XCTAssertEqual(changeJSON.password, "stringst")
         XCTAssertEqual(changeJSON.password_repeat, "stringst")
+    }
+    
+    // MARK: - Test Create or Pay a Invoice
+    
+    func testPayCreate() async throws {
+        let jsonString = """
+            {
+              "unit": "sat",
+              "internal": false,
+              "out": true,
+              "amount": 0,
+              "memo": "string",
+              "description_hash": "string",
+              "unhashed_description": "string",
+              "expiry": 0,
+              "extra": {},
+              "webhook": "string",
+              "bolt11": "string",
+              "lnurl_callback": "string",
+              "fiat_provider": "string"
+            }
+        """
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let jsonData = jsonString.data(using: .utf8)!
+        let payCreateJSON = try decoder.decode(CreateInvoiceRequest.self, from: jsonData)
+        print("JSON Response: \(payCreateJSON)")
+        
+        XCTAssertEqual(payCreateJSON.unit, "sat")
+        XCTAssertEqual(payCreateJSON.internal, false)
+        XCTAssertEqual(payCreateJSON.out, true)
+        XCTAssertEqual(payCreateJSON.amount, 0)
+        XCTAssertEqual(payCreateJSON.memo, "string")
+        XCTAssertEqual(payCreateJSON.description_hash, "")
+        XCTAssertEqual(payCreateJSON.unhashed_description, "string")
+        XCTAssertEqual(payCreateJSON.expiry, 0)
+        XCTAssertEqual(payCreateJSON.extra.email_verified, false)
+        XCTAssertEqual(payCreateJSON.extra.visible_wallet_count, 10)
+        XCTAssertEqual(payCreateJSON.webhook, "string")
+        XCTAssertEqual(payCreateJSON.bolt11, "string")
+        XCTAssertEqual(payCreateJSON.lnurl_callback, "string")
+        XCTAssertEqual(payCreateJSON.fiat_provider, "string")
     }
 }

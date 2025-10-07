@@ -17,6 +17,8 @@ struct ChangePasswords : View {
         if #available(iOS 16, *) {
             ContentNavigation {
                 VStack {
+                    _preView(label: LabelImage(text: "LaunchImage"))
+                  
                     ZStack {
                         HStack {
                             if showPassword {
@@ -29,8 +31,7 @@ struct ChangePasswords : View {
                             } label: {
                                 _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
-                        }
-                        .frame(height: 55)
+                        }.frame(height: 55)
                     }.padding(.horizontal)
                     
                     ZStack {
@@ -45,8 +46,7 @@ struct ChangePasswords : View {
                             } label: {
                                 _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
-                        }
-                        .frame(height: 55)
+                        }.frame(height: 55)
                     }.padding(.horizontal)
                     
                     Button {
@@ -56,7 +56,7 @@ struct ChangePasswords : View {
                     }
                     .padding(.top)
                     .disabled(passRequest.isValid || passRequest.isLoading)
-                    .opacity((passRequest.isValid && passRequest.isLoading) ? 0.5 : 1.0)
+                    .opacity((!passRequest.isValid && !passRequest.isLoading) ? 1.0 : 0.5)
                     .alert("Change", isPresented: $passRequest.successMsg) {
                         
                     } message: {
@@ -78,6 +78,8 @@ struct ChangePasswords : View {
             }
         } else {
             VStack {
+                _preView(label: LabelImage(text: "LaunchImage"))
+              
                 ZStack {
                     HStack {
                         if showPassword {
@@ -117,7 +119,7 @@ struct ChangePasswords : View {
                 }
                 .padding(.top)
                 .disabled(passRequest.isValid || passRequest.isLoading)
-                .opacity((passRequest.isValid && passRequest.isLoading) ? 0.5 : 1.0)
+                .opacity((!passRequest.isValid && !passRequest.isLoading) ? 1.0 : 0.5)
                 .alert("Change", isPresented: $passRequest.successMsg) {
                     
                 } message: {
@@ -162,8 +164,17 @@ struct ChangePasswords : View {
             .foregroundColor(.white)
             .padding(.vertical)
             .frame(width: UIScreen.main.bounds.width - 150)
-            .background(Color.blue)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
             .clipShape(Capsule())
+            .padding()
+    }
+    
+    @ViewBuilder
+    private func _preView(label: LabelImage) -> some View {
+        Image(label.text)
+            .resizable()
+            .frame(width: 60, height: 60)
+            .cornerRadius(20)
             .padding()
     }
 }
