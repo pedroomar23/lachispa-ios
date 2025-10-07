@@ -17,10 +17,8 @@ struct Registers : View {
         if #available(iOS 16, *) {
             ContentNavigation {
                 VStack {
-                    MutiTextfield(text: $register.registerRequest.email, placeholder: "email")
-                        .frame(height: 55)
-                        .padding(.horizontal)
-                   
+                    _preView(label: LabelImage(text: "LaunchImage"))
+                  
                     MutiTextfield(text: $register.registerRequest.username, placeholder: "username")
                         .frame(height: 55)
                         .padding(.horizontal)
@@ -68,7 +66,7 @@ struct Registers : View {
                     }
                     .padding(.top)
                     .disabled(register.isValid || register.isLoading)
-                    .opacity((register.isValid && register.isLoading) ? 1.0 : 0.5)
+                    .opacity((!register.isValid && !register.isLoading) ? 1.0 : 0.5)
                     .alert("Register", isPresented: $register.failureMsg) {
                         
                     } message: {
@@ -78,6 +76,12 @@ struct Registers : View {
                         
                     } message: {
                         Text(register.message)
+                    }
+                    
+                    NavigationLink {
+                        Login()
+                    } label: {
+                        _labels(label: LabelTexts(text: "¿Already have account?", text1: "Login"))
                     }
                   
                     Spacer()
@@ -90,9 +94,7 @@ struct Registers : View {
             }
         } else {
             VStack {
-                MutiTextfield(text: $register.registerRequest.email, placeholder: "email")
-                    .frame(height: 55)
-                    .padding(.horizontal)
+                _preView(label: LabelImage(text: "LaunchImage"))
                 
                 MutiTextfield(text: $register.registerRequest.username, placeholder: "username")
                     .frame(height: 55)
@@ -140,8 +142,8 @@ struct Registers : View {
                     }
                 }
                 .padding(.top)
-                .disabled(register.isValid)
-                .opacity((register.isValid && register.isLoading) ? 1.0 : 0.5)
+                .disabled(register.isValid || register.isLoading)
+                .opacity((!register.isValid && !register.isLoading) ? 1.0 : 0.5)
                 .alert("Register", isPresented: $register.failureMsg) {
                     
                 } message: {
@@ -151,6 +153,12 @@ struct Registers : View {
                     
                 } message: {
                     Text(register.message)
+                }
+                
+                NavigationLink {
+                    Login()
+                } label: {
+                    _labels(label: LabelTexts(text: "¿Already have account?", text1: "Login"))
                 }
                 
                 Spacer()
@@ -186,9 +194,28 @@ struct Registers : View {
             .foregroundColor(.white)
             .padding(.vertical)
             .frame(width: UIScreen.main.bounds.width - 150)
-            .background(Color.blue)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
             .clipShape(Capsule())
             .padding()
+    }
+    
+    @ViewBuilder
+    private func _preView(label: LabelImage) -> some View {
+        Image(label.text)
+            .resizable()
+            .frame(width: 60, height: 60)
+            .cornerRadius(20)
+            .padding()
+    }
+    
+    @ViewBuilder
+    private func _labels(label: LabelTexts) -> some View {
+        HStack (alignment: .center, spacing: 5) {
+            Text(label.text)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text(label.text1)
+                .foregroundStyle(colorScheme == .dark ? .blue : .blue)
+        }.frame(maxWidth: .infinity, alignment: .center)
     }
 }
 

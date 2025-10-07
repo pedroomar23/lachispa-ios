@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+@MainActor
 final class Register : ObservableObject {
     @Published var registerRequest : RegisterRequest = RegisterRequest(email: "", username: "", password: "", password_repeat: "")
     @Published var registerResponse : RegisterResponse = RegisterResponse(message: "")
@@ -22,10 +23,9 @@ final class Register : ObservableObject {
     let endpointApi = EndpointsApi.shared
     
     var isValid : Bool {
-        return registerRequest.email.isEmpty || registerRequest.username.isEmpty || registerRequest.password.isEmpty || registerRequest.password_repeat.isEmpty
+        return registerRequest.username.isEmpty || registerRequest.password.isEmpty || registerRequest.password_repeat.isEmpty
     }
     
-    @MainActor
     func registersRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }
@@ -33,22 +33,22 @@ final class Register : ObservableObject {
         }
     }
     
-    @MainActor
     func registerRequetPrivate() async {
-        await endpointApi.register(email: registerRequest.email, username: registerRequest.username, password: registerRequest.password, password_repeat: registerRequest.password_repeat) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(model):
-                registerResponse = model
-                registerMsg = model.message
-                failureMsg = true 
-                isLoading = false
-                isRegister = true
-            case let .failure(error):
-                message = error.localizedDescription
-                alertMsg = true
-                isLoading = false
-                print("ErrorGetRegisterprivate: \(error.localizedDescription)")
+        await endpointApi.register(email: registerRequest.email, username: registerRequest.username, password: registerRequest.password, password_repeat: registerRequest.password_repeat) { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    registerResponse = model
+                    registerMsg = model.message
+                    failureMsg = true
+                    isLoading = false
+                    isRegister = true
+                case let .failure(error):
+                    message = error.localizedDescription
+                    alertMsg = true
+                    isLoading = false
+                    print("ErrorGetRegisterprivate: \(error.localizedDescription)")
+                }
             }
         }
     }

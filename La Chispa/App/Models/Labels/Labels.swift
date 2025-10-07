@@ -35,3 +35,15 @@ struct LabelIcon: Identifiable {
     let text: LocalizedStringKey
     let icon: String 
 }
+
+struct LabelImages: Identifiable {
+    let id = UUID()
+    let icon: String
+    let text: String
+    let text1: String 
+}
+
+struct Labels: Identifiable {
+    let id = UUID()
+    let icon: String 
+}

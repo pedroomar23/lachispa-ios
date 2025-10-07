@@ -25,7 +25,7 @@ struct MultiSecureField : UIViewRepresentable {
         textfield.delegate = context.coordinator
         textfield.keyboardType = .default
         textfield.autocapitalizationType = .none
-        textfield.autocorrectionType = .no
+        textfield.autocorrectionType = .default
         textfield.placeholder = NSLocalizedString(placeholder, comment: "")
         textfield.font = .preferredFont(forTextStyle: .body)
         textfield.textColor = textColor
@@ -40,6 +40,7 @@ struct MultiSecureField : UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.text = text
+        uiView.delegate = context.coordinator
         uiView.isSecureTextEntry = isSecure
         uiView.layer.cornerRadius = cornerRadius
         uiView.layer.borderWidth = borderWidth

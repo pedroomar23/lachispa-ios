@@ -12,41 +12,31 @@ struct Settings : View {
     @Environment(\.colorScheme) var colorScheme
     
     var body : some View {
-        if #available(iOS 16, *) {
-            ContentNavigation {
-                List {
-                    Section {
-                        NavigationLink {
-                            FaceID()
-                        } label: {
-                            _labelFaceId(label: LabelIcon(text: "Face ID && Passcode", icon: "faceid"))
-                        }
-                    } header: {
-                        Text("Security").textCase(.none)
+        ContentNavigation {
+            List {
+                Section {
+                    NavigationLink {
+                        FaceID()
+                    } label: {
+                        _labelFaceId(label: LabelIcon(text: "Face ID & Passcode", icon: "faceid"))
                     }
+                } header: {
+                    Text("Security").textCase(.none)
                 }
-                .listStyle(.insetGrouped)
-                .toolbar {
-                    _titleView(label: LabelText(text: "Settings"))
+                Section {
+                    NavigationLink {
+                        About()
+                    } label: {
+                        _labelPolicy(label: LabelIcon(text: "About Me", icon: "exclamationmark.circle"))
+                    }
+                } header: {
+                    Text("About Me").textCase(.none)
                 }
             }
-        } else {
-            ScrollView (.vertical, showsIndicators: false) {
-                List {
-                    Section {
-                        NavigationLink {
-                            FaceID()
-                        } label: {
-                            _labelFaceId(label: LabelIcon(text: "Face ID && Passcode", icon: "faceid"))
-                        }
-                    } header: {
-                        Text("Security").textCase(.none)
-                    }
-                }
-                .listStyle(.insetGrouped)
-                .toolbar {
-                    _titleView(label: LabelText(text: "Settings"))
-                }
+            .background(Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all))
+            .listStyle(.insetGrouped)
+            .toolbar {
+                _titleView(label: LabelText(text: "Settings"))
             }
         }
     }

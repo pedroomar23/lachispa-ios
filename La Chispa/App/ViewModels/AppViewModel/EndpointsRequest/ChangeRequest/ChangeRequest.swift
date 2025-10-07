@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+@MainActor
 final class ChangePassword : ObservableObject {
     @Published var passRequest : PasswordRequest = PasswordRequest(reset_key: "", password: "", password_repeat: "")
     @Published var passResponse : PasswordResponse = PasswordResponse(message: "")
@@ -27,7 +28,6 @@ final class ChangePassword : ObservableObject {
         return passRequest.password.isEmpty || passRequest.password_repeat.isEmpty
     }
     
-    @MainActor
     func changePassRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }
@@ -35,22 +35,22 @@ final class ChangePassword : ObservableObject {
         }
     }
     
-    @MainActor
     func changePassPrivate() async {
-        await endPointApi.changePass(reset_key: passRequest.reset_key, password: passRequest.password, password_repeat: passRequest.password_repeat) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(model):
-                passResponse = model
-                acceptMsg = model.message
-                successMsg = true
-                isPass = true
-                isLoading = false
-            case let .failure(error):
-                message = error.localizedDescription
-                failureMsg = true
-                isLoading = false
-                print("FailreGetChangePass: \(error.localizedDescription)")
+        await endPointApi.changePass(reset_key: passRequest.reset_key, password: passRequest.password, password_repeat: passRequest.password_repeat) { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    passResponse = model
+                    acceptMsg = model.message
+                    successMsg = true
+                    isPass = true
+                    isLoading = false
+                case let .failure(error):
+                    message = error.localizedDescription
+                    failureMsg = true
+                    isLoading = false
+                    print("FailreGetChangePass: \(error.localizedDescription)")
+                }
             }
         }
     }

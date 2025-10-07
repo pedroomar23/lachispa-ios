@@ -36,8 +36,7 @@ struct Login : View {
                             } label: {
                                 _showPass(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
-                        }
-                        .frame(height: 53)
+                        }.frame(height: 53)
                     }.padding(.horizontal)
                     
                     NavigationLink {
@@ -57,7 +56,7 @@ struct Login : View {
                         }
                     }
                     .disabled(loginRequest.isValid || loginRequest.isLoading)
-                    .opacity((loginRequest.isValid && loginRequest.isLoading) ? 1.0 : 0.5)
+                    .opacity((!loginRequest.isValid && !loginRequest.isLoading) ? 1.0 : 0.5)
                     .alert("Error", isPresented: $loginRequest.alertMsg) {
                         
                     } message: {
@@ -103,7 +102,7 @@ struct Login : View {
             .foregroundColor(.white)
             .padding(.vertical)
             .frame(width: UIScreen.main.bounds.width - 150)
-            .background(Color.blue)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
             .clipShape(Capsule())
             .padding()
     }
@@ -111,7 +110,7 @@ struct Login : View {
     @ViewBuilder
     private func _labelText(label: LabelText) -> some View {
         Text(label.text)
-            .foregroundStyle(colorScheme == .dark ? .white : .blue)
+            .foregroundStyle(colorScheme == .dark ? .blue : .blue)
             .frame(maxWidth: .infinity, alignment: .center)
     }
     
@@ -121,7 +120,7 @@ struct Login : View {
             Text(label.text)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
             Text(label.text1)
-                .foregroundStyle(colorScheme == .dark ? .white : .blue)
+                .foregroundStyle(colorScheme == .dark ? .blue : .blue)
         }
     }
 }

@@ -18,7 +18,7 @@ struct MutiTextfield : UIViewRepresentable {
     var cornerRadius : CGFloat = 8.0
     var textColor : UIColor = .label
     var borderWidth : CGFloat = 1.5
-    var backgroundColor : UIColor = .systemBackground
+    var backgroundColor : UIColor = .secondarySystemGroupedBackground
     
     func makeUIView(context: Context) -> UITextField {
         let textfield = UITextField()
@@ -34,21 +34,22 @@ struct MutiTextfield : UIViewRepresentable {
         textfield.layer.borderWidth = borderWidth
         textfield.layer.cornerRadius = cornerRadius
         textfield.backgroundColor = backgroundColor
-        borderColor(for: textfield, colorScheme: colorScheme)
+        borderColor(textfield: textfield, colorScheme: colorScheme)
         return textfield
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.text = text
+        uiView.delegate = context.coordinator
         uiView.isSecureTextEntry = isSecure
         uiView.layer.borderWidth = borderWidth
         uiView.layer.cornerRadius = cornerRadius
         uiView.backgroundColor = backgroundColor
-        borderColor(for: uiView, colorScheme: colorScheme)
+        borderColor(textfield: uiView, colorScheme: colorScheme)
     }
     
-    private func borderColor(for textfield: UITextField, colorScheme: ColorScheme) {
-        let borderColor : UIColor = colorScheme == .dark ? .white : .black
+    private func borderColor(textfield: UITextField, colorScheme: ColorScheme) {
+        let borderColor : UIColor = colorScheme == .dark ? .blue : .blue
         textfield.layer.borderColor = borderColor.cgColor
     }
     

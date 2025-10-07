@@ -9,14 +9,15 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var loginRequest: LoginRequests
+    @EnvironmentObject var loginRequest : LoginRequests
+    @StateObject var security = Security()
     @Environment(\.screenSize) var screenSize
     @Environment(\.colorScheme) var colorScheme
     @State var selectedTab : Int = 0
     
     var body : some View {
         GeometryReader { geo in
-            if !loginRequest.isLoading {
+            if loginRequest.isLoading {
                 ProgressView("Loading...", value: 1.0)
                     .progressViewStyle(.circular)
                     .controlSize(.large)
@@ -33,13 +34,16 @@ struct ContentView: View {
                             Image(systemName: Tab.wallet.sistemImage)
                         }
                         .tag(0)
+                        .environmentObject(loginRequest)
                     Settings()
                         .tabItem {
                             Text(Tab.settings.rawValue)
                             Image(systemName: Tab.settings.sistemImage)
                         }
                         .tag(1)
-                }.environment(\.screenSize, geo.size)
+                        .environmentObject(security)
+                }
+                .environment(\.screenSize, geo.size)
             }
         }
     }
