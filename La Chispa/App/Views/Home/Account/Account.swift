@@ -15,8 +15,8 @@ struct Account : View {
     var body : some View {
         List {
             Section {
-                ForEach(loginRequest.loginAuth.wallets, id: \.self) { account in
-                    _account(account: account)
+                ForEach(loginRequest.loginAuth.wallets, id: \.self) { value in
+                    _account(response: value)
                 }
             }
             Section {
@@ -32,6 +32,9 @@ struct Account : View {
                     }
                 }
             }
+        }
+        .refreshable {
+            await loginRequest.getUserAuth()
         }
         .listStyle(.insetGrouped)
         .environmentObject(loginRequest)
@@ -68,7 +71,7 @@ struct Account : View {
     }
     
     @ViewBuilder
-    private func _account(account: Wallets) -> some View {
+    private func _account(response: Wallets) -> some View {
         HStack (alignment: .center) {
             Image(systemName: "person")
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -77,7 +80,7 @@ struct Account : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(account.user)
+            Text(response.user)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -91,7 +94,7 @@ struct Account : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(account.created_at)
+            Text("\(loginRequest.formatDate(response.created_at))")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -105,39 +108,11 @@ struct Account : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(account.updated_at)
+            Text("\(loginRequest.formatDate(response.updated_at))")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center) {
-            Image(systemName: "dollarsign.circle")
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .font(.system(size: 20, weight: .medium))
-            Text("Currency")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(account.currency)
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center) {
-            Image(systemName: "bag")
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .font(.system(size: 20, weight: .medium))
-            Text("Balance")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(account.balance_msat)")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .center)
     }
 }
 

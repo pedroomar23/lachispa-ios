@@ -1,62 +1,17 @@
 //
-//  createInvoice.swift
+//  GetPayments.swift
 //  La Chispa
 //
-//  Created by Pedro Omar  on 9/18/25.
+//  Created by Pedro Omar  on 10/18/25.
 //
 
 import Foundation
 
-struct CreateInvoice: Decodable, Hashable, Encodable {
-    let amount: Int
-    let unit: String
-    let memo: String
-    let expiry: Int
-    let out: Bool
-    let webhook: String
-    let url: String
-    let `internal`: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case amount = "amount"
-        case unit = "unit"
-        case memo = "memo"
-        case expiry = "expiry"
-        case out = "out"
-        case webhook = "webhook"
-        case url = "url"
-        case `internal` = "internal"
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.amount = try container.decode(Int.self, forKey: .amount)
-        self.unit = try container.decode(String.self, forKey: .unit)
-        self.memo = try container.decode(String.self, forKey: .memo)
-        self.expiry = try container.decode(Int.self, forKey: .expiry)
-        self.out = try container.decode(Bool.self, forKey: .out)
-        self.webhook = try container.decode(String.self, forKey: .webhook)
-        self.url = try container.decode(String.self, forKey: .url)
-        self.`internal` = try container.decode(Bool.self, forKey: .internal)
-    }
-    
-    init(amount: Int, unit: String, memo: String, expiry: Int, out: Bool, webhook: String, url: String, `internal`: Bool) {
-        self.amount = amount
-        self.unit = unit
-        self.memo = memo
-        self.expiry = expiry
-        self.out = out
-        self.webhook = webhook
-        self.url = url 
-        self.`internal` = `internal`
-    }
-}
-
-struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
+struct GetPayments: Decodable, Hashable, Encodable {
     let checking_id: String
     let payment_hash: String
     let wallet_id: String
-    let amount: Int 
+    let amount: Int
     let fee: Int
     let bolt11: String
     let fiat_provider: String?
@@ -141,31 +96,3 @@ struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
     }
 }
 
-struct ExtraData: Decodable, Hashable, Encodable {
-    let wallet_fiat_currency: String
-    let wallet_fiat_amount: Double
-    let wallet_fiat_rate: Double
-    let wallet_btc_rate: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case wallet_fiat_currency = "wallet_fiat_currency"
-        case wallet_fiat_amount = "wallet_fiat_amount"
-        case wallet_fiat_rate = "wallet_fiat_rate"
-        case wallet_btc_rate = "wallet_btc_rate"
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.wallet_fiat_currency = try container.decode(String.self, forKey: .wallet_fiat_currency)
-        self.wallet_fiat_amount = try container.decode(Double.self, forKey: .wallet_fiat_amount)
-        self.wallet_fiat_rate = try container.decode(Double.self, forKey: .wallet_fiat_rate)
-        self.wallet_btc_rate = try container.decode(Double.self, forKey: .wallet_btc_rate)
-    }
-    
-    init(wallet_fiat_currency: String, wallet_fiat_amount: Double, wallet_fiat_rate: Double, wallet_btc_rate: Double) {
-        self.wallet_fiat_currency = wallet_fiat_currency
-        self.wallet_fiat_amount = wallet_fiat_amount
-        self.wallet_fiat_rate = wallet_fiat_rate
-        self.wallet_btc_rate = wallet_btc_rate
-    }
-}

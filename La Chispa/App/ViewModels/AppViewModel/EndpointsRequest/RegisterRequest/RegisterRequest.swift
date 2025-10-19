@@ -11,7 +11,7 @@ import Combine
 @MainActor
 final class Register : ObservableObject {
     @Published var registerRequest : RegisterRequest = RegisterRequest(email: "", username: "", password: "", password_repeat: "")
-    @Published var registerResponse : RegisterResponse = RegisterResponse(message: "")
+    @Published var registerResponse : RegisterResponse = RegisterResponse(access_token: "", token_type: "")
     
     @Published var isLoading : Bool = false
     @Published var isRegister : Bool = false
@@ -39,7 +39,6 @@ final class Register : ObservableObject {
                 switch result {
                 case let .success(model):
                     registerResponse = model
-                    registerMsg = model.message
                     failureMsg = true
                     isLoading = false
                     isRegister = true

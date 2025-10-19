@@ -1,0 +1,182 @@
+//
+//  CreateInvoice.swift
+//  La Chispa
+//
+//  Created by Pedro Omar  on 9/21/25.
+//
+
+import SwiftUI
+
+struct Invoice : View {
+    
+    @StateObject var loginRequest = LoginRequests()
+    @Environment(\.colorScheme) var colorScheme
+    @State var qrCode : Bool = false
+    
+    let paymentsUnit = ["sat", "AED", "AFN", "ALL", "AMD", "ANG"]
+    
+    var body: some View {
+        if #available(iOS 16, *) {
+            ContentNavigation {
+                VStack {
+                    Section {
+                        HStack {
+                            InvoiceTextfield(amount: loginRequest.createPayments.amount, placeholder: "amount")
+                                .frame(height: 53)
+                            Text("sats")
+                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                        }.padding(.horizontal)
+                    }
+                    Section {
+                        HStack (alignment: .center, spacing: 1) {
+                            LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "Invoice or Address")
+                                .frame(width: 300, height: 50)
+                                .padding()
+                            Button {
+                                self.qrCode.toggle()
+                            } label: {
+                                _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
+                            }
+                            .fullScreenCover(isPresented: $qrCode) {
+                                QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message, amount: loginRequest.createPayments.amount)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    Section {
+                        Button {
+                            loginRequest.paymetsRequest()
+                        } label: {
+                            if loginRequest.isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
+                                    .frame(width: 200, height: 45)
+                            } else {
+                                _labelButton(label: LabelText(text: "Pay"))
+                            }
+                        }
+                        .sheet(isPresented: $loginRequest.isInvoice) {
+                            PayInvoice()
+                        }
+                        .alert("Error", isPresented: $loginRequest.alertMsg) {
+                            
+                        } message: {
+                            Text(loginRequest.message)
+                        }
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .listRowBackground(Color.clear)
+                .toolbar {
+                    _titleView(label: LabelText(text: "Send"))
+                }
+            }
+        } else {
+            VStack {
+                Section {
+                    HStack {
+                        InvoiceTextfield(amount: loginRequest.createPayments.amount, placeholder: "amount")
+                            .frame(height: 53)
+                        Text("sats")
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    }.padding(.horizontal)
+                }
+                Section {
+                    HStack (alignment: .center, spacing: 1) {
+                        LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "Invoice or Address")
+                            .frame(width: 300, height: 50)
+                            .padding()
+                        Button {
+                            self.qrCode.toggle()
+                        } label: {
+                            _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
+                        }
+                        .fullScreenCover(isPresented: $qrCode) {
+                            QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message, amount: loginRequest.createPayments.amount)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                Section {
+                    Button {
+                        loginRequest.paymetsRequest()
+                    } label: {
+                        if loginRequest.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
+                                .frame(width: 200, height: 45)
+                        } else {
+                            _labelButton(label: LabelText(text: "Create Invoice"))
+                        }
+                    }
+                    .sheet(isPresented: $loginRequest.isInvoice) {
+                        PayInvoice()
+                    }
+                    .alert("Error", isPresented: $loginRequest.alertMsg) {
+                        
+                    } message: {
+                        Text(loginRequest.message)
+                    }
+                }
+                Spacer()
+            }
+            .padding(.horizontal)
+            .listRowBackground(Color.clear)
+            .toolbar {
+                _titleView(label: LabelText(text: "Send"))
+            }
+        }
+    }
+    
+    @ToolbarContentBuilder
+    private func _titleView(label: LabelText) -> some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Text(label.text)
+                .fontWeight(.bold)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+        }
+    }
+    
+    @ViewBuilder
+    private func _labelButton(label: LabelText) -> some View {
+        Text(label.text)
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.vertical)
+            .frame(width: UIScreen.main.bounds.width - 150)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
+            .clipShape(Capsule())
+            .padding()
+    }
+    
+    @ViewBuilder
+    private func _labelIcon(label: Labels) -> some View {
+        Image(systemName: label.icon)
+            .foregroundStyle(colorScheme == .dark ? .blue : .blue)
+            .font(.system(size: 25, weight: .medium))
+    }
+    
+    private func unitTitle(_ title: String) -> LocalizedStringKey {
+        switch title {
+        case "sat":
+            return "sat"
+        case "AED":
+            return "AED"
+        case "AFN":
+            return "AFN"
+        case "ALL":
+            return "ALL"
+        case "AMD":
+            return "AMD"
+        case "ANG":
+            return "ANG"
+        default:
+            return "sat"
+        }
+    }
+}
+
+#Preview {
+    Invoice()
+}

@@ -1,14 +1,14 @@
 //
-//  UITextfield.swift
+//  LNTextfield.swift
 //  La Chispa
 //
-//  Created by Pedro Omar  on 9/12/25.
+//  Created by Pedro Omar  on 10/17/25.
 //
 
 import UIKit
 import SwiftUI
 
-struct MutiTextfield : UIViewRepresentable {
+struct LNTextfield : UIViewRepresentable {
     typealias UIViewType = UITextField
     
     @Binding var text: String
@@ -19,6 +19,9 @@ struct MutiTextfield : UIViewRepresentable {
     var textColor : UIColor = .label
     var borderWidth : CGFloat = 1.5
     var backgroundColor : UIColor = .secondarySystemGroupedBackground
+    var maxWidth: CGFloat? = nil
+    var adjustsFontSizeToFitWidth: Bool = true
+    var minimumFontScale: CGFloat = 0.7
     
     func makeUIView(context: Context) -> UITextField {
         let textfield = UITextField()
@@ -34,6 +37,11 @@ struct MutiTextfield : UIViewRepresentable {
         textfield.layer.borderWidth = borderWidth
         textfield.layer.cornerRadius = cornerRadius
         textfield.backgroundColor = backgroundColor
+        textfield.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        textfield.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        textfield.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth
+        textfield.minimumFontSize = 10
+        textfield.allowsEditingTextAttributes = false
         borderColor(textfield: textfield, colorScheme: colorScheme)
         return textfield
     }
@@ -45,6 +53,8 @@ struct MutiTextfield : UIViewRepresentable {
         uiView.layer.borderWidth = borderWidth
         uiView.layer.cornerRadius = cornerRadius
         uiView.backgroundColor = backgroundColor
+        uiView.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth
+        uiView.minimumFontSize = 10
         uiView.setNeedsLayout()
         borderColor(textfield: uiView, colorScheme: colorScheme)
     }
