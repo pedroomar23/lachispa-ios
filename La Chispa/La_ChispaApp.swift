@@ -38,10 +38,12 @@ struct La_ChispaApp: App {
     
     @ViewBuilder
     func _getApplicationView() -> some View {
-        if security.mostrar {
+        if isUnlocked {
+            AuthBiometric()
+        } else if security.mostrar {
             Presentation()
         } else {
-            AuthBiometric()
+            Login()
         }
     }
 }

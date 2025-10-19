@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LoginAuth: Decodable, Hashable, Encodable {
+struct LoginAuth: Decodable, Hashable, Encodable, Identifiable {
     let id: String
     let created_at: String
     let updated_at: String
@@ -76,7 +76,7 @@ struct LoginAuth: Decodable, Hashable, Encodable {
     }
 }
 
-struct Wallets: Decodable, Hashable, Encodable {
+struct Wallets: Decodable, Hashable, Encodable, Identifiable {
     let id: String
     let user: String
     let name: String

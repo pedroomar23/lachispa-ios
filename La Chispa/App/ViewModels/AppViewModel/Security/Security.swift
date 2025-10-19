@@ -12,9 +12,9 @@ import LocalAuthentication
 
 final class Security : ObservableObject {
     
-    @State var isUnlocked : Bool = false
+    @Published var isUnlocked : Bool = false
     @AppStorage("authenticated") var authenticated : Bool = false
-    @AppStorage("mostrar") var mostrar : Bool = true
+    @AppStorage("mostrar") var mostrar : Bool = true 
     
     init() {
         
@@ -36,9 +36,10 @@ final class Security : ObservableObject {
         var error: NSError?
         
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            self.authenticated = true
+            self.isUnlocked = true
         } else {
-            self.authenticated = false
+            self.isUnlocked = false
+            self.authenticated = false 
             print("FaceID Unavailable")
         }
     }

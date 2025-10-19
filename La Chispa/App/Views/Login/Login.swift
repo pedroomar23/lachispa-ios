@@ -62,6 +62,9 @@ struct Login : View {
                     } message: {
                         Text(loginRequest.message)
                     }
+                    .task {
+                        loginRequest.closeSession()
+                    }
                     
                     NavigationLink {
                         Registers()

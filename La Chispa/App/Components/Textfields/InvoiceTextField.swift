@@ -11,64 +11,66 @@ import SwiftUI
 struct InvoiceTextfield : UIViewRepresentable {
     typealias UIViewType = UITextField
     
-    @Binding var amount : Int
     @Environment(\.colorScheme) var colorScheme
-    var text : String
+    var amount : Int
+    var placeholder: String
     var isSecure : Bool = false
-    var backgroundColor : UIColor = .systemGroupedBackground
+    var backgroundColor : UIColor = .systemBackground
     var textColor : UIColor = .label
+    var maxWidth: CGFloat? = nil
+    var cornerRadius : CGFloat = 8.0
+    var borderWidth : CGFloat = 1.5
     
     func makeUIView(context: Context) -> UITextField {
         let textfield = UITextField()
         textfield.keyboardType = .numberPad
+        textfield.placeholder = NSLocalizedString(placeholder, comment: "")
+        textfield.borderStyle = .roundedRect
+        textfield.layer.borderWidth = borderWidth
+        textfield.layer.cornerRadius = cornerRadius
+        textfield.textColor = textColor
+        textfield.backgroundColor = backgroundColor
         textfield.autocapitalizationType = .none
         textfield.autocorrectionType = .default
         textfield.font = .preferredFont(forTextStyle: .body)
+        textfield.textAlignment = .left
         textfield.borderRect(forBounds: CGRect(x: 0, y: 0, width: 10, height: 10))
         textfield.delegate = context.coordinator
         color(textfield: textfield, colorScheme: colorScheme)
-        updateBalance(textfield, amount: amount)
-        
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: context.coordinator, action: #selector(Coordinator.doneButtonTapped))
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.items = [flexSpace, doneButton]
-        textfield.inputAccessoryView = toolbar
         return textfield
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.delegate = context.coordinator
+        uiView.placeholder = placeholder
+        uiView.layer.borderWidth = borderWidth
+        uiView.layer.cornerRadius = cornerRadius
+        uiView.textColor = textColor
         uiView.isSecureTextEntry = isSecure
         uiView.backgroundColor = backgroundColor
         uiView.textColor = textColor
+        uiView.minimumFontSize = 10
+        uiView.setNeedsLayout()
         color(textfield: uiView, colorScheme: colorScheme)
-        
-        if !uiView.isFirstResponder {
-            updateBalance(uiView, amount: amount)
-        }
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(amount: $amount, text: text ,isSecure: isSecure)
+        Coordinator(placeholder: placeholder, amount: amount , isSecure: isSecure)
     }
     
     final class Coordinator : NSObject, UITextFieldDelegate {
-        @Binding var amount : Int
-        var text : String
+        var placeholder : String
+        var amount : Int
         var isSecure : Bool
         
-        init(amount: Binding<Int>, text: String, isSecure: Bool) {
-            self._amount = amount
-            self.text = text
+        init(placeholder: String, amount: Int ,isSecure: Bool) {
+            self.placeholder = placeholder
+            self.amount = amount
             self.isSecure = isSecure
         }
         
         func textFieldDidChangeSelection(_ textField: UITextField) {
-            if let text = textField.text, !text.isEmpty {
-                textField.text = "\(amount) sats"
-            }
+            placeholder = textField.text ?? ""
         }
         
         @objc func doneButtonTapped() {
@@ -76,16 +78,11 @@ struct InvoiceTextfield : UIViewRepresentable {
         }
     }
     
-    private func updateBalance(_ textfield: UITextField, amount: Int) {
-        if amount == 0 {
-            textfield.text = ""
-        } else {
-            textfield.text = "\(amount) sats"
-        }
-    }
-    
     private func color(textfield: UITextField, colorScheme: ColorScheme) {
         let color : UIColor = colorScheme == .dark ? .blue : .blue
         textfield.textColor = color
+        
+        let borderColor : UIColor = colorScheme == .dark ? .blue : .blue
+        textfield.layer.borderColor = borderColor.cgColor
     }
 }

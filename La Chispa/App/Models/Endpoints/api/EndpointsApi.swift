@@ -54,7 +54,8 @@ class EndpointsApi {
                     print("JSON Response: \(loginJSON)")
                     completion(.success(loginJSON))
                 case 422:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Invalid Dates")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Error: \(httpResponse.statusCode)")))
                 }
@@ -72,6 +73,7 @@ class EndpointsApi {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer\(cookie_acccess_token)", forHTTPHeaderField: "Authorization")
+        request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud GET: \(EndpointUrl.userAuth.url.absoluteString)")
         
@@ -93,7 +95,8 @@ class EndpointsApi {
                     print("JSON Response: \(loginAuth)")
                     completion(.success(loginAuth))
                 case 400:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Failre Response: \(httpResponse.statusCode)")))
                 }
@@ -111,11 +114,13 @@ class EndpointsApi {
         request.httpMethod = "POST"
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("application/json", forHTTPHeaderField: "Content_Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.register.url.absoluteString)")
         
         let register = RegisterRequest(email: email, username: username, password: password, password_repeat: password_repeat)
+        print("JSON Response: \(register)")
         
         do {
             let jsonBody = try JSONEncoder().encode(register)
@@ -138,7 +143,8 @@ class EndpointsApi {
                     print("JSON Response: \(registerJSON)")
                     completion(.success(registerJSON))
                 case 400:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Invalid Dates")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure: \(httpResponse.statusCode)")))
                 }
@@ -157,13 +163,19 @@ class EndpointsApi {
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a PUT: \(EndpointUrl.changePass.url.absoluteString)")
         
-        let changeRequet = PasswordRequest(reset_key: reset_key, password: password, password_repeat: password_repeat)
+        let changeRequest: [String: Any] = [
+            "reset_key": reset_key,
+            "password": password,
+            "password_repeat": password_repeat
+        ]
+        print("JSON Response: \(changeRequest)")
         
         do {
-            let jsonBody = try JSONEncoder().encode(changeRequet)
+            let jsonBody = try JSONSerialization.data(withJSONObject: changeRequest)
             request.httpBody = jsonBody
           
             let (data, response) = try await session.data(for: request)
@@ -183,7 +195,8 @@ class EndpointsApi {
                     print("Respuesta del JSON: \(changeJSON)")
                     completion(.success(changeJSON))
                 case 422:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Invalid Dates")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Response Failure: \(httpResponse.statusCode)")))
                 }
@@ -195,20 +208,27 @@ class EndpointsApi {
     
     // MARK: - Payments
     
-    func payments(unit: String, internal: Bool, out: Bool, amount: Int, memo: String, description_hash: String, unhashed_description: String, expiry: Int, extra: Extra, webhook: String, bolt11: String, lnurl_callback: String, fiat_provider: String, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
+    func createPayments(bolt11: String, out: Bool, amount: Int, unit: String, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
         request.httpMethod = "POST"
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
         
-        let payments = CreateInvoiceRequest(unit: unit, internal: `internal`, out: out, amount: amount, memo: memo, description_hash: description_hash, unhashed_description: unhashed_description, expiry: expiry, extra: extra, webhook: webhook, bolt11: bolt11, lnurl_callback: lnurl_callback, fiat_provider: fiat_provider)
+        let payments: [String: Any] = [
+            "bolt11": bolt11,
+            "out": out,
+            "amount": amount,
+            "unit": unit
+        ]
+        print("JSON Response: \(payments)")
         
         do {
-            let jsonBody = try JSONEncoder().encode(payments)
+            let jsonBody = try JSONSerialization.data(withJSONObject: payments)
             request.httpBody = jsonBody
             
             let (data, response) = try await session.data(for: request)
@@ -223,18 +243,74 @@ class EndpointsApi {
                 }
                 
                 switch httpResponse.statusCode {
-                case 200:
+                case 200, 201:
                     let paymentsResponse = try decoder.decode(CreateInvoiceResponse.self, from: data)
                     print("JSON Response: \(paymentsResponse)")
                     completion(.success(paymentsResponse))
                 case 400:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(httpResponse.statusCode)")))
                 }
             }
         } catch {
             completion(.failure(EndpointFailure.jsonFailure(message: "JSON Response Failure: \(error.localizedDescription)")))
+        }
+    }
+    
+    func createInvoice(amount: Int, unit: String, memo: String, expiry: Int, out: Bool, webhook: String, url: String, `internal`: Bool, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
+        let decoder = JSONDecoder()
+        var request = URLRequest(url: EndpointUrl.createPayments.url)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 15
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        
+        logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
+        
+        let createInvoice: [String: Any] = [
+            "amount": amount,
+            "unit": unit,
+            "memo": memo,
+            "expiry": expiry,
+            "out": false,
+            "webhook": webhook,
+            "url": url,
+            "internal": `internal`
+        ]
+        print("JSON Response: \(createInvoice)")
+        
+        do {
+            let jsonBody = try JSONSerialization.data(withJSONObject: createInvoice)
+            request.httpBody = jsonBody
+            
+            let (data, response) = try await session.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+                
+                if let jsonData = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(jsonData)")
+                } else {
+                    print("Server Failure Response")
+                }
+                
+                switch httpResponse.statusCode {
+                case 200, 201:
+                    let createInvoiceJSON = try decoder.decode(CreateInvoiceResponse.self, from: data)
+                    completion(.success(createInvoiceJSON))
+                    print("JSON Response: \(createInvoiceJSON)")
+                case 400:
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error: \(String(describing: errorDetails))")
+                default:
+                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Response Failure: \(httpResponse.statusCode)")))
+                }
+            }
+        } catch {
+            completion(.failure(EndpointFailure.jsonFailure(message: "JSON Failure: \(error.localizedDescription)")))
         }
     }
     

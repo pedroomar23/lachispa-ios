@@ -35,18 +35,22 @@ struct RegisterRequest: Decodable, Hashable, Encodable {
 }
 
 struct RegisterResponse: Decodable, Hashable, Encodable {
-    let message: String
+    let access_token: String
+    let token_type: String
     
     enum CodingKeys: String, CodingKey {
-        case message = "string"
+        case access_token = "access_token"
+        case token_type = "token_type"
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.message = try container.decode(String.self, forKey: .message)
+        self.access_token = try container.decode(String.self, forKey: .access_token)
+        self.token_type = try container.decode(String.self, forKey: .token_type)
     }
     
-    init(message: String) {
-        self.message = message
+    init(access_token: String, token_type: String) {
+        self.access_token = access_token
+        self.token_type = token_type
     }
 }
