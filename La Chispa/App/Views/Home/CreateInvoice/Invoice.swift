@@ -20,16 +20,8 @@ struct Invoice : View {
             ContentNavigation {
                 VStack {
                     Section {
-                        HStack {
-                            InvoiceTextfield(amount: loginRequest.createPayments.amount, placeholder: "amount")
-                                .frame(height: 53)
-                            Text("sats")
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        }.padding(.horizontal)
-                    }
-                    Section {
                         HStack (alignment: .center, spacing: 1) {
-                            LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "Invoice or Address")
+                            LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
                                 .frame(width: 300, height: 50)
                                 .padding()
                             Button {
@@ -38,7 +30,7 @@ struct Invoice : View {
                                 _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
                             }
                             .fullScreenCover(isPresented: $qrCode) {
-                                QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message, amount: loginRequest.createPayments.amount)
+                                QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -52,7 +44,7 @@ struct Invoice : View {
                                     .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
                                     .frame(width: 200, height: 45)
                             } else {
-                                _labelButton(label: LabelText(text: "Pay"))
+                                _labelButton(label: LabelText(text: "invoice-pay"))
                             }
                         }
                         .sheet(isPresented: $loginRequest.isInvoice) {
@@ -63,28 +55,22 @@ struct Invoice : View {
                         } message: {
                             Text(loginRequest.message)
                         }
+                        .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
+                        .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
                     }
                     Spacer()
                 }
                 .padding(.horizontal)
                 .listRowBackground(Color.clear)
                 .toolbar {
-                    _titleView(label: LabelText(text: "Send"))
+                    _titleView(label: LabelText(text: "invoice-view"))
                 }
             }
         } else {
             VStack {
                 Section {
-                    HStack {
-                        InvoiceTextfield(amount: loginRequest.createPayments.amount, placeholder: "amount")
-                            .frame(height: 53)
-                        Text("sats")
-                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                    }.padding(.horizontal)
-                }
-                Section {
                     HStack (alignment: .center, spacing: 1) {
-                        LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "Invoice or Address")
+                        LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
                             .frame(width: 300, height: 50)
                             .padding()
                         Button {
@@ -93,7 +79,7 @@ struct Invoice : View {
                             _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
                         }
                         .fullScreenCover(isPresented: $qrCode) {
-                            QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message, amount: loginRequest.createPayments.amount)
+                            QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -107,7 +93,7 @@ struct Invoice : View {
                                 .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
                                 .frame(width: 200, height: 45)
                         } else {
-                            _labelButton(label: LabelText(text: "Create Invoice"))
+                            _labelButton(label: LabelText(text: "invoice-pay"))
                         }
                     }
                     .sheet(isPresented: $loginRequest.isInvoice) {
@@ -118,13 +104,15 @@ struct Invoice : View {
                     } message: {
                         Text(loginRequest.message)
                     }
+                    .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
+                    .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
                 }
                 Spacer()
             }
             .padding(.horizontal)
             .listRowBackground(Color.clear)
             .toolbar {
-                _titleView(label: LabelText(text: "Send"))
+                _titleView(label: LabelText(text: "invoice-view"))
             }
         }
     }

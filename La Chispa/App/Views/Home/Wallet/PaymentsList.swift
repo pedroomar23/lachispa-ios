@@ -15,9 +15,10 @@ struct PaymentsList : View {
     var body : some View {
         ContentNavigation {
             List {
-                ForEach(loginRequest.getPayments, id: \.self) { value in
-                    _getPayments(value: value)
-                }
+                
+            }
+            .task {
+                await loginRequest.getPayments()
             }
             .listStyle(.insetGrouped)
             .toolbar {
@@ -72,7 +73,7 @@ struct PaymentsList : View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Text("\(loginRequest.convertSatsToFiat(sats: value.fee))")
+                Text("\(value.fee)")
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)

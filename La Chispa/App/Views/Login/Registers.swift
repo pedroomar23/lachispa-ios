@@ -67,7 +67,7 @@ struct Registers : View {
                     .padding(.top)
                     .disabled(register.isValid || register.isLoading)
                     .opacity((!register.isValid && !register.isLoading) ? 1.0 : 0.5)
-                    .alert("Register", isPresented: $register.failureMsg) {
+                    .alert("Register", isPresented: $register.isRegister) {
                         
                     } message: {
                         Text(register.registerMsg)
@@ -144,7 +144,7 @@ struct Registers : View {
                 .padding(.top)
                 .disabled(register.isValid || register.isLoading)
                 .opacity((!register.isValid && !register.isLoading) ? 1.0 : 0.5)
-                .alert("Register", isPresented: $register.failureMsg) {
+                .alert("Register", isPresented: $register.isRegister) {
                     
                 } message: {
                     Text(register.registerMsg)

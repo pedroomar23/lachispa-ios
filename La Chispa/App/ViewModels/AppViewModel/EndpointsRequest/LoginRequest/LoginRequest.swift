@@ -48,6 +48,10 @@ final class LoginRequests : ObservableObject {
         loginModel.username.isEmpty || loginModel.password.isEmpty
     }
     
+    var invoiceEmpty : Bool {
+        paymentbolt11.isEmpty
+    }
+    
     func formatSats(_ balanceMsat: Int) -> String {
         let sats = balanceMsat / 1000
         let formatter = NumberFormatter()
@@ -77,7 +81,7 @@ final class LoginRequests : ObservableObject {
     }
     
     func getCurrentRate() -> Double {
-        return btcRate
+        return Double(loginAuth.wallets[0].balance_msat)
     }
     
     func formatDate(_ dateString: String) -> String {
@@ -153,16 +157,20 @@ final class LoginRequests : ObservableObject {
     
     func getUserAuth() async {
         await endpointApi.getAuthUser(usr: loginAuth.id, cookie_acccess_token: token) { result in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
-                    self.loginAuth = model
-                    self.isLoading = false
-                    self.isAuth = true
-                    self.loginModel.username = model.username
-                    self.email = model.email
-                    self.token = self.loginResponse.access_token
-                    self.defaults.set(self.loginResponse.access_token, forKey: "authToken")
+                    loginAuth = model
+                    isLoading = false
+                    isAuth = true
+                    loginModel.username = model.username
+                    email = model.email
+                    token = self.loginResponse.access_token
+                    defaults.set(self.loginResponse.access_token, forKey: "authToken")
+                    
+                    Task {
+                        await getPayments()
+                    }
                     
                 case let .failure(error):
                     self.message = error.localizedDescription
@@ -187,6 +195,25 @@ final class LoginRequests : ObservableObject {
                     isLoading = false
                     alertMsg = true
                     print("ErrorGetHistorialPrivate: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func getPayments() async {
+        await endpointApi.getPayments { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    getPayments = model
+                    isLoading = false
+                    isAuth = true
+                    defaults.set(loginResponse.access_token, forKey: "authToken")
+                case let .failure(error):
+                    message = error.localizedDescription
+                    isLoading = false
+                    alertMsg = true 
+                    print("ErrorGetPaymentsPrivate: \(error.localizedDescription)")
                 }
             }
         }
