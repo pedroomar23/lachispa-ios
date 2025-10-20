@@ -15,10 +15,9 @@ final class Register : ObservableObject {
     
     @Published var isLoading : Bool = false
     @Published var isRegister : Bool = false
-    @Published var registerMsg : String = ""
+    @Published var registerMsg : String = "Your register in the LaChispa has been successfully"
     @Published var message : String = ""
     @Published var alertMsg : Bool = false
-    @Published var failureMsg : Bool = false
     
     let endpointApi = EndpointsApi.shared
     
@@ -39,7 +38,6 @@ final class Register : ObservableObject {
                 switch result {
                 case let .success(model):
                     registerResponse = model
-                    failureMsg = true
                     isLoading = false
                     isRegister = true
                 case let .failure(error):

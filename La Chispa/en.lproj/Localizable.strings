@@ -10,8 +10,33 @@
 
 // MARK: - Login
 
+"login-username" = "Username";
+"login-password" = "Password";
+"login-session" = "Sign In";
+"login-register" = "Registers";
+"login-account" = "¿Don't have account?";
+"login-register" = "Registers";
+"login-close" = "Login Out";
+
 // MARK: - Change Password
 
+"forgot-password" = "¿Forgot Password?";
+"password-change" = "Change Passowrd";
+
 // MARK: - Register
+
+// MARK: - Home
+
+"wallet-view" = "Wallet";
+"settings-view" = "Settings";
+
+// MARK: - Wallet
+
+// MARK: - Invoice
+
+"invoice-view" = "Send";
+"invoice-receive" = "Receive";
+"invoice-pay" = "Pay";
+"invoice-bolt11" = "Invoice or Address";
 
 // MARK: - Settings

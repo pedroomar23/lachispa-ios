@@ -69,7 +69,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.userAuth.url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer\(cookie_acccess_token)", forHTTPHeaderField: "Authorization")
@@ -112,7 +112,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.register.url)
         request.httpMethod = "POST"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
@@ -160,7 +160,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.changePass.url)
         request.httpMethod = "PUT"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
@@ -212,7 +212,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
         request.httpMethod = "POST"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
@@ -263,7 +263,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
         request.httpMethod = "POST"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
@@ -314,15 +314,58 @@ class EndpointsApi {
         }
     }
     
+    // MARK: - Get Payments
+    
+    func getPayments(completion: @escaping @Sendable (Result<[GetPayments], EndpointFailure>) -> Void) async {
+        let decoder = JSONDecoder()
+        var request = URLRequest(url: EndpointUrl.getPayments.url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 10
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        
+        logger.info("Iniciando Solicitud a GET: \(EndpointUrl.getPayments.url.absoluteString)")
+        
+        do {
+            let (data, response) = try await session.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+                
+                if let jsonData = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(jsonData)")
+                } else {
+                    print("Server Failure Response")
+                }
+                
+                switch httpResponse.statusCode {
+                case 200:
+                    let getPaymentsJSON = try decoder.decode([GetPayments].self, from: data)
+                    print("JSON Response: \(getPaymentsJSON)")
+                    completion(.success(getPaymentsJSON))
+                case 400:
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error Details: \(String(describing: errorDetails))")
+                default:
+                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Reponse: \(httpResponse.statusCode)")))
+                }
+            }
+        } catch {
+            completion(.failure(EndpointFailure.jsonFailure(message: "Failure JSON Response: \(error.localizedDescription)")))
+        }
+    }
+    
     // MARK: - Historial for day
     
     func getHistorial(completion: @escaping @Sendable (Result<[HistorialResponse], EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.paymentsForDay.url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a GET: \(EndpointUrl.paymentsForDay.url.absoluteString)")
         
@@ -344,7 +387,8 @@ class EndpointsApi {
                     print("JSON Response: \(historialJSON)")
                     completion(.success(historialJSON))
                 case 400:
-                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response")))
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Server Response: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(httpResponse.statusCode)")))
                 }

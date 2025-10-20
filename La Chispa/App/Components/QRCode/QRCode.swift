@@ -12,7 +12,6 @@ import AVFoundation
 struct QRCodeScannerController: UIViewControllerRepresentable {
     @Binding var scannedCode: String
     @Binding var errorMessage: String
-    var amount: Int
     
     func makeUIViewController(context: Context) -> UINavigationController {
         let scannerViewController = ScannerViewController()
@@ -39,10 +38,6 @@ struct QRCodeScannerController: UIViewControllerRepresentable {
             parent.scannedCode = code
         }
         
-        func didFindAmount(_ amount: Int) {
-            parent.amount = amount
-        }
-        
         func didFailWithError(_ error: String) {
             parent.errorMessage = error
         }
@@ -51,7 +46,6 @@ struct QRCodeScannerController: UIViewControllerRepresentable {
 
 protocol ScannerDelegate: AnyObject {
     func didFindCode(_ code: String)
-    func didFindAmount(_ amount: Int)
     func didFailWithError(_ error: String)
 }
 

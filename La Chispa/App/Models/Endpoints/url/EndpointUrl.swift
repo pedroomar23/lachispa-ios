@@ -17,6 +17,7 @@ enum EndpointUrl {
     case createPayments
     case paymentsForDay
     case paymentsTagCount
+    case getPayments
     
     var path: String {
         switch self {
@@ -25,6 +26,7 @@ enum EndpointUrl {
         case .register: return "/auth/register"
         case .changePass: return "/auth/reset"
         case .createPayments: return "/payments"
+        case .getPayments: return "/payments"
         case .paymentsForDay: return "/payments/history?group=day"
         case .paymentsTagCount: return "/payments/stats/count?count_by=tag"
         }

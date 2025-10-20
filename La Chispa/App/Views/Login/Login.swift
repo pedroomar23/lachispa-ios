@@ -20,7 +20,7 @@ struct Login : View {
                    _preview(label: LabelImage(text: "LaunchImage"))
                         .padding()
                     
-                    MutiTextfield(text: $loginRequest.loginModel.username, placeholder: "username")
+                    MutiTextfield(text: $loginRequest.loginModel.username, placeholder: "login-username")
                         .frame(height: 55)
                         .padding(.horizontal)
                     
@@ -29,7 +29,7 @@ struct Login : View {
                             if showPassword {
                                 MutiTextfield(text: $loginRequest.loginModel.password, placeholder: "*********", isSecure: true)
                             } else {
-                                MutiTextfield(text: $loginRequest.loginModel.password, placeholder: "Password", isSecure: false)
+                                MutiTextfield(text: $loginRequest.loginModel.password, placeholder: "login-password", isSecure: false)
                             }
                             Button {
                                 self.showPassword.toggle()
@@ -38,21 +38,21 @@ struct Login : View {
                             }
                         }.frame(height: 53)
                     }.padding(.horizontal)
-                    
+                    /*
                     NavigationLink {
                         ChangePasswords()
                     } label: {
                         _labelText(label: LabelText(text: "¿Forgot Password?"))
                     }
                     .padding(.top)
-                    
+                    */
                     Button {
                         loginRequest.loginRequest()
                     } label: {
                         if loginRequest.isLoading {
                             ProgressBar(color: .blue)
                         } else {
-                            _labelButton(label: LabelText(text: "Sign In"))
+                            _labelButton(label: LabelText(text: "login-session"))
                         }
                     }
                     .disabled(loginRequest.isValid || loginRequest.isLoading)
@@ -69,7 +69,7 @@ struct Login : View {
                     NavigationLink {
                         Registers()
                     } label: {
-                        _label(label: LabelTexts(text: "¿No tienes Cuenta?", text1: "Registrate"))
+                        _label(label: LabelTexts(text: "login-account", text1: "login-register"))
                     }
                    
                     Spacer()

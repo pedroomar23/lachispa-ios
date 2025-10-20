@@ -15,9 +15,7 @@ struct Account : View {
     var body : some View {
         List {
             Section {
-                ForEach(loginRequest.loginAuth.wallets, id: \.self) { value in
-                    _account(response: value)
-                }
+                _account(response: loginRequest.loginAuth)
             }
             Section {
                 Button(role: .destructive) {
@@ -32,6 +30,9 @@ struct Account : View {
                     }
                 }
             }
+        }
+        .task {
+            await loginRequest.getUserAuth()
         }
         .refreshable {
             await loginRequest.getUserAuth()
@@ -71,7 +72,7 @@ struct Account : View {
     }
     
     @ViewBuilder
-    private func _account(response: Wallets) -> some View {
+    private func _account(response: LoginAuth) -> some View {
         HStack (alignment: .center) {
             Image(systemName: "person")
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -80,7 +81,7 @@ struct Account : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.user)
+            Text(response.username)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)

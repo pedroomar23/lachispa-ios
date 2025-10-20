@@ -21,9 +21,11 @@ struct Wallet : View {
                             VStack {
                                 Text("Balance")
                                     .font(.headline)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 Text("\(loginRequest.formatSats(value.balance_msat)) sats")
                                     .font(.subheadline)
                                     .font(.system(size: 40))
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
                             }
                         }.padding(.top)
                     }
@@ -33,13 +35,13 @@ struct Wallet : View {
                             NavigationLink {
                                 Invoice()
                             } label: {
-                                _label(label: LabelIcon(text: "Send", icon: "arrow.up.forward"))
+                                _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
                             }
                             
                             NavigationLink {
                                 Receive()
                             } label: {
-                                _label(label: LabelIcon(text: "Receive", icon: "arrow.down.right"))
+                                _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                             }
                         }
                     }
@@ -56,7 +58,7 @@ struct Wallet : View {
                             } else {
                                 ForEach(loginRequest.getPayments, id: \.self) { value in
                                     NavigationLink {
-                                        PaymentsList()
+                                       PaymentsList()
                                     } label: {
                                         _historial(value: value)
                                     }
@@ -70,6 +72,9 @@ struct Wallet : View {
                         }.padding(.horizontal)
                     }
                 }
+            }
+            .task {
+                await loginRequest.getUserAuth()
             }
             .refreshable {
                 await loginRequest.getUserAuth()
@@ -119,33 +124,37 @@ struct Wallet : View {
     }
     
     @ViewBuilder
+    private func _labelIcon(label: Labels) -> some View {
+        ZStack (alignment: .center) {
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .fill(colorScheme == .dark ? .black : .orange)
+                .frame(width: 30, height: 30)
+            Image(systemName: label.icon)
+                .foregroundStyle(colorScheme == .dark ? .orange : .white)
+                .font(.system(size: 20, weight: .medium))
+        }
+    }
+    
+    @ViewBuilder
     private func _historial(value: GetPayments) -> some View {
-        VStack {
-            HStack (alignment: .center, spacing: 12) {
-                ZStack (alignment: .center) {
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .fill(colorScheme == .dark ? .black : .orange)
-                        .frame(width: 30, height: 30)
-                    Image(systemName: "bolt.fill")
-                        .foregroundStyle(colorScheme == .dark ? .orange : .white)
-                        .font(.system(size: 20, weight: .medium))
-                }
+        HStack (alignment: .center, spacing: 12) {
+            _labelIcon(label: Labels(icon: "bolt.fill"))
+            VStack {
                 Text("LaChispa")
-                    .lineLimit(1)
                     .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Text("\(loginRequest.formatDate(value.time))")
+                Text("\(value.created_at)")
                     .lineLimit(1)
                     .font(.subheadline)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(loginRequest.formatSats(value.amount))")
-                    .lineLimit(1)
-                    .font(.headline)
-                    .foregroundStyle(colorScheme == .dark ? .white : .black)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-            }.frame(maxWidth: .infinity, alignment: .leading)
-        }
+            }
+            Text("\(loginRequest.formatSats(value.amount))")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
     }
     
     @ViewBuilder
