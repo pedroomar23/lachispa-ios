@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Receive : View {
     
-    @StateObject var loginRequest = LoginRequests()
+    @EnvironmentObject var loginRequest: LoginRequests
     @Environment(\.colorScheme) var colorScheme
     @State var invoiceReceive : Bool = false
     
@@ -150,5 +150,5 @@ struct Receive : View {
 }
 
 #Preview {
-    Receive()
+    Receive().environmentObject(LoginRequests())
 }

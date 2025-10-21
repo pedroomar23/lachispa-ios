@@ -25,7 +25,7 @@ class EndpointsApi {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.login.url)
         request.httpMethod = "POST"
-        request.timeoutInterval = 15
+        request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -349,6 +349,48 @@ class EndpointsApi {
                     print("Error Details: \(String(describing: errorDetails))")
                 default:
                     completion(.failure(EndpointFailure.jsonFailure(message: "Server Reponse: \(httpResponse.statusCode)")))
+                }
+            }
+        } catch {
+            completion(.failure(EndpointFailure.jsonFailure(message: "Failure JSON Response: \(error.localizedDescription)")))
+        }
+    }
+    
+    func getLNURl(username: String, completion: @escaping @Sendable (Result<GetLNURLUsername, EndpointFailure>) -> Void) async {
+        let decoder = JSONDecoder()
+        let requestURL = EndpointLNUrl.getLNURLP(username: username).urlLNP
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 10
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        logger.info("Iniciando Solicitud a Get")
+        
+        print("Username Encontrado: \(username)")
+        
+        do {
+            let (data, response) = try await session.data(for: request)
+           
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+                
+                if let jsonData = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(jsonData)")
+                } else {
+                    print("Server Failure Response")
+                }
+                
+                switch httpResponse.statusCode {
+                case 200:
+                    let getLNURLJSON = try decoder.decode(GetLNURLUsername.self, from: data)
+                    completion(.success(getLNURLJSON))
+                    print("JSON Response: \(getLNURLJSON)")
+                case 400:
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("JSON Failure Response: \(String(describing: errorDetails))")
+                default:
+                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(httpResponse.statusCode)")))
                 }
             }
         } catch {

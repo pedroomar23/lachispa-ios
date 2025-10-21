@@ -15,18 +15,16 @@ struct Wallet : View {
     var body : some View {
         ContentNavigation {
             ScrollView (.vertical, showsIndicators: false) {
-                ForEach(loginRequest.loginAuth.wallets) { value in
+                ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                     Section {
                         VStack {
-                            VStack {
-                                Text("Balance")
-                                    .font(.headline)
-                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                    .font(.subheadline)
-                                    .font(.system(size: 40))
-                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
-                            }
+                            Text("Balance")
+                                .font(.headline)
+                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                .font(.subheadline)
+                                .font(.system(size: 40))
+                                .foregroundStyle(colorScheme == .dark ? .white : .black)
                         }.padding(.top)
                     }
                     
@@ -39,7 +37,7 @@ struct Wallet : View {
                             }
                             
                             NavigationLink {
-                                Receive()
+                                CreatesInvoice()
                             } label: {
                                 _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                             }
@@ -82,7 +80,7 @@ struct Wallet : View {
             .environmentObject(loginRequest)
             .listRowBackground(Color.clear)
             .toolbar {
-                _titleView(label: LabelIcon(text: "Wallets", icon: "chevron.down"))
+                _titleView(label: LabelIcon(text: "Wallet", icon: "chevron.down"))
             }
         }
     }
@@ -95,7 +93,6 @@ struct Wallet : View {
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                
             }
         }
         
@@ -140,7 +137,8 @@ struct Wallet : View {
         HStack (alignment: .center, spacing: 12) {
             _labelIcon(label: Labels(icon: "bolt.fill"))
             VStack {
-                Text("LaChispa")
+                Text("\(value.memo ?? "")")
+                    .lineLimit(1)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)

@@ -21,14 +21,16 @@ final class LoginRequests : ObservableObject {
     @Published var getPaymentsForDay : GetPaymentsForDay = GetPaymentsForDay(date: "", balance: 0, balance_in: 0, payments_count: 0, count_in: 0, count_out: 0, fee: 0)
     @Published var getPaymentsAllUsers : GetPaymentsAllUsers = GetPaymentsAllUsers(field: "", total: 0)
     @Published var getPayments : [GetPayments] = [GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount:  4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))]
+    @Published var getLNURLResponse : GetLNURLUsername = GetLNURLUsername(tag: "", callback: "", minSendable: 1000, maxSendable: 2100000000000, metadata: "", commentAllowed: 500, allowsNostr: true, nostrPubkey: "")
     
     @AppStorage("token") var token : String = ""
     @AppStorage("email") var email : String = ""
-    
+    @AppStorage("usuario") var username : String = ""
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
     @Published var paymentsUnit : String =  ""
     
     @Published var isInvoice : Bool = false
+    @AppStorage("getLNURL") var isLNURL : Bool = false
     
     @Published var isLoading : Bool = false
     @AppStorage("isAuth") var isAuth : Bool = false
@@ -114,7 +116,6 @@ final class LoginRequests : ObservableObject {
         qrCodeImage = UIImage(systemName: "qrcode")?
             .withTintColor(.black, renderingMode: .alwaysOriginal)
     }
-    
     
     func loginRequest() {
         Task {
@@ -214,6 +215,33 @@ final class LoginRequests : ObservableObject {
                     isLoading = false
                     alertMsg = true 
                     print("ErrorGetPaymentsPrivate: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func getLNURLRequest() {
+        Task {
+            DispatchQueue.main.async { [self] in isLoading = false }
+            await getLNURLRequestPrivate()
+        }
+    }
+    
+    func getLNURLRequestPrivate() async {
+        await endpointApi.getLNURl(username: username) { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    getLNURLResponse = model
+                    isLoading = false
+                    isAuth = true
+                    isLNURL = true
+                    defaults.set(loginResponse.access_token, forKey: "authToken")
+                case let .failure(error):
+                    message = error.localizedDescription
+                    alertMsg = true
+                    isLoading = false
+                    print("ErrorGetLNURLPrivate: \(error.localizedDescription)")
                 }
             }
         }
