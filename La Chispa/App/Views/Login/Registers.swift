@@ -19,7 +19,7 @@ struct Registers : View {
                 VStack {
                     _preView(label: LabelImage(text: "LaunchImage"))
                   
-                    MutiTextfield(text: $register.registerRequest.username, placeholder: "username")
+                    MutiTextfield(text: $register.registerRequest.username, placeholder: "login-username")
                         .frame(height: 55)
                         .padding(.horizontal)
                     
@@ -28,7 +28,7 @@ struct Registers : View {
                             if showPassword {
                                 MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "********", isSecure: true)
                             } else {
-                                MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "Password", isSecure: false)
+                                MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "login-password", isSecure: false)
                             }
                             Button {
                                 self.showPassword.toggle()
@@ -44,7 +44,7 @@ struct Registers : View {
                             if showPassword {
                                 MutiTextfield(text: $register.registerRequest.password, placeholder: "********", isSecure: true)
                             } else {
-                                MutiTextfield(text: $register.registerRequest.password, placeholder: "Password", isSecure: false)
+                                MutiTextfield(text: $register.registerRequest.password, placeholder: "login-password", isSecure: false)
                             }
                             Button {
                                 self.showPassword.toggle()
@@ -61,7 +61,7 @@ struct Registers : View {
                         if register.isLoading {
                             ProgressBar(color: .blue)
                         } else {
-                            _label(label: LabelText(text: "Registrarse"))
+                            _label(label: LabelText(text: "login-register"))
                         }
                     }
                     .padding(.top)

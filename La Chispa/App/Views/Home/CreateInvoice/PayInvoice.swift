@@ -23,6 +23,12 @@ struct PayInvoice : View {
                     _paymentResponse(response: loginRequest.paymentResponse)
                 }
             }
+            .task {
+                loginRequest.paymetsRequest()
+            }
+            .refreshable {
+                loginRequest.paymetsRequest()
+            }
             .toolbar {
                 _toolbar()
             }
@@ -30,7 +36,7 @@ struct PayInvoice : View {
             .background {
                 Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all)
             }
-            .navigationTitle("Invoice")
+            .navigationTitle("Pay Invoice")
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled()
         }
@@ -42,8 +48,8 @@ struct PayInvoice : View {
             Button {
                 dismiss()
             } label: {
-                Text("Done")
-                    .fontWeight(.bold)
+                Image(systemName: "xmark")
+                    .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
         }
@@ -75,7 +81,7 @@ struct PayInvoice : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.created_at)
+            Text(response.time)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)

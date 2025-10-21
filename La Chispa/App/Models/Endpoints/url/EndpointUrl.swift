@@ -9,6 +9,8 @@ import Foundation
 
 enum EndpointUrl {
     private static let urlApi = "https://lachispa.me/api/v1"
+    private static let lnURLP = "https://lachispa.me/"
+    private static let urlBolts = "https://lachispa.me/boltz/api/v1"
     
     case login
     case userAuth
@@ -34,5 +36,21 @@ enum EndpointUrl {
     
     var url: URL {
         return URL(string: EndpointUrl.urlApi + path)!
+    }
+    
+    var urlBoltz: URL {
+        return URL(string: EndpointUrl.urlBolts + path)!
+    }
+}
+
+enum EndpointLNUrl {
+    case getLNURLP(username: String)
+    
+    var urlLNP: URL {
+        switch self {
+        case .getLNURLP(let username):
+            let urlString = "https://lachispa.me/.well-known/lnurlp/\(username)"
+            return URL(string: urlString)!
+        }
     }
 }

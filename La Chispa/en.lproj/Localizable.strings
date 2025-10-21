@@ -23,14 +23,15 @@
 "forgot-password" = "¿Forgot Password?";
 "password-change" = "Change Passowrd";
 
-// MARK: - Register
-
 // MARK: - Home
 
 "wallet-view" = "Wallet";
 "settings-view" = "Settings";
+"wallet-progress" = "Loading Dates...";
 
 // MARK: - Wallet
+
+"wallet-historial" = "Historial";
 
 // MARK: - Invoice
 

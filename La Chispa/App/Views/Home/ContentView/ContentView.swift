@@ -17,29 +17,38 @@ struct ContentView : View {
     
     var body : some View {
         GeometryReader { geo in
-            TabView(selection: $selectedTab) {
-                Wallet()
-                    .tabItem {
-                        Text(Tab.wallet.rawValue)
-                        Image(systemName: Tab.wallet.sistemImage)
+            if loginRequest.isLoading {
+                ProgressView("wallet-progress", value: 1.0)
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .task {
+                        await loginRequest.getUserAuth()
                     }
-                    .tag(0)
-                    .environmentObject(loginRequest)
-                Settings()
-                    .tabItem {
-                        Text(Tab.settings.rawValue)
-                        Image(systemName: Tab.settings.sistemImage)
-                    }
-                    .tag(1)
-                    .environmentObject(security)
+            } else {
+                TabView(selection: $selectedTab) {
+                    Wallet()
+                        .tabItem {
+                            Text(Tab.wallet.rawValue)
+                            Image(systemName: Tab.wallet.sistemImage)
+                        }
+                        .tag(0)
+                        .environmentObject(loginRequest)
+                    Settings()
+                        .tabItem {
+                            Text(Tab.settings.rawValue)
+                            Image(systemName: Tab.settings.sistemImage)
+                        }
+                        .tag(1)
+                        .environmentObject(security)
+                }
+                .environment(\.screenSize, geo.size)
             }
-            .environment(\.screenSize, geo.size)
         }
     }
     
     private enum Tab : LocalizedStringKey {
         case wallet = "Wallet"
-        case settings = "Settings"
+        case settings = "wallet-settings"
         
         var sistemImage : String {
             switch self {
