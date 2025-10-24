@@ -18,7 +18,7 @@ struct Settings : View {
                     NavigationLink {
                         FaceID()
                     } label: {
-                        _labelFaceId(label: LabelIcon(text: "Face ID & Passcode", icon: "faceid"))
+                        _labelFaceId(label: LabelIcon(text: "settings-faceid", icon: "faceid"))
                     }
                 } header: {
                     Text("Security").textCase(.none)
@@ -36,7 +36,7 @@ struct Settings : View {
             .background(Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all))
             .listStyle(.insetGrouped)
             .toolbar {
-                _titleView(label: LabelText(text: "Settings"))
+                _titleView(label: LabelText(text: "settings-view"))
             }
         }
     }

@@ -19,7 +19,7 @@ struct GetPayments: Decodable, Hashable, Encodable {
     let memo: String?
     let expiry: String
     let webhook: String?
-    let webhook_status: Int?
+    let webhook_status: String?
     let preimage: String
     let tag: String?
     let `extension`: String?
@@ -60,10 +60,10 @@ struct GetPayments: Decodable, Hashable, Encodable {
         self.bolt11 = try container.decode(String.self, forKey: .bolt11)
         self.fiat_provider = try container.decodeIfPresent(String.self, forKey: .fiat_provider) ?? ""
         self.status = try container.decode(String.self, forKey: .status)
-        self.memo = try container.decode(String.self, forKey: .memo)
+        self.memo = try container.decodeIfPresent(String.self, forKey: .memo) ?? ""
         self.expiry = try container.decode(String.self, forKey: .expiry)
         self.webhook = try container.decodeIfPresent(String.self, forKey: .webhook) ?? ""
-        self.webhook_status = try container.decodeIfPresent(Int.self, forKey: .webhook_status)
+        self.webhook_status = try container.decodeIfPresent(String.self, forKey: .webhook_status) ?? ""
         self.preimage = try container.decode(String.self, forKey: .preimage)
         self.tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
         self.extension = try container.decodeIfPresent(String.self, forKey: .extension) ?? ""
@@ -73,7 +73,7 @@ struct GetPayments: Decodable, Hashable, Encodable {
         self.extra = try container.decodeIfPresent(ExtraData.self.self, forKey: .extra)
     }
     
-    init(cheking_id: String, payment_hash: String, wallet_id: String, amount: Int, fee: Int, bolt11: String, fiat_provider: String?, status: String, memo: String, expiry: String, webhook: String?, webhook_status: Int?, preimage: String, tag: String?, `extension`: String?, time: String, created_at: String, updated_at: String, extra: ExtraData?) {
+    init(cheking_id: String, payment_hash: String, wallet_id: String, amount: Int, fee: Int, bolt11: String, fiat_provider: String?, status: String, memo: String?, expiry: String, webhook: String?, webhook_status: String?, preimage: String, tag: String?, `extension`: String?, time: String, created_at: String, updated_at: String, extra: ExtraData?) {
         self.checking_id = cheking_id
         self.payment_hash = payment_hash
         self.wallet_id = wallet_id

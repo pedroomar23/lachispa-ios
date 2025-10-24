@@ -10,8 +10,8 @@ import SwiftUI
 struct ContentView : View {
     
     @EnvironmentObject var loginRequest : LoginRequests
-    @StateObject var security = Security()
     @Environment(\.screenSize) var screenSize
+    @StateObject var security = Security()
     @Environment(\.colorScheme) var colorScheme
     @State var selectedTab : Int = 0
     
@@ -40,8 +40,7 @@ struct ContentView : View {
                         }
                         .tag(1)
                         .environmentObject(security)
-                }
-                .environment(\.screenSize, geo.size)
+                }.environment(\.screenSize, geo.size)
             }
         }
     }

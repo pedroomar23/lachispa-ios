@@ -21,6 +21,9 @@ enum EndpointUrl {
     case paymentsTagCount
     case getPayments
     
+    case getListSwap
+    case createSwap
+    
     var path: String {
         switch self {
         case .login: return "/auth"
@@ -31,6 +34,9 @@ enum EndpointUrl {
         case .getPayments: return "/payments"
         case .paymentsForDay: return "/payments/history?group=day"
         case .paymentsTagCount: return "/payments/stats/count?count_by=tag"
+            
+        case .getListSwap: return "/swap?all_wallets=false"
+        case .createSwap: return "/swap"
         }
     }
     

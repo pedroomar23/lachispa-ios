@@ -20,14 +20,14 @@ struct PayInvoice : View {
                     _titleView(label: LabelText(text: "Pay Successfully"))
                 }
                 Section {
-                    _paymentResponse(response: loginRequest.paymentResponse)
+                    _paymentResponse(response: loginRequest.isGetPayments)
                 }
             }
             .task {
-                loginRequest.paymetsRequest()
+                await loginRequest.getPayments()
             }
             .refreshable {
-                loginRequest.paymetsRequest()
+                await loginRequest.getPayments()
             }
             .toolbar {
                 _toolbar()
@@ -72,7 +72,7 @@ struct PayInvoice : View {
     }
     
     @ViewBuilder
-    private func _paymentResponse(response: CreateInvoiceResponse) -> some View {
+    private func _paymentResponse(response: GetPayments) -> some View {
         HStack (alignment: .center, spacing: 5) {
             Image(systemName: "calendar")
                 .font(.system(size: 20, weight: .medium))

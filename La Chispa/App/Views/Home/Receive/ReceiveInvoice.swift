@@ -17,9 +17,39 @@ struct ReceiveInvoice : View {
     var body : some View  {
         ContentNavigation {
             List {
-               _invoiceReceive()
+                Section {
+                    HStack (spacing: 3) {
+                        InvoiceTextfield(amount: loginRequest.createInvoice.amount, placeholder: "0")
+                            .frame(height: 53)
+                        Text("sats")
+                            .padding()
+                    }
+                    .listRowSeparator(.hidden)
+                   
+                    MutiTextfield(text: $loginRequest.username, placeholder: "Ex payments or services")
+                        .frame(height: 53)
+                        .listRowSeparator(.hidden)
+                }
+                Section {
+                    Button {
+                        loginRequest.invoiceRequest()
+                    } label: {
+                        _labelButton(label: LabelText(text: "Solicitar Monto"))
+                    }
+                    .buttonStyle(.plain)
+                    .sheet(isPresented: $loginRequest.isInvoice, content: {
+                        RInvoice()
+                    })
+                    .alert("Error", isPresented: $loginRequest.alertMsg) {
+                        
+                    } message: {
+                        Text(loginRequest.message)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
+                }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(.plain)
             .interactiveDismissDisabled()
             .background {
                 Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all)
@@ -37,48 +67,18 @@ struct ReceiveInvoice : View {
                 .fontWeight(.bold)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
         }
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                dismiss()
-            } label: {
-                ZStack (alignment: .center) {
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .fill(Color(.tertiarySystemGroupedBackground))
-                        .frame(width: 60, height: 40)
-                    Text("Done")
-                        .fontWeight(.bold)
-                        .foregroundStyle(colorScheme == .dark ? .blue : .blue)
-                }
-            }
-        }
     }
     
     @ViewBuilder
-    private func _invoiceReceive() -> some View {
-        VStack {
-            AsyncImage(url: URL(string: loginRequest.paymentResponse.preimage))
-            HStack (spacing: 2) {
-                Text("\(loginRequest.paymentResponse.payment_hash)")
-                Button {
-                    _copy(text: loginRequest.paymentbolt11)
-                    self.paymentInvoice.toggle()
-                } label: {
-                    Image(systemName: "document.on.document")
-                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        .font(.system(size: 20, weight: .medium))
-                }
-                .buttonStyle(.plain)
-                .alert("Payment Hash Copied", isPresented: $paymentInvoice) {
-                    
-                } message: {
-                    Text("Your payment hash has been copied to clipboard")
-                }
-            }
-        }
-    }
-    
-    private func _copy(text: String) {
-        UIPasteboard.general.string = loginRequest.paymentbolt11
+    private func _labelButton(label: LabelText) -> some View {
+        Text(label.text)
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.vertical)
+            .frame(width: UIScreen.main.bounds.width - 150)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
+            .clipShape(Capsule())
+            .padding()
     }
 }
 

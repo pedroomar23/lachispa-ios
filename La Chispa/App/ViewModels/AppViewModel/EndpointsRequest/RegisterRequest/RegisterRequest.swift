@@ -25,6 +25,8 @@ final class Register : ObservableObject {
         return registerRequest.username.isEmpty || registerRequest.password.isEmpty || registerRequest.password_repeat.isEmpty
     }
     
+    // MARK: - Register
+    
     func registersRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }

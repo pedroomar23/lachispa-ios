@@ -56,7 +56,7 @@ struct Wallet : View {
                             } else {
                                 ForEach(loginRequest.getPayments, id: \.self) { value in
                                     NavigationLink {
-                                       PaymentsList()
+                                        PaymentsList()
                                     } label: {
                                         _historial(value: value)
                                     }
@@ -124,10 +124,10 @@ struct Wallet : View {
     private func _labelIcon(label: Labels) -> some View {
         ZStack (alignment: .center) {
             RoundedRectangle(cornerRadius: 7, style: .continuous)
-                .fill(colorScheme == .dark ? .black : .orange)
+                .fill(colorScheme == .dark ? .black : .blue)
                 .frame(width: 30, height: 30)
             Image(systemName: label.icon)
-                .foregroundStyle(colorScheme == .dark ? .orange : .white)
+                .foregroundStyle(colorScheme == .dark ? .blue : .white)
                 .font(.system(size: 20, weight: .medium))
         }
     }
@@ -142,7 +142,7 @@ struct Wallet : View {
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Text("\(value.created_at)")
+                Text("\(loginRequest.formatDate(value.created_at))")
                     .lineLimit(1)
                     .font(.subheadline)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
@@ -186,14 +186,14 @@ struct Wallet : View {
         HStack {
             Text(label.text)
                 .font(.headline)
-                .foregroundStyle(colorScheme == .dark ? .orange : .white)
+                .foregroundStyle(colorScheme == .dark ? .white : .white)
             Image(systemName: label.icon)
                 .font(.headline)
-                .foregroundStyle(colorScheme == .dark ? .orange : .white)
+                .foregroundStyle(colorScheme == .dark ? .white : .white)
         }
         .padding(.vertical)
         .frame(width: UIScreen.main.bounds.width - 260)
-        .background(Color(colorScheme == .dark ? .gray : .orange))
+        .background(Color(colorScheme == .dark ? .gray : .blue))
         .clipShape(Capsule())
         .padding()
     }

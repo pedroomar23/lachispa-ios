@@ -77,7 +77,7 @@ struct Account : View {
             Image(systemName: "person")
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .font(.system(size: 20, weight: .medium))
-            Text("Username")
+            Text("login-username")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
