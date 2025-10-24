@@ -65,6 +65,8 @@ class EndpointsApi {
         }
     }
     
+    // MARK: - GetUserAuth 
+    
     func getAuthUser(usr: String, cookie_acccess_token: String, completion: @escaping @Sendable (Result<LoginAuth, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.userAuth.url)

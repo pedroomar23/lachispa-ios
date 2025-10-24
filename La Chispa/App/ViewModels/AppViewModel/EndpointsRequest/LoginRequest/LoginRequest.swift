@@ -17,10 +17,10 @@ final class LoginRequests : ObservableObject {
     @Published var historial : [HistorialResponse] = [HistorialResponse(date: "", income: 0, spending: 0, balance: 0)]
     @Published var createInvoice : CreateInvoice = CreateInvoice(amount: 0, unit: "sat", memo: "", expiry: 0, out: false, webhook: "", url: "", internal: false)
     @Published var createPayments : CreatePayments = CreatePayments(bolt11: "", out: true, amount: 0, unit: "")
-    @Published var paymentResponse : CreateInvoiceResponse = CreateInvoiceResponse(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))
-    @Published var getPaymentsForDay : GetPaymentsForDay = GetPaymentsForDay(date: "", balance: 0, balance_in: 0, payments_count: 0, count_in: 0, count_out: 0, fee: 0)
+    @Published var paymentResponse : CreateInvoiceResponse = CreateInvoiceResponse(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     @Published var getPaymentsAllUsers : GetPaymentsAllUsers = GetPaymentsAllUsers(field: "", total: 0)
-    @Published var getPayments : [GetPayments] = [GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount:  4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))]
+    @Published var getPayments : [GetPayments] = [GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))]
+    @Published var isGetPayments : GetPayments = GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))
     @Published var getLNURLResponse : GetLNURLUsername = GetLNURLUsername(tag: "", callback: "", minSendable: 1000, maxSendable: 2100000000000, metadata: "", commentAllowed: 500, allowsNostr: true, nostrPubkey: "")
     
     @AppStorage("token") var token : String = ""
@@ -33,6 +33,7 @@ final class LoginRequests : ObservableObject {
     @AppStorage("getLNURL") var isLNURL : Bool = false
     
     @Published var isLoading : Bool = false
+    @Published var timeOut : Bool = false
     @AppStorage("isAuth") var isAuth : Bool = false
     @Published var alertMsg : Bool = false
     
@@ -54,6 +55,8 @@ final class LoginRequests : ObservableObject {
         paymentbolt11.isEmpty
     }
     
+    // MARK: - Balance in sats
+   
     func formatSats(_ balanceMsat: Int) -> String {
         let sats = balanceMsat / 1000
         let formatter = NumberFormatter()
@@ -63,10 +66,26 @@ final class LoginRequests : ObservableObject {
         return formatter.string(from: NSNumber(value: sats)) ?? "0"
     }
     
+    // MARK: - Format Date
+    
+    func formatDate(_ dateString: String) -> String {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "dd/MM/yy HH:mm"
+        
+        if let date = inputFormatter.date(from: dateString) {
+            return outputFormatter.string(from: date)
+        }
+        return String(dateString.prefix(10))
+    }
+    
+    // MARK: - Convert Sats to Fiat
+    
     func convertSatsToFiat(sats: Int) -> String {
-        let rate = getCurrentRate()
         let amountInBTC = Double(sats) / 100_000_000.0
-        let amountInFiat = amountInBTC * rate
+        let amountInFiat = amountInBTC 
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -86,15 +105,7 @@ final class LoginRequests : ObservableObject {
         return Double(loginAuth.wallets[0].balance_msat)
     }
     
-    func formatDate(_ dateString: String) -> String {
-        let formatter = ISO8601DateFormatter()
-        if let date = formatter.date(from: dateString) {
-            let displayFormatter = DateFormatter()
-            displayFormatter.dateStyle = .medium
-            return displayFormatter.string(from: date)
-        }
-        return dateString
-    }
+    // MARK: - Read QR
     
     func generateQRCode(from string: String) {
         let context = CIContext()
@@ -117,6 +128,8 @@ final class LoginRequests : ObservableObject {
             .withTintColor(.black, renderingMode: .alwaysOriginal)
     }
     
+    // MARK: - Login
+    
     func loginRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }
@@ -133,6 +146,7 @@ final class LoginRequests : ObservableObject {
                     token = model.access_token
                     isLoading = false
                     isAuth = true
+                    timeOut = true
                     
                     defaults.set(model.access_token, forKey: "authToken")
                     
@@ -150,11 +164,14 @@ final class LoginRequests : ObservableObject {
                     message = error.localizedDescription
                     alertMsg = true
                     isLoading = false
+                    timeOut = false 
                     print("ErrorGetLoginRequestPrivate: \(error.localizedDescription)")
                 }
             }
         }
     }
+    
+    // MARK: - User Auth
     
     func getUserAuth() async {
         await endpointApi.getAuthUser(usr: loginAuth.id, cookie_acccess_token: token) { result in
@@ -182,6 +199,8 @@ final class LoginRequests : ObservableObject {
         }
     }
     
+    // MARK: - Historial
+    
     func getHistorial() async {
         await endpointApi.getHistorial { result in
             DispatchQueue.main.async { [self] in
@@ -201,6 +220,8 @@ final class LoginRequests : ObservableObject {
         }
     }
     
+    // MARK: - GetPayments
+    
     func getPayments() async {
         await endpointApi.getPayments { result in
             DispatchQueue.main.async { [self] in
@@ -219,6 +240,8 @@ final class LoginRequests : ObservableObject {
             }
         }
     }
+    
+    // MARK: - LNURL
     
     func getLNURLRequest() {
         Task {
@@ -246,6 +269,8 @@ final class LoginRequests : ObservableObject {
             }
         }
     }
+    
+    // MARK: - Payments
     
     func paymetsRequest() {
         Task {
@@ -277,6 +302,8 @@ final class LoginRequests : ObservableObject {
         }
     }
     
+    // MARK: - Invoices
+    
     func invoiceRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }
@@ -285,7 +312,7 @@ final class LoginRequests : ObservableObject {
     }
     
     func invoiceRequestPrivate() async {
-        await endpointApi.createInvoice(amount: createInvoice.amount, unit: createInvoice.unit, memo: createInvoice.memo, expiry: createInvoice.expiry, out: createInvoice.out, webhook: createInvoice.webhook, url: createInvoice.url, internal: createInvoice.internal) { result in
+        await endpointApi.createInvoice(amount: createInvoice.amount, unit: createInvoice.unit, memo: createInvoice.memo, expiry: createInvoice.expiry ?? 0, out: createInvoice.out, webhook: createInvoice.webhook ?? "", url: createInvoice.url ?? "", internal: createInvoice.internal ?? false) { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
@@ -304,6 +331,8 @@ final class LoginRequests : ObservableObject {
         }
     }
     
+    // MARK: - Login Out
+    
     func closeSession() {
         self.loginModel = LoginRequest(username: "", password: "")
         if !isAuth {
@@ -311,6 +340,7 @@ final class LoginRequests : ObservableObject {
                 defaults.set(encoded, forKey: "keyLoginRequest")
             }
         }
+        self.timeOut = false
         self.token = ""
         self.message = ""
         self.alertMsg = false

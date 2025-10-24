@@ -44,7 +44,7 @@ struct FaceID : View {
         .environmentObject(security)
         .listStyle(.insetGrouped)
         .toolbar {
-            _titleView(label: LabelText(text: "Face ID & Passcode"))
+            _titleView(label: LabelText(text: "settings-faceid"))
         }
     }
     

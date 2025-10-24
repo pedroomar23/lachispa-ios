@@ -11,11 +11,11 @@ struct CreateInvoice: Decodable, Hashable, Encodable {
     let amount: Int
     let unit: String
     let memo: String
-    let expiry: Int
+    let expiry: Int?
     let out: Bool
-    let webhook: String
-    let url: String
-    let `internal`: Bool
+    let webhook: String?
+    let url: String?
+    let `internal`: Bool?
     
     enum CodingKeys: String, CodingKey {
         case amount = "amount"
@@ -40,7 +40,7 @@ struct CreateInvoice: Decodable, Hashable, Encodable {
         self.`internal` = try container.decode(Bool.self, forKey: .internal)
     }
     
-    init(amount: Int, unit: String, memo: String, expiry: Int, out: Bool, webhook: String, url: String, `internal`: Bool) {
+    init(amount: Int, unit: String, memo: String, expiry: Int?, out: Bool, webhook: String?, url: String?, `internal`: Bool?) {
         self.amount = amount
         self.unit = unit
         self.memo = memo
