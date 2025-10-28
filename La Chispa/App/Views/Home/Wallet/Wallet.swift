@@ -18,6 +18,9 @@ struct Wallet : View {
                 ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                     Section {
                         VStack {
+                            Text(value.name)
+                                .font(.headline)
+                                .padding(.top)
                             Text("Balance")
                                 .font(.headline)
                                 .foregroundStyle(colorScheme == .dark ? .white : .black)
@@ -31,7 +34,7 @@ struct Wallet : View {
                     Section {
                         HStack (alignment: .center, spacing: 1) {
                             NavigationLink {
-                                Invoice()
+                                InvoiceView()
                             } label: {
                                 _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
                             }

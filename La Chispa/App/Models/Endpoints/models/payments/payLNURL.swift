@@ -1,50 +1,54 @@
 //
-//  createInvoice.swift
+//  payLNURL.swift
 //  La Chispa
 //
-//  Created by Pedro Omar  on 9/18/25.
+//  Created by Pedro Omar  on 10/27/25.
 //
 
 import Foundation
 
-struct CreateInvoice: Decodable, Hashable, Encodable {
-    let bolt11: String
-    let out: Bool
+struct PayLNURLRequest: Decodable, Hashable, Encodable {
+    let description_hash: String
+    let callback: String
     let amount: Int
+    let comment: String
+    let description: String
     let unit: String
-    let memo: String?
     
     enum CodingKeys: String, CodingKey {
-        case bolt11 = "bolt11"
-        case out = "out"
+        case description_hash = "description_hash"
+        case callback = "callback"
         case amount = "amount"
+        case comment = "comment"
+        case description = "description"
         case unit = "unit"
-        case memo = "memo"
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.bolt11 = try container.decode(String.self, forKey: .bolt11)
-        self.out = try container.decode(Bool.self, forKey: .out)
+        self.description_hash = try container.decode(String.self, forKey: .description_hash)
+        self.callback = try container.decode(String.self, forKey: .callback)
         self.amount = try container.decode(Int.self, forKey: .amount)
+        self.comment = try container.decode(String.self, forKey: .comment)
+        self.description = try container.decode(String.self, forKey: .description)
         self.unit = try container.decode(String.self, forKey: .unit)
-        self.memo = try container.decodeIfPresent(String.self, forKey: .memo)
     }
     
-    init(bolt11: String, out: Bool, amount: Int, unit: String, memo: String?) {
-        self.bolt11 = bolt11
-        self.out = out
+    init(description_hash: String, callback: String, amount: Int, comment: String, description: String, unit: String) {
+        self.description_hash = description_hash
+        self.callback = callback
         self.amount = amount
+        self.comment = comment
+        self.description = description
         self.unit = unit
-        self.memo = memo
     }
 }
 
-struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
+struct PayLNURLResponse: Decodable, Hashable, Encodable {
     let checking_id: String
     let payment_hash: String
     let wallet_id: String
-    let amount: Int 
+    let amount: Int
     let fee: Int
     let bolt11: String
     let fiat_provider: String?
@@ -52,9 +56,9 @@ struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
     let memo: String?
     let expiry: String
     let webhook: String?
-    let webhook_status: Int?
+    let webhook_status: String?
     let preimage: String
-    let tag: String?
+    let tag: String
     let `extension`: String?
     let time: String
     let created_at: String
@@ -91,23 +95,23 @@ struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
         self.amount = try container.decode(Int.self, forKey: .amount)
         self.fee = try container.decode(Int.self, forKey: .fee)
         self.bolt11 = try container.decode(String.self, forKey: .bolt11)
-        self.fiat_provider = try container.decodeIfPresent(String.self, forKey: .fiat_provider) ?? ""
+        self.fiat_provider = try container.decodeIfPresent(String.self, forKey: .fiat_provider)
         self.status = try container.decode(String.self, forKey: .status)
-        self.memo = try container.decode(String.self, forKey: .memo)
+        self.memo = try container.decodeIfPresent(String.self, forKey: .memo)
         self.expiry = try container.decode(String.self, forKey: .expiry)
-        self.webhook = try container.decodeIfPresent(String.self, forKey: .webhook) ?? ""
-        self.webhook_status = try container.decodeIfPresent(Int.self, forKey: .webhook_status)
+        self.webhook = try container.decodeIfPresent(String.self, forKey: .webhook)
+        self.webhook_status = try container.decodeIfPresent(String.self, forKey: .webhook_status)
         self.preimage = try container.decode(String.self, forKey: .preimage)
-        self.tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
-        self.extension = try container.decodeIfPresent(String.self, forKey: .extension) ?? ""
+        self.tag = try container.decode(String.self, forKey: .tag)
+        self.extension = try container.decodeIfPresent(String.self, forKey: .extension)
         self.time = try container.decode(String.self, forKey: .time)
         self.created_at = try container.decode(String.self, forKey: .created_at)
         self.updated_at = try container.decode(String.self, forKey: .updated_at)
-        self.extra = try container.decodeIfPresent(ExtraData.self.self, forKey: .extra)
+        self.extra = try container.decodeIfPresent(ExtraData.self, forKey: .extra)
     }
     
-    init(cheking_id: String, payment_hash: String, wallet_id: String, amount: Int, fee: Int, bolt11: String, fiat_provider: String?, status: String, memo: String, expiry: String, webhook: String?, webhook_status: Int?, preimage: String, tag: String?, `extension`: String?, time: String, created_at: String, updated_at: String, extra: ExtraData?) {
-        self.checking_id = cheking_id
+    init(checking_id: String, payment_hash: String, wallet_id: String, amount: Int, fee: Int, bolt11: String, fiat_provider: String?, status: String, memo: String?, expiry: String, webhook: String?, webhook_status: String?, preimage: String, tag: String, `extension`: String, time: String, created_at: String, updated_at: String, extra: ExtraData?) {
+        self.checking_id = checking_id
         self.payment_hash = payment_hash
         self.wallet_id = wallet_id
         self.amount = amount
@@ -126,34 +130,5 @@ struct CreateInvoiceResponse: Decodable, Hashable, Encodable {
         self.created_at = created_at
         self.updated_at = updated_at
         self.extra = extra
-    }
-}
-
-struct ExtraData: Decodable, Hashable, Encodable {
-    let wallet_fiat_currency: String
-    let wallet_fiat_amount: Double
-    let wallet_fiat_rate: Double
-    let wallet_btc_rate: Double
-    
-    enum CodingKeys: String, CodingKey {
-        case wallet_fiat_currency = "wallet_fiat_currency"
-        case wallet_fiat_amount = "wallet_fiat_amount"
-        case wallet_fiat_rate = "wallet_fiat_rate"
-        case wallet_btc_rate = "wallet_btc_rate"
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.wallet_fiat_currency = try container.decode(String.self, forKey: .wallet_fiat_currency)
-        self.wallet_fiat_amount = try container.decode(Double.self, forKey: .wallet_fiat_amount)
-        self.wallet_fiat_rate = try container.decode(Double.self, forKey: .wallet_fiat_rate)
-        self.wallet_btc_rate = try container.decode(Double.self, forKey: .wallet_btc_rate)
-    }
-    
-    init(wallet_fiat_currency: String, wallet_fiat_amount: Double, wallet_fiat_rate: Double, wallet_btc_rate: Double) {
-        self.wallet_fiat_currency = wallet_fiat_currency
-        self.wallet_fiat_amount = wallet_fiat_amount
-        self.wallet_fiat_rate = wallet_fiat_rate
-        self.wallet_btc_rate = wallet_btc_rate
     }
 }

@@ -34,7 +34,11 @@ struct ReceiveInvoice : View {
                     Button {
                         loginRequest.invoiceRequest()
                     } label: {
-                        _labelButton(label: LabelText(text: "Solicitar Monto"))
+                        if loginRequest.isInvoice {
+                            ProgressBar(color: .blue)
+                        } else {
+                            _labelButton(label: LabelText(text: "Solicitar Monto"))
+                        }
                     }
                     .buttonStyle(.plain)
                     .sheet(isPresented: $loginRequest.isInvoice, content: {

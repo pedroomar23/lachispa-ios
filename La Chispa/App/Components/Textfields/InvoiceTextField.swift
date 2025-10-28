@@ -82,7 +82,7 @@ struct InvoiceTextfield : UIViewRepresentable {
         let color : UIColor = colorScheme == .dark ? .blue : .blue
         textfield.textColor = color
         
-        let borderColor : UIColor = colorScheme == .dark ? .blue : .blue
+        let borderColor : UIColor = colorScheme == .dark ? .white : .blue
         textfield.layer.borderColor = borderColor.cgColor
     }
 }

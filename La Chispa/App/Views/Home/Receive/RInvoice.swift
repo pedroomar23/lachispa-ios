@@ -19,12 +19,7 @@ struct RInvoice : View {
             List {
                 _invoiceResponse(response: loginRequest.paymentResponse)
             }
-            .task {
-                loginRequest.invoiceRequest()
-            }
-            .refreshable {
-                loginRequest.invoiceRequest()
-            }
+            .interactiveDismissDisabled()
             .listStyle(.insetGrouped)
             .toolbar {
                 _toolbar(label: LabelIcon(text: "Receive Invoice", icon: "xmark"))
@@ -63,7 +58,7 @@ struct RInvoice : View {
             } else {
                 ProgressBar(color: .blue)
                     .task {
-                        loginRequest.generateQRCode(from: loginRequest.createInvoice.memo)
+                        loginRequest.generateQRCode(from: loginRequest.paymentbolt11)
                     }
             }
         }
@@ -74,7 +69,7 @@ struct RInvoice : View {
                     .padding()
                 Button {
                     self.alertMsg.toggle()
-                    _copy(text: loginRequest.createInvoice.memo)
+                    _copy(text: loginRequest.paymentbolt11)
                 } label: {
                     Image(systemName: "document.on.document")
                         .font(.system(size: 20, weight: .medium))
@@ -91,7 +86,7 @@ struct RInvoice : View {
     }
     
     private func _copy(text: String) {
-        UIPasteboard.general.string = loginRequest.createInvoice.memo
+        UIPasteboard.general.string = loginRequest.paymentbolt11
     }
 }
 

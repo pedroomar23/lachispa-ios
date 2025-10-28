@@ -31,7 +31,11 @@ class EndpointsApi {
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.login.url.absoluteString)")
         
-        let loginRequest = LoginRequest(username: username, password: password)
+        let loginRequest = LoginRequest(
+            username: username,
+            password: password
+        )
+        print("JSON Response: \(loginRequest)")
         
         do {
             let jsonBody = try JSONEncoder().encode(loginRequest)
@@ -121,7 +125,12 @@ class EndpointsApi {
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.register.url.absoluteString)")
         
-        let register = RegisterRequest(email: email, username: username, password: password, password_repeat: password_repeat)
+        let register = RegisterRequest(
+            email: email,
+            username: username,
+            password: password,
+            password_repeat: password_repeat
+        )
         print("JSON Response: \(register)")
         
         do {
@@ -210,6 +219,59 @@ class EndpointsApi {
     
     // MARK: - Payments
     
+    func payLNURL(description_hash: String, callback: String, amount: Int, comment: String, description: String, unit: String, completion: @escaping @Sendable (Result<PayLNURLResponse, EndpointFailure>) -> Void) async {
+        let decoder = JSONDecoder()
+        var request = URLRequest(url: EndpointUrl.payLNURL.url)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 10
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        
+        logger.info("Initializing Solicite: \(EndpointUrl.payLNURL.url.absoluteString)")
+        
+        let payLNURL = PayLNURLRequest(
+            description_hash: description_hash,
+            callback: callback,
+            amount: amount,
+            comment: comment,
+            description: description,
+            unit: unit
+        )
+        print("JSON Response: \(payLNURL)")
+        
+        do {
+            let jsonBody = try JSONEncoder().encode(payLNURL)
+            request.httpBody = jsonBody
+            
+            let (data, response) = try await session.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+                
+                if let jsonData = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(jsonData)")
+                } else {
+                    print("Server Failure Response")
+                }
+                
+                switch httpResponse.statusCode {
+                case 200:
+                    let payLNURLResponse = try decoder.decode(PayLNURLResponse.self, from: data)
+                    print("JSON Response: \(payLNURLResponse)")
+                    completion(.success(payLNURLResponse))
+                case 401:
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Server Failure Response: \(String(describing: errorDetails))")
+                default:
+                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(httpResponse.statusCode)")))
+                }
+            }
+        } catch {
+            completion(.failure(EndpointFailure.jsonFailure(message: "JSON Failure Response: \(error.localizedDescription)")))
+        }
+    }
+    
     func createPayments(bolt11: String, out: Bool, amount: Int, unit: String, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
@@ -261,7 +323,7 @@ class EndpointsApi {
         }
     }
     
-    func createInvoice(amount: Int, unit: String, memo: String, expiry: Int, out: Bool, webhook: String, url: String, `internal`: Bool, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
+    func createInvoice(bolt11: String, out: Bool, amount: Int, unit: String, memo: String?, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
         request.httpMethod = "POST"
@@ -273,14 +335,11 @@ class EndpointsApi {
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
         
         let createInvoice: [String: Any] = [
+            "bolt11": bolt11,
+            "out": out,
             "amount": amount,
             "unit": unit,
-            "memo": memo,
-            "expiry": expiry,
-            "out": false,
-            "webhook": webhook,
-            "url": url,
-            "internal": `internal`
+            "memo": memo ?? ""
         ]
         print("JSON Response: \(createInvoice)")
         
