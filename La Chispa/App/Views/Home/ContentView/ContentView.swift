@@ -17,14 +17,7 @@ struct ContentView : View {
     
     var body : some View {
         GeometryReader { geo in
-            if loginRequest.isLoading {
-                ProgressView("wallet-progress", value: 1.0)
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .task {
-                        await loginRequest.getUserAuth()
-                    }
-            } else {
+            if #available(iOS 16, *) {
                 TabView(selection: $selectedTab) {
                     Wallet()
                         .tabItem {
@@ -40,7 +33,34 @@ struct ContentView : View {
                         }
                         .tag(1)
                         .environmentObject(security)
-                }.environment(\.screenSize, geo.size)
+                }
+                .environment(\.screenSize, geo.size)
+                .accentColor(colorScheme == .dark ? .white : .blue)
+            } else {
+                RefreshableScrollView(isLoading: $loginRequest.isAuth) {
+                    Task {
+                        await loginRequest.getUserAuth()
+                    }
+                } content: {
+                    TabView(selection: $selectedTab) {
+                        Wallet()
+                            .tabItem {
+                                Text(Tab.wallet.rawValue)
+                                Image(systemName: Tab.wallet.sistemImage)
+                            }
+                            .tag(0)
+                            .environmentObject(loginRequest)
+                        Settings()
+                            .tabItem {
+                                Text(Tab.settings.rawValue)
+                                Image(systemName: Tab.settings.sistemImage)
+                            }
+                            .tag(1)
+                            .environmentObject(security)
+                    }
+                    .environment(\.screenSize, geo.size)
+                    .accentColor(colorScheme == .dark ? .white : .blue)
+                }
             }
         }
     }

@@ -22,7 +22,7 @@ struct Invoice : View {
                     Section {
                         HStack (alignment: .center, spacing: 1) {
                             LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
-                                .frame(width: 300, height: 50)
+                                .frame(height: 53)
                                 .padding()
                             Button {
                                 self.qrCode.toggle()
@@ -71,7 +71,7 @@ struct Invoice : View {
                 Section {
                     HStack (alignment: .center, spacing: 1) {
                         LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
-                            .frame(width: 300, height: 50)
+                            .frame(height: 53)
                             .padding()
                         Button {
                             self.qrCode.toggle()

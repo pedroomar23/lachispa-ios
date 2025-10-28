@@ -1,13 +1,13 @@
 //
-//  Swap.swift
+//  FixedFloat.swift
 //  La Chispa
 //
-//  Created by Pedro Omar  on 10/20/25.
+//  Created by Pedro Omar  on 10/26/25.
 //
 
 import SwiftUI
 
-struct Swap : View {
+struct FixedFloat : View {
     
     var body : some View {
         ContentNavigation {
@@ -17,5 +17,5 @@ struct Swap : View {
 }
 
 #Preview {
-    Swap()
+    FixedFloat()
 }

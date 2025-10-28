@@ -38,7 +38,7 @@
 "invoice-view" = "Send";
 "invoice-receive" = "Receive";
 "invoice-pay" = "Pay";
-"invoice-bolt11" = "Invoice or Address";
+"invoice-bolt11" = "Invoice or Ligtning Network Address";
 "invoice-lnurlconnect" = "Connect";
 
 // MARK: - Settings

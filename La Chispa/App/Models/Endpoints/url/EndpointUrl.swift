@@ -9,7 +9,6 @@ import Foundation
 
 enum EndpointUrl {
     private static let urlApi = "https://lachispa.me/api/v1"
-    private static let lnURLP = "https://lachispa.me/"
     private static let urlBolts = "https://lachispa.me/boltz/api/v1"
     
     case login
@@ -20,6 +19,7 @@ enum EndpointUrl {
     case paymentsForDay
     case paymentsTagCount
     case getPayments
+    case payLNURL
     
     case getListSwap
     case createSwap
@@ -34,6 +34,7 @@ enum EndpointUrl {
         case .getPayments: return "/payments"
         case .paymentsForDay: return "/payments/history?group=day"
         case .paymentsTagCount: return "/payments/stats/count?count_by=tag"
+        case .payLNURL: return "/payments/lnurl"
             
         case .getListSwap: return "/swap?all_wallets=false"
         case .createSwap: return "/swap"

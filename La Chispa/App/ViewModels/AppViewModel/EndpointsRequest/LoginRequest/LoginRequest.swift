@@ -15,19 +15,22 @@ final class LoginRequests : ObservableObject {
     @Published var loginResponse : LoginResponse = LoginResponse(access_token: "", token_type: "")
     @Published var loginAuth : LoginAuth = LoginAuth(id: "", created_at: "", updated_at: "", email: "", username: "", pubkey: "", external_id: "", extensions: [""], wallets: [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 870852, extra: WalletExtra(icon: "", color: "", pinned: false))], admin: false, super_user: false, fiat_providers: [""], has_password: false, extra: Extra(email_verified: false, first_name: "", last_name: "", display_name: "", picture: "", provider: "", visible_wallet_count: 10))
     @Published var historial : [HistorialResponse] = [HistorialResponse(date: "", income: 0, spending: 0, balance: 0)]
-    @Published var createInvoice : CreateInvoice = CreateInvoice(amount: 0, unit: "sat", memo: "", expiry: 0, out: false, webhook: "", url: "", internal: false)
+    @Published var createInvoice : CreateInvoice = CreateInvoice(bolt11: "", out: false, amount: 1000, unit: "", memo: "")
     @Published var createPayments : CreatePayments = CreatePayments(bolt11: "", out: true, amount: 0, unit: "")
     @Published var paymentResponse : CreateInvoiceResponse = CreateInvoiceResponse(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     @Published var getPaymentsAllUsers : GetPaymentsAllUsers = GetPaymentsAllUsers(field: "", total: 0)
     @Published var getPayments : [GetPayments] = [GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))]
     @Published var isGetPayments : GetPayments = GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))
     @Published var getLNURLResponse : GetLNURLUsername = GetLNURLUsername(tag: "", callback: "", minSendable: 1000, maxSendable: 2100000000000, metadata: "", commentAllowed: 500, allowsNostr: true, nostrPubkey: "")
+    @Published var payLNURL : PayLNURLRequest = PayLNURLRequest(description_hash: "", callback: "", amount: 0, comment: "", description: "", unit: "")
+    @Published var payLNURLResponse : PayLNURLResponse = PayLNURLResponse(checking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     
     @AppStorage("token") var token : String = ""
     @AppStorage("email") var email : String = ""
     @AppStorage("usuario") var username : String = ""
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
     @Published var paymentsUnit : String =  ""
+    @Published var payLNURLs : String = ""
     
     @Published var isInvoice : Bool = false
     @AppStorage("getLNURL") var isLNURL : Bool = false
@@ -270,6 +273,35 @@ final class LoginRequests : ObservableObject {
         }
     }
     
+    func payLNURLRequest() {
+        Task {
+            DispatchQueue.main.async { [self] in isLoading = false }
+            await payLNURLRequestPrivate()
+        }
+    }
+    
+    func payLNURLRequestPrivate() async {
+        await endpointApi.payLNURL(description_hash: payLNURL.description_hash, callback: payLNURLs, amount: payLNURL.amount, comment: payLNURL.comment, description: payLNURL.description, unit: payLNURL.unit) { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    payLNURLResponse = model
+                    paymentbolt11 = model.bolt11
+                    isLoading = false
+                    isAuth = true
+                    isLNURL = true
+                    alertMsg = false
+                    defaults.set(loginResponse.access_token, forKey: "authToken")
+                case let .failure(error):
+                    message = error.localizedDescription
+                    alertMsg = true
+                    isLoading = false
+                    print("ErrorPayLNURLPrivate: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
     // MARK: - Payments
     
     func paymetsRequest() {
@@ -312,7 +344,7 @@ final class LoginRequests : ObservableObject {
     }
     
     func invoiceRequestPrivate() async {
-        await endpointApi.createInvoice(amount: createInvoice.amount, unit: createInvoice.unit, memo: createInvoice.memo, expiry: createInvoice.expiry ?? 0, out: createInvoice.out, webhook: createInvoice.webhook ?? "", url: createInvoice.url ?? "", internal: createInvoice.internal ?? false) { result in
+        await endpointApi.createInvoice(bolt11: paymentbolt11, out: createInvoice.out, amount: createInvoice.amount, unit: createInvoice.unit,  memo: createInvoice.memo ?? "") { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):

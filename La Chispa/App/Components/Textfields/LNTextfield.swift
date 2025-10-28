@@ -60,7 +60,7 @@ struct LNTextfield : UIViewRepresentable {
     }
     
     private func borderColor(textfield: UITextField, colorScheme: ColorScheme) {
-        let borderColor : UIColor = colorScheme == .dark ? .blue : .blue
+        let borderColor : UIColor = colorScheme == .dark ? .white : .blue
         textfield.layer.borderColor = borderColor.cgColor
     }
     
