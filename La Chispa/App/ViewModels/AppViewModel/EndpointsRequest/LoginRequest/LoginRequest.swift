@@ -24,16 +24,18 @@ final class LoginRequests : ObservableObject {
     @Published var getLNURLResponse : GetLNURLUsername = GetLNURLUsername(tag: "", callback: "", minSendable: 1000, maxSendable: 2100000000000, metadata: "", commentAllowed: 500, allowsNostr: true, nostrPubkey: "")
     @Published var payLNURL : PayLNURLRequest = PayLNURLRequest(description_hash: "", callback: "", amount: 0, comment: "", description: "", unit: "")
     @Published var payLNURLResponse : PayLNURLResponse = PayLNURLResponse(checking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
+    @Published var payLNUrlNFC : PaymentNFCRequest = PaymentNFCRequest(lnurl_w: "")
     
     @AppStorage("token") var token : String = ""
     @AppStorage("email") var email : String = ""
     @AppStorage("usuario") var username : String = ""
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
+    @AppStorage("wallets") var wallets: String = ""
     @Published var paymentsUnit : String =  ""
     @Published var payLNURLs : String = ""
     
     @Published var isInvoice : Bool = false
-    @AppStorage("getLNURL") var isLNURL : Bool = false
+    @Published var isLNURL : Bool = false
     
     @Published var isLoading : Bool = false
     @Published var timeOut : Bool = false
@@ -188,6 +190,10 @@ final class LoginRequests : ObservableObject {
                     email = model.email
                     token = self.loginResponse.access_token
                     defaults.set(self.loginResponse.access_token, forKey: "authToken")
+                    
+                    if wallets.isEmpty {
+                        wallets = model.wallets[0].id
+                    }
                     
                     Task {
                         await getPayments()

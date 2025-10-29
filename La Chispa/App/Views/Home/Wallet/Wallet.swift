@@ -16,61 +16,60 @@ struct Wallet : View {
         ContentNavigation {
             ScrollView (.vertical, showsIndicators: false) {
                 ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                    Section {
-                        VStack {
-                            Text(value.name)
-                                .font(.headline)
-                                .padding(.top)
-                            Text("Balance")
-                                .font(.headline)
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                            Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                .font(.subheadline)
-                                .font(.system(size: 40))
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        }.padding(.top)
-                    }
-                    
-                    Section {
-                        HStack (alignment: .center, spacing: 1) {
-                            NavigationLink {
-                                InvoiceView()
-                            } label: {
-                                _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
-                            }
-                            
-                            NavigationLink {
-                                CreatesInvoice()
-                            } label: {
-                                _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
-                            }
+                    if value.id == loginRequest.wallets {
+                        Section {
+                            VStack {
+                                Text("Balance")
+                                    .font(.headline)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                    .font(.subheadline)
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            }.padding(.top)
                         }
-                    }
-                  
-                    Section {
-                        VStack {
-                            Text("Historial")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.title2)
-                                .padding()
-                            if loginRequest.historial.isEmpty {
-                                _historialEmpty()
-                            } else {
-                                ForEach(loginRequest.getPayments, id: \.self) { value in
-                                    NavigationLink {
-                                        PaymentsList()
-                                    } label: {
-                                        _historial(value: value)
-                                    }
-                                    .padding()
-                                    .background {
-                                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                            .fill(Color(.tertiarySystemGroupedBackground))
-                                    }
+                        
+                        Section {
+                            HStack (alignment: .center, spacing: 1) {
+                                NavigationLink {
+                                    InvoiceView()
+                                } label: {
+                                    _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                }
+                                
+                                NavigationLink {
+                                    CreatesInvoice()
+                                } label: {
+                                    _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                                 }
                             }
-                        }.padding(.horizontal)
+                        }
+                      
+                        Section {
+                            VStack {
+                                Text("Historial")
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.title2)
+                                    .padding()
+                                if loginRequest.historial.isEmpty {
+                                    _historialEmpty()
+                                } else {
+                                    ForEach(loginRequest.getPayments, id: \.self) { value in
+                                        NavigationLink {
+                                            PaymentsList()
+                                        } label: {
+                                            _historial(value: value)
+                                        }
+                                        .padding()
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                .fill(Color(.tertiarySystemGroupedBackground))
+                                        }
+                                    }
+                                }
+                            }.padding(.horizontal)
+                        }
                     }
                 }
             }
@@ -96,6 +95,11 @@ struct Wallet : View {
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
+            }
+            Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                    Text("\(value.id)").tag(value.id)
+                }
             }
         }
         

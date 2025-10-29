@@ -44,8 +44,6 @@ struct LNURL : View {
                     .sheet(isPresented: $loginRequest.isLNURL) {
                         PayLNURLInvoice()
                     }
-                    .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
-                    .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
                 }
                 .listRowBackground(Color.clear)
                 .padding(.horizontal)
@@ -77,8 +75,6 @@ struct LNURL : View {
                         _labelButton(label: LabelText(text: "Pay"))
                     }
                 }
-                .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
-                .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
                 .sheet(isPresented: $loginRequest.isLNURL) {
                     PayLNURLInvoice()
                 }
