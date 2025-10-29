@@ -16,7 +16,13 @@ struct PayLNURLInvoice : View {
     var body : some View {
         ContentNavigation {
             List {
+                Section {
+                    _preview(label: LabelIcon(text: "Pay Successfully", icon: "checkmark.seal.fill"))
+                }
                 
+                Section {
+                    
+                }
             }
             .listStyle(.insetGrouped)
             .interactiveDismissDisabled()
@@ -42,6 +48,22 @@ struct PayLNURLInvoice : View {
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
         }
+    }
+    
+    @ViewBuilder
+    private func _preview(label: LabelIcon) -> some View {
+        VStack {
+            Image(systemName: label.icon)
+                .font(.system(size: 50, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .blue)
+                .padding(2)
+            Text(label.text)
+                .lineLimit(1)
+                .font(.headline)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .listRowBackground(Color.clear)
     }
 }
 

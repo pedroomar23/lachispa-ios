@@ -39,9 +39,6 @@ struct Receive : View {
                 }
                 .padding(.horizontal)
                 .listRowBackground(Color.clear)
-                .toolbar {
-                    _titleView(label: LabelText(text: "Receive"))
-                }
             }
         } else {
             VStack {
@@ -73,18 +70,6 @@ struct Receive : View {
             }
             .padding(.horizontal)
             .listRowBackground(Color.clear)
-            .toolbar {
-                _titleView(label: LabelText(text: "Receive"))
-            }
-        }
-    }
-    
-    @ToolbarContentBuilder
-    private func _titleView(label: LabelText) -> some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Text(label.text)
-                .fontWeight(.bold)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
         }
     }
     

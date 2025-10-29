@@ -11,6 +11,9 @@ enum EndpointUrl {
     private static let urlApi = "https://lachispa.me/api/v1"
     private static let urlBolts = "https://lachispa.me/boltz/api/v1"
     
+    case wallet
+    case updateWallet
+  
     case login
     case userAuth
     case register
@@ -20,12 +23,16 @@ enum EndpointUrl {
     case paymentsTagCount
     case getPayments
     case payLNURL
+    case payLNURLNFC
     
     case getListSwap
     case createSwap
     
     var path: String {
         switch self {
+        case .wallet: return "/wallet"
+        case .updateWallet: return "/wallet"
+       
         case .login: return "/auth"
         case .userAuth: return "/auth"
         case .register: return "/auth/register"
@@ -35,6 +42,7 @@ enum EndpointUrl {
         case .paymentsForDay: return "/payments/history?group=day"
         case .paymentsTagCount: return "/payments/stats/count?count_by=tag"
         case .payLNURL: return "/payments/lnurl"
+        case .payLNURLNFC: return "/payments/lnurl/pay-with-nfc"
             
         case .getListSwap: return "/swap?all_wallets=false"
         case .createSwap: return "/swap"
