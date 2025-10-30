@@ -37,7 +37,7 @@ struct ReceiveInvoice : View {
                         if loginRequest.isInvoice {
                             ProgressBar(color: .blue)
                         } else {
-                            _labelButton(label: LabelText(text: "Solicitar Monto"))
+                            _labelButton(label: LabelText(text: "invoice-request"))
                         }
                     }
                     .buttonStyle(.plain)
@@ -55,19 +55,13 @@ struct ReceiveInvoice : View {
             }
             .listStyle(.plain)
             .interactiveDismissDisabled()
-            .background {
-                Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all)
-            }
-            .toolbar {
-                _toolbar()
-            }
         }
     }
     
     @ToolbarContentBuilder
-    private func _toolbar() -> some ToolbarContent {
+    private func _toolbar(label: LabelText) -> some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Text("Invoice")
+            Text(label.text)
                 .fontWeight(.bold)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
         }

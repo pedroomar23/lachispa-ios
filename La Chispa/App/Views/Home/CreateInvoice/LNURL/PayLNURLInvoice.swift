@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PayLNURLInvoice : View {
     
-    @StateObject var loginRequet = LoginRequests()
+    @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
@@ -17,17 +17,27 @@ struct PayLNURLInvoice : View {
         ContentNavigation {
             List {
                 Section {
-                    _preview(label: LabelIcon(text: "Pay Successfully", icon: "checkmark.seal.fill"))
+                    _preview(label: LabelIcon(text: "invoice-pay-success", icon: "checkmark.seal.fill"))
                 }
                 
                 Section {
-                    
+                    ForEach(loginRequest.getPayments, id: \.checking_id) { value in
+                        if value.checking_id == loginRequest.getPayment {
+                            _paymentResponse(response: value)
+                        }
+                    }
                 }
+            }
+            .task {
+                await loginRequest.getPayments()
+            }
+            .refreshable {
+                await loginRequest.getPayments()
             }
             .listStyle(.insetGrouped)
             .interactiveDismissDisabled()
             .toolbar {
-                _toolbar(label: LabelIcon(text: "Payment Invoice", icon: "xmark"))
+                _toolbar(label: LabelIcon(text: "invoice-title-pay", icon: "xmark"))
             }
         }
     }
@@ -64,6 +74,65 @@ struct PayLNURLInvoice : View {
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .listRowBackground(Color.clear)
+    }
+    
+    @ViewBuilder
+    private func _paymentResponse(response: GetPayments) -> some View {
+        HStack (alignment: .center, spacing: 5) {
+            Image(systemName: "calendar")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text("invoice-date")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text("\(loginRequest.formatDate(response.time))")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+        
+        HStack (alignment: .center, spacing: 5) {
+            Image(systemName: "purchased")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text("Hash:")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(response.payment_hash)
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+        
+        HStack (alignment: .center, spacing: 5) {
+            Image(systemName: "staroflife.circle")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text("Fee:")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text("\(loginRequest.formatSats(response.fee))")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+        
+        HStack (alignment: .center, spacing: 5) {
+            Image(systemName: "checkmark.rectangle.stack.fill")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text("invoice-status")
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(response.status)
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

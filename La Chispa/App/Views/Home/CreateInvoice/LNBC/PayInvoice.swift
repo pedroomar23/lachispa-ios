@@ -17,10 +17,14 @@ struct PayInvoice : View {
         ContentNavigation {
             List {
                 Section {
-                    _titleView(label: LabelText(text: "Pay Successfully"))
+                    _titleView(label: LabelText(text: "invoice-pay-success"))
                 }
                 Section {
-                    _paymentResponse(response: loginRequest.isGetPayments)
+                    ForEach(loginRequest.getPayments, id: \.checking_id) { value in
+                        if value.checking_id == loginRequest.getPayment {
+                            _paymentResponse(response: value)
+                        }
+                    }
                 }
             }
             .task {
@@ -33,11 +37,10 @@ struct PayInvoice : View {
                 _toolbar()
             }
             .listStyle(.insetGrouped)
+            .navigationBarTitle("invoice-title-pay", displayMode: .inline)
             .background {
                 Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all)
             }
-            .navigationTitle("Pay Invoice")
-            .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled()
         }
     }
@@ -77,25 +80,11 @@ struct PayInvoice : View {
             Image(systemName: "calendar")
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("Fecha:")
+            Text("invoice-date")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.time)
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center, spacing: 5) {
-            Image(systemName: "exclamationmark.circle")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("Description:")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.webhook ?? "")
+            Text("\(loginRequest.formatDate(response.time))")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -123,7 +112,7 @@ struct PayInvoice : View {
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(response.fee)")
+            Text("\(loginRequest.formatSats(response.fee))")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -133,7 +122,7 @@ struct PayInvoice : View {
             Image(systemName: "checkmark.rectangle.stack.fill")
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("Estado:")
+            Text("invoice-status")
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)

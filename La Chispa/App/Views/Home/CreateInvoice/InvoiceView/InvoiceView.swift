@@ -21,7 +21,7 @@ struct InvoiceView : View {
             .padding(.horizontal)
             .pickerStyle(.segmented)
             .toolbar {
-                _toolbar(label: LabelText(text: "Send"))
+                _toolbar(label: LabelText(text: "invoice-view"))
             }
             
             switch selection {
@@ -43,8 +43,8 @@ struct InvoiceView : View {
     }
     
     enum LNView : LocalizedStringKey {
-        case lnbc = "LNBC"
-        case lnURL = "LNURL"
+        case lnbc = "lnbc"
+        case lnURL = "lnURL"
     }
 }
 

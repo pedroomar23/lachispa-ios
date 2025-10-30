@@ -15,7 +15,11 @@ struct PaymentsList : View {
     var body : some View {
         ContentNavigation {
             List {
-                _getInvoice(value: loginRequest.isGetPayments)
+                ForEach(loginRequest.getPayments, id: \.checking_id) { value in
+                    if value.checking_id == loginRequest.getPayment {
+                        _getInvoice(value: value)
+                    }
+                }
             }
             .task {
                 await loginRequest.getPayments()
@@ -25,7 +29,7 @@ struct PaymentsList : View {
             }
             .listStyle(.insetGrouped)
             .toolbar {
-                _titleView(label: LabelText(text: "Lightning Invoice"))
+                _titleView(label: LabelText(text: "invoice-lightning"))
             }
         }
     }
@@ -76,7 +80,7 @@ struct PaymentsList : View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Text(value.created_at)
+                Text("\(loginRequest.formatDate(value.created_at))")
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
@@ -120,7 +124,7 @@ struct PaymentsList : View {
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
                 Text(value.status)
                     .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
             }.frame(maxWidth: .infinity, alignment: .leading)
         }

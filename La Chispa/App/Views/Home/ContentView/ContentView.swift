@@ -17,31 +17,36 @@ struct ContentView : View {
     
     var body : some View {
         GeometryReader { geo in
-            if #available(iOS 16, *) {
-                TabView(selection: $selectedTab) {
-                    Wallet()
-                        .tabItem {
-                            Text(Tab.wallet.rawValue)
-                            Image(systemName: Tab.wallet.sistemImage)
+            if !loginRequest.timeOut {
+                if !loginRequest.isLoading {
+                    ProgressView("wallet-progress", value: 1.0)
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                        .task {
+                            await loginRequest.getUserAuth()
                         }
-                        .tag(0)
-                        .environmentObject(loginRequest)
-                    Settings()
-                        .tabItem {
-                            Text(Tab.settings.rawValue)
-                            Image(systemName: Tab.settings.sistemImage)
+                } else {
+                    HStack (alignment: .center, spacing: 5) {
+                        Button {
+                            Task {
+                                await loginRequest.getUserAuth()
+                            }
+                        } label: {
+                            _labelButton(label: LabelText(text: "Continue Sesion"))
                         }
-                        .tag(1)
-                        .environmentObject(security)
+                        .buttonStyle(.plain)
+                        
+                        Button {
+                            loginRequest.closeSession()
+                        } label: {
+                            _labelButton(label: LabelText(text: "Login Out"))
+                        }
+                        .buttonStyle(.plain)
+                        
+                    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
-                .environment(\.screenSize, geo.size)
-                .accentColor(colorScheme == .dark ? .white : .blue)
             } else {
-                RefreshableScrollView(isLoading: $loginRequest.isAuth) {
-                    Task {
-                        await loginRequest.getUserAuth()
-                    }
-                } content: {
+                if #available(iOS 16, *) {
                     TabView(selection: $selectedTab) {
                         Wallet()
                             .tabItem {
@@ -60,6 +65,31 @@ struct ContentView : View {
                     }
                     .environment(\.screenSize, geo.size)
                     .accentColor(colorScheme == .dark ? .white : .blue)
+                } else {
+                    RefreshableScrollView(isLoading: $loginRequest.isAuth) {
+                        Task {
+                            await loginRequest.getUserAuth()
+                        }
+                    } content: {
+                        TabView(selection: $selectedTab) {
+                            Wallet()
+                                .tabItem {
+                                    Text(Tab.wallet.rawValue)
+                                    Image(systemName: Tab.wallet.sistemImage)
+                                }
+                                .tag(0)
+                                .environmentObject(loginRequest)
+                            Settings()
+                                .tabItem {
+                                    Text(Tab.settings.rawValue)
+                                    Image(systemName: Tab.settings.sistemImage)
+                                }
+                                .tag(1)
+                                .environmentObject(security)
+                        }
+                        .environment(\.screenSize, geo.size)
+                        .accentColor(colorScheme == .dark ? .white : .blue)
+                    }
                 }
             }
         }
@@ -75,6 +105,18 @@ struct ContentView : View {
             case .settings: return "gearshape"
             }
         }
+    }
+    
+    @ViewBuilder
+    private func _labelButton(label: LabelText) -> some View {
+        Text(label.text)
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.vertical)
+            .frame(width: UIScreen.main.bounds.width - 250)
+            .background(Color(colorScheme == .dark ? .gray : .blue))
+            .clipShape(Capsule())
+            .padding()
     }
 }
 

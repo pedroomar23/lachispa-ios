@@ -27,7 +27,7 @@ struct Settings : View {
                     NavigationLink {
                         About()
                     } label: {
-                        _labelPolicy(label: LabelIcon(text: "About Me", icon: "exclamationmark.circle"))
+                        _labelPolicy(label: LabelIcon(text: "settings-aboutme", icon: "exclamationmark.circle"))
                     }
                 } header: {
                     Text("About Me").textCase(.none)

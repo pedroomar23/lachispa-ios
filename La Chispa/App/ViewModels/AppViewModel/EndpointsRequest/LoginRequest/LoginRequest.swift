@@ -31,6 +31,7 @@ final class LoginRequests : ObservableObject {
     @AppStorage("usuario") var username : String = ""
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
     @AppStorage("wallets") var wallets: String = ""
+    @AppStorage("getPayments") var getPayment : String = ""
     @Published var paymentsUnit : String =  ""
     @Published var payLNURLs : String = ""
     
@@ -185,15 +186,19 @@ final class LoginRequests : ObservableObject {
                 case let .success(model):
                     loginAuth = model
                     isLoading = false
+                    timeOut = true
                     isAuth = true
                     loginModel.username = model.username
                     email = model.email
-                    token = self.loginResponse.access_token
-                    defaults.set(self.loginResponse.access_token, forKey: "authToken")
-                    
-                    if wallets.isEmpty {
-                        wallets = model.wallets[0].id
+                    token = loginResponse.access_token
+                    defaults.set(loginResponse.access_token, forKey: "authToken")
+                   
+                    wallets.removeAll()
+                    for i in model.wallets {
+                        wallets.append(i.id)
                     }
+                    
+                    wallets = model.wallets[0].id
                     
                     Task {
                         await getPayments()
@@ -239,7 +244,15 @@ final class LoginRequests : ObservableObject {
                     getPayments = model
                     isLoading = false
                     isAuth = true
+                    timeOut = true 
                     defaults.set(loginResponse.access_token, forKey: "authToken")
+                    
+                    for i in model {
+                        getPayment.append(i.checking_id)
+                    }
+                    
+                    getPayment = model[0].checking_id
+               
                 case let .failure(error):
                     message = error.localizedDescription
                     isLoading = false
@@ -384,5 +397,11 @@ final class LoginRequests : ObservableObject {
         self.alertMsg = false
         self.isLoading = false
         self.isAuth = false
+    }
+}
+
+extension String {
+    func removingPlus() -> String {
+        return replacingOccurrences(of: "+", with: "")
     }
 }
