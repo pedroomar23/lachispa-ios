@@ -82,7 +82,7 @@ struct Wallet : View {
             .environmentObject(loginRequest)
             .listRowBackground(Color.clear)
             .toolbar {
-                _titleView(label: LabelIcon(text: "wallet-balance", icon: "chevron.down"))
+                _titleView(label: LabelIcon(text: "wallet-view", icon: "chevron.down"))
             }
         }
     }
