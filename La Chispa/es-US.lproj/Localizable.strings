@@ -10,8 +10,62 @@
 
 // MARK: - Login
 
+"login-username" = "Usuario";
+"login-password" = "Contraseña";
+"login-session" = "Iniciar Sesión";
+"login-register" = "Registrarse";
+"login-account" = "¿No tienes Cuentat?";
+"login-register" = "Registrate";
+"login-close" = "Cerrar Sesión";
+"login-addWallet" = "Añadir Wallet";
+
 // MARK: - Change Password
 
-// MARK: - Register
+"forgot-password" = "¿Olvidaste tu Contraseña?";
+"password-change" = "Cambiar Contraseña";
 
-// MARK: - Settings 
+// MARK: - Home
+
+"wallet-view" = "Billetera";
+"wallet-create" = "Billetera Creada";
+"wallet-settings" = "Ajustes";
+"wallet-progress" = "Cargando Datos...";
+"wallet-account" = "Cuenta";
+"wallet-balance" = "Saldo";
+
+// MARK: - Wallet
+
+"wallet-historial" = "Historial";
+
+// MARK: - Invoice
+
+"invoice-lightning" = "Factura Lightning";
+"invoice-view" = "Enviar";
+"invoice-receive" = "Recibir";
+"invoice-pay" = "Pagar";
+"invoice-bolt11" = "Dirección Lightning Network o Invoice";
+"invoice-lnurlconnect" = "Connectar";
+"invoice-pay-success" = "Pago Exitoso";
+"invoice-title-pay" = "Factura de Pago";
+"invoice-date" = "Fecha";
+"invoice-status" = "Estado";
+"invoice-request" = "Solicitar Monto";
+"invoice-amount" = "Monto";
+"invoice-create" = "Crear Factura";
+"invoice-copy" = "Factura Copiada";
+"invoice-alert-copy" = "Tu factura lighthing ha sido copiada al portapapeles";
+
+// MARK: - Settings
+
+"settings-view" = "Ajustes";
+"settings-faceid" = "Face ID & Código";
+"settings-aboutme" = "Sobre Mí";
+"settings-faceidenable" = "Activar Face ID";
+"settings-privacy" = "Política de Privacidad";
+"settings-biometric-immediatley" = "Inmediatamente";
+"settings-biometric-1" = "Después 1 minuto";
+"settings-biometric-5" = "Después 5 minuto";
+"settings-biometric-15" = "Después 15 minuto";
+"settings-biometric-30" = "Después 30 minuto";
+"settings-biometric-locked" = "KeyWifi Blockeado";
+"settings-biometric-unlocked" = "KeyWifi Desbloqueado";

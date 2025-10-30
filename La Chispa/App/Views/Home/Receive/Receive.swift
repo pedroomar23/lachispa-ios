@@ -22,9 +22,9 @@ struct Receive : View {
                     }
                     Section {
                         NavigationLink {
-                            ReceiveInvoice()
+                            ReceiveLNURL()
                         } label: {
-                            _labelButton(label: LabelText(text: "Create Invoice"))
+                            _labelButton(label: LabelText(text: "invoice-create"))
                         }
                         .sheet(isPresented: $loginRequest.isInvoice) {
                             ReceiveInvoice()
@@ -54,7 +54,7 @@ struct Receive : View {
                                 .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
                                 .frame(width: 200, height: 45)
                         } else {
-                            _labelButton(label: LabelText(text: "Create Invoice"))
+                            _labelButton(label: LabelText(text: "invoice-create"))
                         }
                     }
                     .sheet(isPresented: $loginRequest.isInvoice) {

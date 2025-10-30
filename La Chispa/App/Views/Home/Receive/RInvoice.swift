@@ -22,7 +22,7 @@ struct RInvoice : View {
             .interactiveDismissDisabled()
             .listStyle(.insetGrouped)
             .toolbar {
-                _toolbar(label: LabelIcon(text: "Receive Invoice", icon: "xmark"))
+                _toolbar(label: LabelIcon(text: "", icon: "xmark"))
             }
         }
     }
@@ -76,10 +76,10 @@ struct RInvoice : View {
                         .foregroundStyle(colorScheme == .dark ? .white : .black)
                 }
                 .buttonStyle(.plain)
-                .alert("Invoice Copied", isPresented: $alertMsg) {
+                .alert("invoice-copy", isPresented: $alertMsg) {
                     
                 } message: {
-                    Text("Your Lightning Network invoice has been copied to clipboard")
+                    Text("invoice-alert-copy")
                 }
             }
         }

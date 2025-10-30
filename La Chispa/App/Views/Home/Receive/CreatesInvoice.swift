@@ -32,7 +32,7 @@ struct CreatesInvoice : View {
                             if loginRequest.isLoading {
                                 ProgressBar(color: .blue)
                             } else {
-                                _labelButton(label: LabelText(text: "Connect"))
+                                _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
                             }
                         }
                         .alert("Error", isPresented: $loginRequest.alertMsg) {
@@ -43,9 +43,6 @@ struct CreatesInvoice : View {
                         Spacer()
                     }
                     .padding(.horizontal)
-                    .toolbar {
-                        _toolbar(label: LabelText(text: "Receive"))
-                    }
                 }
             } else {
                 Receive().environmentObject(loginRequest)
@@ -69,7 +66,7 @@ struct CreatesInvoice : View {
                             if loginRequest.isLoading {
                                 ProgressBar(color: .blue)
                             } else {
-                                _labelButton(label: LabelText(text: "Connect"))
+                                _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
                             }
                         }
                         .alert("Error", isPresented: $loginRequest.alertMsg) {
@@ -78,9 +75,6 @@ struct CreatesInvoice : View {
                             Text(loginRequest.message)
                         }
                         Spacer()
-                    }
-                    .toolbar {
-                        _toolbar(label: LabelText(text: "Receive"))
                     }
                 }
             } else {

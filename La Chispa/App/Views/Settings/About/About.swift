@@ -21,7 +21,7 @@ struct About : View {
                 Button {
                     self.policy.toggle()
                 } label: {
-                    _labelPolicy(label: LabelIcon(text: "Privacy Policy", icon: "exclamationmark.shield"))
+                    _labelPolicy(label: LabelIcon(text: "settings-privacy", icon: "exclamationmark.shield"))
                 }
                 .sheet(isPresented: $policy) {
                     SafariWebView(url: URL(string: "")!)
@@ -30,7 +30,7 @@ struct About : View {
         }
         .listStyle(.insetGrouped)
         .toolbar {
-            _titleView(label: LabelText(text: "About Me"))
+            _titleView(label: LabelText(text: "settings-aboutme"))
         }
     }
     

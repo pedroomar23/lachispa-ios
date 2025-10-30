@@ -75,7 +75,7 @@ struct Login : View {
                     NavigationLink {
                         NewWallet()
                     } label: {
-                        _labelButton(label: LabelText(text: "Change Wallet"))
+                        _labelButton(label: LabelText(text: "login-addWallet"))
                     }
                    
                     Spacer()

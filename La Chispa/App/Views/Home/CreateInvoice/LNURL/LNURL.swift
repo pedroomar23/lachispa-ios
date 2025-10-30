@@ -38,7 +38,7 @@ struct LNURL : View {
                         if loginRequest.isLNURL {
                             ProgressBar(color: .blue)
                         } else {
-                            _labelButton(label: LabelText(text: "Pay"))
+                            _labelButton(label: LabelText(text: "invoice-pay"))
                         }
                     }
                     .sheet(isPresented: $loginRequest.isLNURL) {
@@ -72,7 +72,7 @@ struct LNURL : View {
                     if loginRequest.isLNURL {
                         ProgressBar(color: .blue)
                     } else {
-                        _labelButton(label: LabelText(text: "Pay"))
+                        _labelButton(label: LabelText(text: "invoice-pay"))
                     }
                 }
                 .sheet(isPresented: $loginRequest.isLNURL) {

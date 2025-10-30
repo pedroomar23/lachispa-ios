@@ -8,6 +8,8 @@
 
 // MARK: - Presentation
 
+
+
 // MARK: - Login
 
 "login-username" = "Username";
@@ -17,6 +19,7 @@
 "login-account" = "¿Don't have account?";
 "login-register" = "Registers";
 "login-close" = "Login Out";
+"login-addWallet" = "Add Wallet";
 
 // MARK: - Change Password
 
@@ -27,7 +30,10 @@
 
 "wallet-view" = "Wallet";
 "wallet-settings" = "Settings";
-"wallet-progress" = "Loading Dates...";
+"wallet-progress" = "Loading Data...";
+"wallet-account" = "Account";
+"wallet-balance" = "Balance";
+"wallet-create" = "Wallet Created";
 
 // MARK: - Wallet
 
@@ -35,13 +41,31 @@
 
 // MARK: - Invoice
 
+"invoice-lightning" = "Lightning Invoice";
 "invoice-view" = "Send";
 "invoice-receive" = "Receive";
 "invoice-pay" = "Pay";
 "invoice-bolt11" = "Invoice or Ligtning Network Address";
 "invoice-lnurlconnect" = "Connect";
+"invoice-pay-success" = "Pay Successfully";
+"invoice-title-pay" = "Payment Invoice";
+"invoice-date" = "Date";
+"invoice-status" = "Status";
+"invoice-request" = "Request Amount";
+"invoice-amount" = "Amount";
+"invoice-create" = "Create Invoice";
+"invoice-copy" = "Invoice Copied";
+"invoice-alert-copy" = "Your Lightning Invoice has been copied to clipboard";
 
 // MARK: - Settings
 
 "settings-view" = "Settings";
 "settings-faceid" = "Face ID & Passcode";
+"settings-faceidenable" = "Enable Face ID";
+"settings-aboutme" = "About Me";
+"settings-privacy" = "Privacy Policy";
+"settings-biometric-immediatley" = "Immediatley";
+"settings-biometric-1" = "After 1 minute";
+"settings-biometric-5" = "After 5 minute";
+"settings-biometric-15" = "After 15 minute";
+"settings-biometric-30" = "After 30 minute";

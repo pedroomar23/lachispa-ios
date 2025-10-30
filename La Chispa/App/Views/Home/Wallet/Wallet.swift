@@ -19,7 +19,7 @@ struct Wallet : View {
                     if value.id == loginRequest.wallets {
                         Section {
                             VStack {
-                                Text("Balance")
+                                Text("wallet-balance")
                                     .font(.headline)
                                     .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 Text("\(loginRequest.formatSats(value.balance_msat)) sats")
@@ -38,7 +38,7 @@ struct Wallet : View {
                                 }
                                 
                                 NavigationLink {
-                                    CreatesInvoice()
+                                    ReceiveView()
                                 } label: {
                                     _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                                 }
@@ -82,7 +82,7 @@ struct Wallet : View {
             .environmentObject(loginRequest)
             .listRowBackground(Color.clear)
             .toolbar {
-                _titleView(label: LabelIcon(text: "Wallet", icon: "chevron.down"))
+                _titleView(label: LabelIcon(text: "wallet-balance", icon: "chevron.down"))
             }
         }
     }
@@ -149,7 +149,7 @@ struct Wallet : View {
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
-                Text("\(loginRequest.formatDate(value.created_at))")
+                Text("\(loginRequest.formatDate(value.time))")
                     .lineLimit(1)
                     .font(.subheadline)
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)

@@ -25,7 +25,7 @@ struct Account : View {
                         ProgressBar(color: .blue)
                             .frame(maxWidth: .infinity, alignment: .center)
                     } else {
-                        Text("Close Sesion")
+                        Text("login-close")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
@@ -40,7 +40,7 @@ struct Account : View {
         .listStyle(.insetGrouped)
         .environmentObject(loginRequest)
         .toolbar {
-            _titleView(label: LabelText(text: "Account"))
+            _titleView(label: LabelText(text: "wallet-account"))
         }
     }
     
