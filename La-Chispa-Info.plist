@@ -4,9 +4,9 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.app.wificonnect</string>
-		<string>http://secure.etecsa.net:8443/</string>
-		<string>https://secure.etecsa.net:8443/</string>
+		<string>app.lachispa.me</string>
+		<string>lachispa.me</string>
+		<string>lachispa.me</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -215,7 +215,7 @@
 					<string>3qcr597p9d.skadnetwork</string>
 				</dict>
 			</array>
-			<key>https://secure.etecsa.net:8443/</key>
+			<key>https://app.lachispa.me</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
 				<true/>
@@ -226,7 +226,7 @@
 	</dict>
 	<key>NSExceptionDomains</key>
 	<dict>
-		<key>nauta.co.cu</key>
+		<key>app.lachispa.me</key>
 		<dict>
 			<key>NSExceptionAllowsInsecureHTTPLoads</key>
 			<true/>
@@ -237,7 +237,7 @@
 			<key>NSRequiresCertificateTransparency</key>
 			<false/>
 		</dict>
-		<key>nauta.com.cu</key>
+		<key>https://lachispa.me</key>
 		<dict>
 			<key>NSExceptionAllowsInsecureHTTPLoads</key>
 			<true/>
@@ -248,7 +248,7 @@
 			<key>NSRequiresCertificateTransparency</key>
 			<false/>
 		</dict>
-		<key>nauta.cu</key>
+		<key>lachispa.me</key>
 		<dict>
 			<key>NSExceptionAllowsInsecureHTTPLoads</key>
 			<true/>

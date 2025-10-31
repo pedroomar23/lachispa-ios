@@ -14,6 +14,7 @@ final class LoginRequests : ObservableObject {
     @Published var loginModel : LoginRequest = LoginRequest(username: "", password: "")
     @Published var loginResponse : LoginResponse = LoginResponse(access_token: "", token_type: "")
     @Published var loginAuth : LoginAuth = LoginAuth(id: "", created_at: "", updated_at: "", email: "", username: "", pubkey: "", external_id: "", extensions: [""], wallets: [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 870852, extra: WalletExtra(icon: "", color: "", pinned: false))], admin: false, super_user: false, fiat_providers: [""], has_password: false, extra: Extra(email_verified: false, first_name: "", last_name: "", display_name: "", picture: "", provider: "", visible_wallet_count: 10))
+    @Published var wallet = [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 0, extra: WalletExtra(icon: "", color: "", pinned: false))]
     @Published var historial : [HistorialResponse] = [HistorialResponse(date: "", income: 0, spending: 0, balance: 0)]
     @Published var createInvoice : CreateInvoice = CreateInvoice(bolt11: "", out: false, amount: 1000, unit: "", memo: "")
     @Published var createPayments : CreatePayments = CreatePayments(bolt11: "", out: true, amount: 0, unit: "")
@@ -32,6 +33,7 @@ final class LoginRequests : ObservableObject {
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
     @AppStorage("wallets") var wallets: String = ""
     @AppStorage("getPayments") var getPayment : String = ""
+    @AppStorage("account") var account : String = ""
     @Published var paymentsUnit : String =  ""
     @Published var payLNURLs : String = ""
     
@@ -136,6 +138,15 @@ final class LoginRequests : ObservableObject {
     
     // MARK: - Login
     
+    func _getUserLogin() -> LoginRequest {
+        if let savedLoginModel = defaults.object(forKey: "keySavedLoginRequest") as? Data {
+            if let loadLoginModel = try? JSONDecoder().decode(LoginRequest.self, from: savedLoginModel) {
+                return loadLoginModel
+            }
+        }
+        return loginModel
+    }
+    
     func loginRequest() {
         Task {
             DispatchQueue.main.async { [self] in isLoading = false }
@@ -153,6 +164,7 @@ final class LoginRequests : ObservableObject {
                     isLoading = false
                     isAuth = true
                     timeOut = true
+                    email = isAuth ? _getUserLogin().username : loginModel.username
                     
                     defaults.set(model.access_token, forKey: "authToken")
                     
@@ -192,8 +204,10 @@ final class LoginRequests : ObservableObject {
                     email = model.email
                     token = loginResponse.access_token
                     defaults.set(loginResponse.access_token, forKey: "authToken")
+                    
+                    account = model.id
                    
-                    wallets.removeAll()
+                    wallet.removeAll()
                     for i in model.wallets {
                         wallets.append(i.id)
                     }
@@ -247,6 +261,7 @@ final class LoginRequests : ObservableObject {
                     timeOut = true 
                     defaults.set(loginResponse.access_token, forKey: "authToken")
                     
+                    getPayment.removeAll()
                     for i in model {
                         getPayment.append(i.checking_id)
                     }
