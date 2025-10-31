@@ -15,7 +15,9 @@ struct Account : View {
     var body : some View {
         List {
             Section {
-                _account(response: loginRequest.loginAuth)
+                if loginRequest.account == loginRequest.loginAuth.id {
+                    _account(response: loginRequest.loginAuth)
+                }
             }
             Section {
                 Button(role: .destructive) {

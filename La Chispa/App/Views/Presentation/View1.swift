@@ -11,13 +11,13 @@ struct View1 : View {
     
     var body : some View {
         VStack {
-            _view(label: LabelImages(icon: "LaunchImage", text: "LaChispa does is for you", text1: "v1.0"))
+            _view(label: LabelPre(text: "presentation-view1", text1: "v1.0", icon: "LaunchImage"))
             Spacer()
         }.padding(.top)
     }
     
     @ViewBuilder
-    private func _view(label: LabelImages) -> some View {
+    private func _view(label: LabelPre) -> some View {
         VStack {
             Text(label.text)
                 .fontWeight(.semibold)

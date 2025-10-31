@@ -7,7 +7,12 @@
 */
 
 // MARK: - Presentation
-
+"presentation-view1" = "LaChispa does is for you";
+"presentation-view2-text1" = "Favorite Server";
+"presentation-view2-text2" = "Init with your favorite server for a better experiencie with Bitcoin Lighting Network";
+"presentation-view3-text1" = "Send and Receive Satochis";
+"presentation-view3-text2" = "Send and Receive satochis with a better security, and pay with lightning network in diferents plataforms";
+"presentation-button" = "Next";
 
 
 // MARK: - Login

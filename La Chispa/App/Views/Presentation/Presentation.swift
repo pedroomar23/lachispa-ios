@@ -38,7 +38,7 @@ struct Presentation : View {
                 if selectedTab < totalPage {
                     Button(action: goNext) {
                         HStack (spacing: 5) {
-                            Text("Next")
+                            Text("presentation-button")
                                 .font(.headline)
                                 .foregroundColor(.white)
                             Image(systemName: "arrow.forward")

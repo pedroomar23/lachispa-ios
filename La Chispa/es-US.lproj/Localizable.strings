@@ -8,6 +8,13 @@
 
 // MARK: - Presentation
 
+"presentation-view1" = "LaChispa esto es para ti";
+"presentation-view2-text1" = "Server Favorito";
+"presentation-view2-text2" = "Inicia con tu server favorito para una mejor experiencia con Bitcoin Lightning Network";
+"presentation-view3-text1" = "Envía y Recibe satochis";
+"presentation-view3-text2" = "Envía y Recibe satochis con seguridad y paga con Bitcoin Lightning Network en diferentes plataformas";
+"presentation-button" = "Siguiente";
+
 // MARK: - Login
 
 "login-username" = "Usuario";

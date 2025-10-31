@@ -15,7 +15,7 @@ struct View3 : View {
     
     var body: some View {
         VStack {
-            _view(label: LabelImages(icon: "bitcoinsign", text: "Send and Receive Satochis", text1: "Send and Receive satochis with a better security, and pay with lightning network diferents plataforms"))
+            _view(label: LabelPre(text: "presentation-view3-text1", text1: "presentation-view3-text2", icon: "bitcoinsign"))
             
             Spacer()
         }
@@ -34,7 +34,7 @@ struct View3 : View {
     }
     
     @ViewBuilder
-    private func _view(label: LabelImages) -> some View {
+    private func _view(label: LabelPre) -> some View {
         VStack {
             Text(label.text)
                 .fontWeight(.semibold)
