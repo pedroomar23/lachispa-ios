@@ -13,7 +13,26 @@ struct InvoiceView : View {
     @Environment(\.colorScheme) var colorScheme
     
     var body : some View {
-        ContentNavigation {
+        if #available(iOS 16, *) {
+            ContentNavigation {
+                Picker("", selection: $selection) {
+                    Text(LNView.lnbc.rawValue).tag(LNView.lnbc)
+                    Text(LNView.lnURL.rawValue).tag(LNView.lnURL)
+                }
+                .padding(.horizontal)
+                .pickerStyle(.segmented)
+                .toolbar {
+                    _toolbar(label: LabelText(text: "invoice-view"))
+                }
+                
+                switch selection {
+                case .lnbc:
+                    Invoice()
+                case .lnURL:
+                    LNURL()
+                }
+            }
+        } else {
             Picker("", selection: $selection) {
                 Text(LNView.lnbc.rawValue).tag(LNView.lnbc)
                 Text(LNView.lnURL.rawValue).tag(LNView.lnURL)

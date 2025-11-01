@@ -16,99 +16,52 @@ struct Invoice : View {
     let paymentsUnit = ["sat", "AED", "AFN", "ALL", "AMD", "ANG"]
     
     var body: some View {
-        if #available(iOS 16, *) {
-            ContentNavigation {
-                VStack {
-                    Section {
-                        HStack (alignment: .center, spacing: 1) {
-                            LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
-                                .frame(height: 53)
-                                .padding()
-                            Button {
-                                self.qrCode.toggle()
-                            } label: {
-                                _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
-                            }
-                            .fullScreenCover(isPresented: $qrCode) {
-                                QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    Section {
-                        Button {
-                            loginRequest.paymetsRequest()
-                        } label: {
-                            if loginRequest.isLoading {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
-                                    .frame(width: 200, height: 45)
-                            } else {
-                                _labelButton(label: LabelText(text: "invoice-pay"))
-                            }
-                        }
-                        .sheet(isPresented: $loginRequest.isInvoice) {
-                            PayInvoice()
-                        }
-                        .alert("Error", isPresented: $loginRequest.alertMsg) {
-                            
-                        } message: {
-                            Text(loginRequest.message)
-                        }
-                        .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
-                        .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .listRowBackground(Color.clear)
-            }
-        } else {
-            VStack {
-                Section {
-                    HStack (alignment: .center, spacing: 1) {
-                        LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
-                            .frame(height: 53)
-                            .padding()
-                        Button {
-                            self.qrCode.toggle()
-                        } label: {
-                            _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
-                        }
-                        .fullScreenCover(isPresented: $qrCode) {
-                            QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                Section {
+        List {
+            Section {
+                HStack (alignment: .center, spacing: 1) {
+                    LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
+                        .frame(height: 53)
+                        .padding()
                     Button {
-                        loginRequest.paymetsRequest()
+                        self.qrCode.toggle()
                     } label: {
-                        if loginRequest.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
-                                .frame(width: 200, height: 45)
-                        } else {
-                            _labelButton(label: LabelText(text: "invoice-pay"))
-                        }
+                        _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
                     }
-                    .sheet(isPresented: $loginRequest.isInvoice) {
-                        PayInvoice()
+                    .fullScreenCover(isPresented: $qrCode) {
+                        QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                     }
-                    .alert("Error", isPresented: $loginRequest.alertMsg) {
-                        
-                    } message: {
-                        Text(loginRequest.message)
-                    }
-                    .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
-                    .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
                 }
-                Spacer()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .listRowSeparator(.hidden)
             }
-            .padding(.horizontal)
-            .listRowBackground(Color.clear)
+            Section {
+                Button {
+                    loginRequest.paymetsRequest()
+                } label: {
+                    if loginRequest.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
+                            .frame(width: 200, height: 45)
+                    } else {
+                        _labelButton(label: LabelText(text: "invoice-pay"))
+                    }
+                }
+                .sheet(isPresented: $loginRequest.isInvoice) {
+                    PayInvoice()
+                }
+                .alert("Error", isPresented: $loginRequest.alertMsg) {
+                    
+                } message: {
+                    Text(loginRequest.message)
+                }
+                .disabled(loginRequest.invoiceEmpty || loginRequest.isLoading)
+                .opacity((!loginRequest.invoiceEmpty && !loginRequest.isLoading) ? 1.0 : 0.5)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .listRowSeparator(.hidden)
+            }
         }
+        .listStyle(.plain)
+        .listRowBackground(Color.clear)
     }
     
     @ViewBuilder
