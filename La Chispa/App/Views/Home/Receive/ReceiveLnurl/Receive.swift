@@ -16,7 +16,7 @@ struct Receive : View {
     var body : some View {
         if #available(iOS 16, *) {
             ContentNavigation {
-                VStack {
+                List {
                     Section {
                         _invoice(response: loginRequest.getLNURLResponse)
                     }
@@ -26,49 +26,29 @@ struct Receive : View {
                         } label: {
                             _labelButton(label: LabelText(text: "invoice-create"))
                         }
-                        .sheet(isPresented: $loginRequest.isInvoice) {
-                            ReceiveInvoice()
-                        }
-                        .alert("Error", isPresented: $loginRequest.alertMsg) {
-                            
-                        } message: {
-                            Text(loginRequest.message)
-                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowSeparator(.hidden)
                     }
-                    Spacer()
                 }
-                .padding(.horizontal)
+                .listStyle(.plain)
                 .listRowBackground(Color.clear)
             }
         } else {
-            VStack {
+            List {
                 Section {
                     _invoice(response: loginRequest.getLNURLResponse)
                 }
                 Section {
-                    Button {
-                        loginRequest.paymetsRequest()
+                    NavigationLink {
+                        ReceiveLNURL()
                     } label: {
-                        if loginRequest.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: colorScheme == .dark ? .orange : .white))
-                                .frame(width: 200, height: 45)
-                        } else {
-                            _labelButton(label: LabelText(text: "invoice-create"))
-                        }
+                        _labelButton(label: LabelText(text: "invoice-create"))
                     }
-                    .sheet(isPresented: $loginRequest.isInvoice) {
-                        ReceiveInvoice()
-                    }
-                    .alert("Error", isPresented: $loginRequest.alertMsg) {
-                        
-                    } message: {
-                        Text(loginRequest.message)
-                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
                 }
-               Spacer()
             }
-            .padding(.horizontal)
+            .listStyle(.plain)
             .listRowBackground(Color.clear)
         }
     }
@@ -121,6 +101,8 @@ struct Receive : View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .listRowSeparator(.hidden)
     }
     
     private func _copy(text: String) {

@@ -15,7 +15,6 @@ struct ReceiveInvoice : View {
     @State var paymentInvoice : Bool = false
     
     var body : some View  {
-        ContentNavigation {
             List {
                 Section {
                     HStack (spacing: 3) {
@@ -54,8 +53,6 @@ struct ReceiveInvoice : View {
                 }
             }
             .listStyle(.plain)
-            .interactiveDismissDisabled()
-        }
     }
     
     @ToolbarContentBuilder

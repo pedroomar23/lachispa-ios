@@ -13,24 +13,22 @@ struct PaymentsList : View {
     @Environment(\.colorScheme) var colorScheme
     
     var body : some View {
-        ContentNavigation {
-            List {
-                ForEach(loginRequest.getPayments, id: \.checking_id) { value in
-                    if value.checking_id == loginRequest.getPayment {
-                        _getInvoice(value: value)
-                    }
+        List {
+            ForEach(loginRequest.getPayments, id: \.checking_id) { value in
+                if value.checking_id == loginRequest.getPayment {
+                    _getInvoice(value: value)
                 }
             }
-            .task {
-                await loginRequest.getPayments()
-            }
-            .refreshable {
-                await loginRequest.getPayments()
-            }
-            .listStyle(.insetGrouped)
-            .toolbar {
-                _titleView(label: LabelText(text: "invoice-lightning"))
-            }
+        }
+        .task {
+            await loginRequest.getPayments()
+        }
+        .refreshable {
+            await loginRequest.getPayments()
+        }
+        .listStyle(.insetGrouped)
+        .toolbar {
+            _titleView(label: LabelText(text: "invoice-lightning"))
         }
     }
     

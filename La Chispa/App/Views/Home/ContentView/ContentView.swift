@@ -46,51 +46,24 @@ struct ContentView : View {
                     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
             } else {
-                if #available(iOS 16, *) {
-                    TabView(selection: $selectedTab) {
-                        Wallet()
-                            .tabItem {
-                                Text(Tab.wallet.rawValue)
-                                Image(systemName: Tab.wallet.sistemImage)
-                            }
-                            .tag(0)
-                            .environmentObject(loginRequest)
-                        Settings()
-                            .tabItem {
-                                Text(Tab.settings.rawValue)
-                                Image(systemName: Tab.settings.sistemImage)
-                            }
-                            .tag(1)
-                            .environmentObject(security)
-                    }
-                    .environment(\.screenSize, geo.size)
-                    .accentColor(colorScheme == .dark ? .white : .blue)
-                } else {
-                    RefreshableScrollView(isLoading: $loginRequest.isAuth) {
-                        Task {
-                            await loginRequest.getUserAuth()
+                TabView(selection: $selectedTab) {
+                    Wallet()
+                        .tabItem {
+                            Text(Tab.wallet.rawValue)
+                            Image(systemName: Tab.wallet.sistemImage)
                         }
-                    } content: {
-                        TabView(selection: $selectedTab) {
-                            Wallet()
-                                .tabItem {
-                                    Text(Tab.wallet.rawValue)
-                                    Image(systemName: Tab.wallet.sistemImage)
-                                }
-                                .tag(0)
-                                .environmentObject(loginRequest)
-                            Settings()
-                                .tabItem {
-                                    Text(Tab.settings.rawValue)
-                                    Image(systemName: Tab.settings.sistemImage)
-                                }
-                                .tag(1)
-                                .environmentObject(security)
+                        .tag(0)
+                        .environmentObject(loginRequest)
+                    Settings()
+                        .tabItem {
+                            Text(Tab.settings.rawValue)
+                            Image(systemName: Tab.settings.sistemImage)
                         }
-                        .environment(\.screenSize, geo.size)
-                        .accentColor(colorScheme == .dark ? .white : .blue)
-                    }
+                        .tag(1)
+                        .environmentObject(security)
                 }
+                .environment(\.screenSize, geo.size)
+                .accentColor(colorScheme == .dark ? .white : .blue)
             }
         }
     }

@@ -14,75 +14,40 @@ struct LNURL : View {
     @State var payLNURL : Bool = false
     
     var body : some View {
-        if #available(iOS 16, *) {
-            ContentNavigation {
-                VStack {
-                    HStack (spacing: 1) {
-                        LNTextfield(text: $loginRequest.payLNURLs, placeholder: "invoice-bolt11")
-                            .frame(height: 53)
-                            .padding()
-                        Button {
-                            self.payLNURL.toggle()
-                        } label: {
-                            _qrLabel(label: LabelImage(text: "qrcode.viewfinder"))
-                        }
-                        .buttonStyle(.plain)
-                        .fullScreenCover(isPresented: $payLNURL) {
-                            QRCodeScannerController(scannedCode: $loginRequest.payLNURLs, errorMessage: $loginRequest.message)
-                        }
-                    }
-                    
-                    Button {
-                        loginRequest.payLNURLRequest()
-                    } label: {
-                        if loginRequest.isLNURL {
-                            ProgressBar(color: .blue)
-                        } else {
-                            _labelButton(label: LabelText(text: "invoice-pay"))
-                        }
-                    }
-                    .sheet(isPresented: $loginRequest.isLNURL) {
-                        PayLNURLInvoice()
-                    }
-                }
-                .listRowBackground(Color.clear)
-                .padding(.horizontal)
-                Spacer()
-            }
-        } else {
-            VStack {
-                HStack (spacing: 1) {
-                    LNTextfield(text: $loginRequest.payLNURLs, placeholder: "LNURL")
-                        .frame(height: 53)
-                        .padding()
-                    Button {
-                        self.payLNURL.toggle()
-                    } label: {
-                        _qrLabel(label: LabelImage(text: "qrcode"))
-                    }
-                    .buttonStyle(.plain)
-                    .fullScreenCover(isPresented: $payLNURL) {
-                        QRCodeScannerController(scannedCode: $loginRequest.payLNURLs, errorMessage: $loginRequest.message)
-                    }
-                }
-                
+        List {
+            HStack (spacing: 1) {
+                LNTextfield(text: $loginRequest.payLNURLs, placeholder: "invoice-bolt11")
+                    .frame(height: 53)
+                    .padding()
                 Button {
-                    loginRequest.payLNURLRequest()
+                    self.payLNURL.toggle()
                 } label: {
-                    if loginRequest.isLNURL {
-                        ProgressBar(color: .blue)
-                    } else {
-                        _labelButton(label: LabelText(text: "invoice-pay"))
-                    }
+                    _qrLabel(label: LabelImage(text: "qrcode.viewfinder"))
                 }
-                .sheet(isPresented: $loginRequest.isLNURL) {
-                    PayLNURLInvoice()
+                .buttonStyle(.plain)
+                .fullScreenCover(isPresented: $payLNURL) {
+                    QRCodeScannerController(scannedCode: $loginRequest.payLNURLs, errorMessage: $loginRequest.message)
+                }
+                .listRowSeparator(.hidden)
+            }
+            
+            Button {
+                loginRequest.payLNURLRequest()
+            } label: {
+                if loginRequest.isLNURL {
+                    ProgressBar(color: .blue)
+                } else {
+                    _labelButton(label: LabelText(text: "invoice-pay"))
                 }
             }
-            .listRowBackground(Color.clear)
-            .padding(.horizontal)
-            Spacer()
+            .sheet(isPresented: $loginRequest.isLNURL) {
+                PayLNURLInvoice()
+            }
+            .listRowSeparator(.hidden)
+            .frame(maxWidth: .infinity, alignment: .center)
         }
+        .listStyle(.plain)
+        .listRowBackground(Color.clear)
     }
     
     @ViewBuilder

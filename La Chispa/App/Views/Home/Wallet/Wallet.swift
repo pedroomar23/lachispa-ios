@@ -27,7 +27,7 @@ struct Wallet : View {
                                         .font(.subheadline)
                                         .font(.system(size: 40))
                                         .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                }.padding(.top)
+                                }
                             }
                             
                             Section {

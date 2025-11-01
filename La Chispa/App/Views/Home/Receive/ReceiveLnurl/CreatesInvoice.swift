@@ -14,9 +14,9 @@ struct CreatesInvoice : View {
     
     var body : some View {
         if #available(iOS 16, *) {
-            if !loginRequest.isLNURL {
-                ContentNavigation {
-                    VStack {
+            ContentNavigation {
+                if !loginRequest.isLNURL {
+                    List {
                         HStack (spacing: 1) {
                             MutiTextfield(text: $loginRequest.username, placeholder: "login-username")
                                 .frame(height: 53)
@@ -24,7 +24,8 @@ struct CreatesInvoice : View {
                             Text("@lachispa.me")
                                 .font(.headline)
                                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        }.padding(.top)
+                        }
+                        .listRowSeparator(.hidden)
                         
                         Button {
                             loginRequest.getLNURLRequest()
@@ -40,43 +41,47 @@ struct CreatesInvoice : View {
                         } message: {
                             Text(loginRequest.message)
                         }
-                        Spacer()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowSeparator(.hidden)
                     }
-                    .padding(.horizontal)
+                    .listStyle(.plain)
+                    .listRowBackground(Color.clear)
+                } else {
+                    Receive().environmentObject(loginRequest)
                 }
-            } else {
-                Receive().environmentObject(loginRequest)
             }
         } else {
             if !loginRequest.isLNURL {
-                ContentNavigation {
-                    VStack {
-                        HStack (spacing: 1) {
-                            MutiTextfield(text: $loginRequest.username, placeholder: "login-username")
-                                .frame(height: 53)
-                                .padding(.horizontal)
-                            Text("@lachispa.me")
-                                .font(.headline)
-                                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        }
-                        
-                        Button {
-                            loginRequest.getLNURLRequest()
-                        } label: {
-                            if loginRequest.isLoading {
-                                ProgressBar(color: .blue)
-                            } else {
-                                _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
-                            }
-                        }
-                        .alert("Error", isPresented: $loginRequest.alertMsg) {
-                            
-                        } message: {
-                            Text(loginRequest.message)
-                        }
-                        Spacer()
+                List {
+                    HStack (spacing: 1) {
+                        MutiTextfield(text: $loginRequest.username, placeholder: "login-username")
+                            .frame(height: 53)
+                            .padding(.horizontal)
+                        Text("@lachispa.me")
+                            .font(.headline)
+                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                     }
+                    .listRowSeparator(.hidden)
+                    
+                    Button {
+                        loginRequest.getLNURLRequest()
+                    } label: {
+                        if loginRequest.isLoading {
+                            ProgressBar(color: .blue)
+                        } else {
+                            _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
+                        }
+                    }
+                    .alert("Error", isPresented: $loginRequest.alertMsg) {
+                        
+                    } message: {
+                        Text(loginRequest.message)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowSeparator(.hidden)
                 }
+                .listStyle(.plain)
+                .listRowBackground(Color.clear)
             } else {
                 Receive().environmentObject(loginRequest)
             }

@@ -14,7 +14,26 @@ struct ReceiveView : View {
     @State var selection = ReceiveV.lnurl
     
     var body : some View {
-        ContentNavigation {
+        if #available(iOS 16, *) {
+            ContentNavigation {
+                Picker("", selection: $selection) {
+                    Text(ReceiveV.lnurl.rawValue).tag(ReceiveV.lnurl)
+                    Text(ReceiveV.lnbc.rawValue).tag(ReceiveV.lnbc)
+                }
+                .padding(.horizontal)
+                .pickerStyle(.segmented)
+                .toolbar {
+                    _toolbar(label: LabelText(text: "invoice-receive"))
+                }
+                
+                switch selection {
+                case .lnurl:
+                    CreatesInvoice()
+                case .lnbc:
+                    ReceiveInvoice()
+                }
+            }
+        } else {
             Picker("", selection: $selection) {
                 Text(ReceiveV.lnurl.rawValue).tag(ReceiveV.lnurl)
                 Text(ReceiveV.lnbc.rawValue).tag(ReceiveV.lnbc)
