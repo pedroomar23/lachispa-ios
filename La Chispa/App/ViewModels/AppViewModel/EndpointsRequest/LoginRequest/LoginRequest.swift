@@ -16,7 +16,7 @@ final class LoginRequests : ObservableObject {
     @Published var loginAuth : LoginAuth = LoginAuth(id: "", created_at: "", updated_at: "", email: "", username: "", pubkey: "", external_id: "", extensions: [""], wallets: [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 870852, extra: WalletExtra(icon: "", color: "", pinned: false))], admin: false, super_user: false, fiat_providers: [""], has_password: false, extra: Extra(email_verified: false, first_name: "", last_name: "", display_name: "", picture: "", provider: "", visible_wallet_count: 10))
     @Published var wallet = [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 0, extra: WalletExtra(icon: "", color: "", pinned: false))]
     @Published var historial : [HistorialResponse] = [HistorialResponse(date: "", income: 0, spending: 0, balance: 0)]
-    @Published var createInvoice : CreateInvoice = CreateInvoice(bolt11: "", out: false, amount: 1000, unit: "", memo: "")
+    @Published var createInvoice : CreateInvoice = CreateInvoice(bolt11: "", out: false, amount: 0, unit: "sat", memo: "")
     @Published var createPayments : CreatePayments = CreatePayments(bolt11: "", out: true, amount: 0, unit: "")
     @Published var paymentResponse : CreateInvoiceResponse = CreateInvoiceResponse(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     @Published var getPaymentsAllUsers : GetPaymentsAllUsers = GetPaymentsAllUsers(field: "", total: 0)
@@ -34,6 +34,7 @@ final class LoginRequests : ObservableObject {
     @AppStorage("wallets") var wallets: String = ""
     @AppStorage("getPayments") var getPayment : String = ""
     @AppStorage("account") var account : String = ""
+    @Published var amount : String = ""
     @Published var paymentsUnit : String =  ""
     @Published var payLNURLs : String = ""
     
@@ -378,11 +379,15 @@ final class LoginRequests : ObservableObject {
     }
     
     func invoiceRequestPrivate() async {
-        await endpointApi.createInvoice(bolt11: paymentbolt11, out: createInvoice.out, amount: createInvoice.amount, unit: createInvoice.unit,  memo: createInvoice.memo ?? "") { result in
+        guard let newAmount = Int(amount), newAmount > 0 else {
+            return
+        }
+        await endpointApi.createInvoice(out: false, amount: newAmount, unit: "sat",  memo: "") { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
                     paymentResponse = model
+                    paymentbolt11 = model.bolt11
                     isLoading = false
                     isInvoice = true
                     alertMsg = false

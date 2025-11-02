@@ -12,7 +12,7 @@ struct InvoiceTextfield : UIViewRepresentable {
     typealias UIViewType = UITextField
     
     @Environment(\.colorScheme) var colorScheme
-    var amount : Int
+    @Binding var text : String
     var placeholder: String
     var isSecure : Bool = false
     var backgroundColor : UIColor = .systemBackground
@@ -41,6 +41,7 @@ struct InvoiceTextfield : UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
+        uiView.text = text
         uiView.delegate = context.coordinator
         uiView.placeholder = placeholder
         uiView.layer.borderWidth = borderWidth
@@ -51,26 +52,27 @@ struct InvoiceTextfield : UIViewRepresentable {
         uiView.textColor = textColor
         uiView.minimumFontSize = 10
         uiView.setNeedsLayout()
+        uiView.addTarget(context.coordinator, action: #selector(Coordinator.textChagend(_:)), for: .editingChanged)
         color(textfield: uiView, colorScheme: colorScheme)
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(placeholder: placeholder, amount: amount , isSecure: isSecure)
+        Coordinator(placeholder: placeholder, text: $text , isSecure: isSecure)
     }
     
     final class Coordinator : NSObject, UITextFieldDelegate {
+        @Binding var text : String
         var placeholder : String
-        var amount : Int
         var isSecure : Bool
         
-        init(placeholder: String, amount: Int ,isSecure: Bool) {
+        init(placeholder: String, text: Binding<String> ,isSecure: Bool) {
             self.placeholder = placeholder
-            self.amount = amount
+            self._text = text
             self.isSecure = isSecure
         }
         
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            placeholder = textField.text ?? ""
+        @objc func textChagend(_ textfield: UITextField) {
+            text = textfield.text ?? ""
         }
         
         @objc func doneButtonTapped() {

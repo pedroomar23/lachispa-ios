@@ -236,7 +236,7 @@ class EndpointsApi {
             amount: amount,
             comment: comment,
             description: description,
-            unit: unit
+            unit: "sat"
         )
         print("JSON Response: \(payLNURL)")
         
@@ -323,7 +323,7 @@ class EndpointsApi {
         }
     }
     
-    func createInvoice(bolt11: String, out: Bool, amount: Int, unit: String, memo: String?, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
+    func createInvoice(out: Bool, amount: Int, unit: String, memo: String?, completion: @escaping @Sendable (Result<CreateInvoiceResponse, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
         var request = URLRequest(url: EndpointUrl.createPayments.url)
         request.httpMethod = "POST"
@@ -335,7 +335,6 @@ class EndpointsApi {
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
         
         let createInvoice: [String: Any] = [
-            "bolt11": bolt11,
             "out": out,
             "amount": amount,
             "unit": unit,

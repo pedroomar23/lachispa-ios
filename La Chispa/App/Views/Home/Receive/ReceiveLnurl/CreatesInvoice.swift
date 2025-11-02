@@ -14,8 +14,8 @@ struct CreatesInvoice : View {
     
     var body : some View {
         if #available(iOS 16, *) {
-            ContentNavigation {
-                if !loginRequest.isLNURL {
+            if !loginRequest.isLNURL {
+                ContentNavigation {
                     List {
                         HStack (spacing: 1) {
                             MutiTextfield(text: $loginRequest.username, placeholder: "login-username")
@@ -46,9 +46,9 @@ struct CreatesInvoice : View {
                     }
                     .listStyle(.plain)
                     .listRowBackground(Color.clear)
-                } else {
-                    Receive().environmentObject(loginRequest)
                 }
+            } else {
+                Receive().environmentObject(loginRequest)
             }
         } else {
             if !loginRequest.isLNURL {

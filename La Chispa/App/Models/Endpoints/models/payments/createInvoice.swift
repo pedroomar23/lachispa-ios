@@ -34,7 +34,7 @@ struct CreateInvoice: Decodable, Hashable, Encodable {
     init(bolt11: String, out: Bool, amount: Int, unit: String, memo: String?) {
         self.bolt11 = bolt11
         self.out = out
-        self.amount = amount
+        self.amount = amount * 1000 
         self.unit = unit
         self.memo = memo
     }

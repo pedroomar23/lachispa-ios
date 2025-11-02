@@ -15,44 +15,44 @@ struct ReceiveInvoice : View {
     @State var paymentInvoice : Bool = false
     
     var body : some View  {
-            List {
-                Section {
-                    HStack (spacing: 3) {
-                        InvoiceTextfield(amount: loginRequest.createInvoice.amount, placeholder: "0")
-                            .frame(height: 53)
-                        Text("sats")
-                            .padding()
-                    }
-                    .listRowSeparator(.hidden)
-                   
-                    MutiTextfield(text: $loginRequest.username, placeholder: "Ex payments or services")
+        List {
+            Section {
+                HStack (spacing: 3) {
+                    InvoiceTextfield(text: $loginRequest.amount, placeholder: "0")
                         .frame(height: 53)
-                        .listRowSeparator(.hidden)
+                    Text("sats")
+                        .padding()
                 }
-                Section {
-                    Button {
-                        loginRequest.invoiceRequest()
-                    } label: {
-                        if loginRequest.isInvoice {
-                            ProgressBar(color: .blue)
-                        } else {
-                            _labelButton(label: LabelText(text: "invoice-request"))
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .sheet(isPresented: $loginRequest.isInvoice, content: {
-                        RInvoice()
-                    })
-                    .alert("Error", isPresented: $loginRequest.alertMsg) {
-                        
-                    } message: {
-                        Text(loginRequest.message)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                .listRowSeparator(.hidden)
+                
+                MutiTextfield(text: $loginRequest.username, placeholder: "Ex payments or services")
+                    .frame(height: 53)
                     .listRowSeparator(.hidden)
-                }
             }
-            .listStyle(.plain)
+            Section {
+                Button {
+                    loginRequest.invoiceRequest()
+                } label: {
+                    if loginRequest.isInvoice {
+                        ProgressBar(color: .blue)
+                    } else {
+                        _labelButton(label: LabelText(text: "invoice-request"))
+                    }
+                }
+                .buttonStyle(.plain)
+                .sheet(isPresented: $loginRequest.isInvoice, content: {
+                    RInvoice()
+                })
+                .alert("Error", isPresented: $loginRequest.alertMsg) {
+                    
+                } message: {
+                    Text(loginRequest.message)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .listRowSeparator(.hidden)
+            }
+        }
+        .listStyle(.plain)
     }
     
     @ToolbarContentBuilder

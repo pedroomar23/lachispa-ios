@@ -16,7 +16,7 @@ struct ReceiveLNURL : View {
         List {
             Section {
                 HStack (spacing: 3) {
-                    InvoiceTextfield(amount: loginRequest.payLNURL.amount, placeholder: "0")
+                    InvoiceTextfield(text: $loginRequest.amount, placeholder: "0")
                         .frame(height: 53)
                     Text("sats")
                         .padding()
