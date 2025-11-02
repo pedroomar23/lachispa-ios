@@ -40,6 +40,7 @@ struct LNURL : View {
                     _labelButton(label: LabelText(text: "invoice-pay"))
                 }
             }
+            .buttonStyle(.plain)
             .sheet(isPresented: $loginRequest.isLNURL) {
                 PayLNURLInvoice()
             }

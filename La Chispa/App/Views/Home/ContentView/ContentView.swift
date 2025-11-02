@@ -49,15 +49,15 @@ struct ContentView : View {
                 TabView(selection: $selectedTab) {
                     Wallet()
                         .tabItem {
-                            Text(Tab.wallet.rawValue)
                             Image(systemName: Tab.wallet.sistemImage)
+                            Text(Tab.wallet.rawValue)
                         }
                         .tag(0)
                         .environmentObject(loginRequest)
                     Settings()
                         .tabItem {
-                            Text(Tab.settings.rawValue)
                             Image(systemName: Tab.settings.sistemImage)
+                            Text(Tab.settings.rawValue)
                         }
                         .tag(1)
                         .environmentObject(security)
@@ -74,7 +74,12 @@ struct ContentView : View {
         
         var sistemImage : String {
             switch self {
-            case .wallet: return "wallet.bifold"
+            case .wallet: 
+                if #available(iOS 16, *) {
+                    return "wallet.bifold"
+                } else {
+                    return "creditcard"
+                }
             case .settings: return "gearshape"
             }
         }

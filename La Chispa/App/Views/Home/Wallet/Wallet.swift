@@ -11,80 +11,171 @@ struct Wallet : View {
     
     @Environment(\.colorScheme) var colorScheme
     @StateObject var loginRequest = LoginRequests()
+    @State var showInvoice : Bool = false
+    @State var showPayments : Bool = false
     
     var body : some View {
         ContentNavigation {
-            ScrollView (.vertical, showsIndicators: false) {
-                if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
-                    ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                        if value.id == loginRequest.wallets {
-                            Section {
-                                VStack {
-                                    Text("wallet-balance")
-                                        .font(.headline)
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                        .font(.subheadline)
-                                        .font(.system(size: 40))
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                }
-                            }
-                            
-                            Section {
-                                HStack (alignment: .center, spacing: 1) {
-                                    NavigationLink {
-                                        InvoiceView()
-                                    } label: {
-                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
-                                    }
-                                    
-                                    NavigationLink {
-                                        ReceiveView()
-                                    } label: {
-                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+            if #available(iOS 16, *) {
+                ScrollView (.vertical, showsIndicators: false) {
+                    if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
+                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                            if value.id == loginRequest.wallets {
+                                Section {
+                                    VStack {
+                                        Text("wallet-balance")
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                            .font(.subheadline)
+                                            .font(.system(size: 40))
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                                     }
                                 }
-                            }
-                          
-                            Section {
-                                VStack {
-                                    Text("Historial")
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .font(.title2)
-                                        .padding()
-                                    if loginRequest.historial.isEmpty {
-                                        _historialEmpty()
-                                    } else {
-                                        ForEach(loginRequest.getPayments, id: \.self) { value in
-                                            NavigationLink {
-                                                PaymentsList()
-                                            } label: {
-                                                _historial(value: value)
-                                            }
-                                            .padding()
-                                            .background {
-                                                RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                                    .fill(Color(.tertiarySystemGroupedBackground))
-                                            }
+                                
+                                Section {
+                                    HStack (alignment: .center, spacing: 1) {
+                                        NavigationLink {
+                                            InvoiceView()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                        }
+                                        
+                                        NavigationLink {
+                                            ReceiveView()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                                         }
                                     }
-                                }.padding(.horizontal)
+                                }
+                              
+                                Section {
+                                    VStack {
+                                        Text("Historial")
+                                            .fontWeight(.bold)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.title2)
+                                            .padding()
+                                        if loginRequest.historial.isEmpty {
+                                            _historialEmpty()
+                                        } else {
+                                            ForEach(loginRequest.getPayments, id: \.self) { value in
+                                                NavigationLink {
+                                                    PaymentsList()
+                                                } label: {
+                                                    _historial(value: value)
+                                                }
+                                                .padding()
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                        .fill(Color(.tertiarySystemGroupedBackground))
+                                                }
+                                            }
+                                        }
+                                    }.padding(.horizontal)
+                                }
                             }
                         }
                     }
                 }
-            }
-            .task {
-                await loginRequest.getUserAuth()
-            }
-            .refreshable {
-                await loginRequest.getUserAuth()
-            }
-            .environmentObject(loginRequest)
-            .listRowBackground(Color.clear)
-            .toolbar {
-                _titleView(label: LabelIcon(text: "wallet-view", icon: "chevron.down"))
+                .task {
+                    await loginRequest.getUserAuth()
+                }
+                .refreshable {
+                    await loginRequest.getUserAuth()
+                }
+                .environmentObject(loginRequest)
+                .listRowBackground(Color.clear)
+                .toolbar {
+                    _titleView(label: LabelIcon(text: "wallet-view", icon: "chevron.down"))
+                }
+            } else {
+                List {
+                    if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
+                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                            if value.id == loginRequest.wallets {
+                                Section {
+                                    VStack {
+                                        Text("wallet-balance")
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                            .font(.subheadline)
+                                            .font(.system(size: 40))
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .listRowSeparator(.hidden)
+                                }
+                                
+                                Section {
+                                    HStack (spacing: 1) {
+                                        Button {
+                                            self.showPayments.toggle()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .sheet(isPresented: $showPayments) {
+                                            InvoiceView()
+                                        }
+                                        
+                                        Button {
+                                            self.showInvoice.toggle()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .sheet(isPresented: $showInvoice) {
+                                            ReceiveView()
+                                        }
+                                    }.listRowSeparator(.hidden)
+                                }
+                              
+                                Section {
+                                    VStack {
+                                        Text("Historial")
+                                            .fontWeight(.bold)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.title2)
+                                            .padding()
+                                        if loginRequest.historial.isEmpty {
+                                            _historialEmpty()
+                                        } else {
+                                            ForEach(loginRequest.getPayments, id: \.self) { value in
+                                                NavigationLink {
+                                                    PaymentsList()
+                                                } label: {
+                                                    _historial(value: value)
+                                                }
+                                                .padding()
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                        .fill(Color(.tertiarySystemGroupedBackground))
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                    .listRowSeparator(.hidden)
+                                }
+                            }
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .listRowBackground(Color.clear)
+                .task {
+                    await loginRequest.getUserAuth()
+                }
+                .refreshable {
+                    await loginRequest.getUserAuth()
+                }
+                .environmentObject(loginRequest)
+                .listRowBackground(Color.clear)
+                .toolbar {
+                    _titleView(label: LabelIcon(text: "wallet-view", icon: "chevron.down"))
+                }
             }
         }
     }
@@ -207,6 +298,7 @@ struct Wallet : View {
         .background(Color(colorScheme == .dark ? .gray : .blue))
         .clipShape(Capsule())
         .padding()
+        .contentShape(Rectangle())
     }
 }
 

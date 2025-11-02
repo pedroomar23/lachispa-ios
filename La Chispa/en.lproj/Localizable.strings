@@ -59,8 +59,9 @@
 "invoice-request" = "Request Amount";
 "invoice-amount" = "Amount";
 "invoice-create" = "Create Invoice";
-"invoice-copy" = "Invoice Copied";
-"invoice-alert-copy" = "Your Lightning Invoice has been copied to clipboard";
+"invoice-copy" = "Lightning Address Copied";
+"invoice-alert-copy" = "Your Lightning Address has been copied to clipboard";
+"invoice-lightning-address" = "Lightning Address";
 
 // MARK: - Settings
 

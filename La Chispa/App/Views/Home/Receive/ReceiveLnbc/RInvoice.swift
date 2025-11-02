@@ -64,9 +64,8 @@ struct RInvoice : View {
         }
         Section {
             HStack (spacing: 5) {
-                Text(loginRequest.paymentbolt11)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
+                Text("\(loginRequest.paymentbolt11)")
+                    .lineLimit(1)
                 Button {
                     self.alertMsg.toggle()
                     _copy(text: loginRequest.paymentbolt11)
@@ -82,6 +81,7 @@ struct RInvoice : View {
                     Text("invoice-alert-copy")
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .center)
         }
     }
     

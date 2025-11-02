@@ -59,8 +59,9 @@
 "invoice-request" = "Solicitar Monto";
 "invoice-amount" = "Monto";
 "invoice-create" = "Crear Factura";
-"invoice-copy" = "Factura Copiada";
-"invoice-alert-copy" = "Tu factura lighthing ha sido copiada al portapapeles";
+"invoice-copy" = "Dirección Lightning Copiada";
+"invoice-alert-copy" = "Tu dirección lighthing ha sido copiada al portapapeles";
+"invoice-lightning-address" = "Dirección Lightning";
 
 // MARK: - Settings
 

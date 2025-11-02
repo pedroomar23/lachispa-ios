@@ -16,36 +16,18 @@ struct Receive : View {
     var body : some View {
         if #available(iOS 16, *) {
             ContentNavigation {
-                List {
+                ScrollView (.vertical, showsIndicators: false) {
                     Section {
                         _invoice(response: loginRequest.getLNURLResponse)
-                    }
-                    Section {
-                        NavigationLink {
-                            ReceiveLNURL()
-                        } label: {
-                            _labelButton(label: LabelText(text: "invoice-create"))
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .listRowSeparator(.hidden)
                     }
                 }
                 .listStyle(.plain)
                 .listRowBackground(Color.clear)
             }
         } else {
-            List {
+            ScrollView (.vertical, showsIndicators: false) {
                 Section {
                     _invoice(response: loginRequest.getLNURLResponse)
-                }
-                Section {
-                    NavigationLink {
-                        ReceiveLNURL()
-                    } label: {
-                        _labelButton(label: LabelText(text: "invoice-create"))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowSeparator(.hidden)
                 }
             }
             .listStyle(.plain)
@@ -78,27 +60,13 @@ struct Receive : View {
             } else {
                 ProgressBar(color: .blue)
                     .task {
-                        loginRequest.generateQRCode(from: loginRequest.username)
+                        loginRequest.generateQRCode(from: loginRequest.getLNURLResponse.callback)
                     }
             }
-            HStack (spacing: 2) {
+            VStack (spacing: 2) {
                 Text("\(loginRequest.username)@lachispa.me")
                     .lineLimit(1)
                     .padding()
-                Button {
-                    _copy(text: loginRequest.username)
-                    self.invoiceReceive.toggle()
-                } label: {
-                    Image(systemName: "document.on.document")
-                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                        .font(.system(size: 20, weight: .medium))
-                }
-                .buttonStyle(.plain)
-                .alert("Payment Hash Copied", isPresented: $invoiceReceive) {
-                    
-                } message: {
-                    Text("Your payment hash has been copied to clipboard")
-                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .center)
@@ -106,7 +74,7 @@ struct Receive : View {
     }
     
     private func _copy(text: String) {
-        UIPasteboard.general.string = loginRequest.username
+        UIPasteboard.general.string = loginRequest.getLNURLResponse.callback
     }
 }
 

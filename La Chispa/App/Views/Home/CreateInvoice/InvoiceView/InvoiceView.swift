@@ -10,6 +10,7 @@ import SwiftUI
 struct InvoiceView : View {
     
     @State var selection = LNView.lnbc
+    @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
     var body : some View {
@@ -40,7 +41,7 @@ struct InvoiceView : View {
             .padding(.horizontal)
             .pickerStyle(.segmented)
             .toolbar {
-                _toolbar(label: LabelText(text: "invoice-view"))
+                _toolbarIOS15(label: LabelIcon(text: "invoice-view", icon: "xmark"))
             }
             
             switch selection {
@@ -58,6 +59,24 @@ struct InvoiceView : View {
             Text(label.text)
                 .font(.headline)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
+        }
+    }
+    
+    @ToolbarContentBuilder
+    private func _toolbarIOS15(label: LabelIcon) -> some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Text(label.text)
+                .font(.headline)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: label.icon)
+                    .font(.system(size: 25, weight: .medium))
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+            }
         }
     }
     
