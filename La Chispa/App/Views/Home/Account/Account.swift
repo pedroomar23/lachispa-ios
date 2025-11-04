@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct Account : View {
-    
+
     @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
+    
+    let loginAuth : LoginAuth
     
     var body : some View {
         List {
             Section {
-                if loginRequest.account == loginRequest.loginAuth.id {
-                    _account(response: loginRequest.loginAuth)
-                }
+                _accountDetails(text: "login-username", icon: "person", value: loginAuth.username)
+                _accountDetails(text: "Joined", icon: "calendar", value: "\(loginRequest.formatDate(loginAuth.created_at))")
+                _accountDetails(text: "Updated", icon: "calendar", value: "\(loginRequest.formatDate(loginAuth.updated_at))")
             }
             Section {
                 Button(role: .destructive) {
@@ -32,12 +34,6 @@ struct Account : View {
                     }
                 }
             }
-        }
-        .task {
-            await loginRequest.getUserAuth()
-        }
-        .refreshable {
-            await loginRequest.getUserAuth()
         }
         .listStyle(.insetGrouped)
         .environmentObject(loginRequest)
@@ -74,44 +70,16 @@ struct Account : View {
     }
     
     @ViewBuilder
-    private func _account(response: LoginAuth) -> some View {
+    private func _accountDetails(text: LocalizedStringKey, icon: String, value: String) -> some View {
         HStack (alignment: .center) {
-            Image(systemName: "person")
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Image(systemName: icon)
                 .font(.system(size: 20, weight: .medium))
-            Text("login-username")
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text(text)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.username)
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center) {
-            Image(systemName: "calendar")
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .font(.system(size: 20, weight: .medium))
-            Text("Joined")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(loginRequest.formatDate(response.created_at))")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center) {
-            Image(systemName: "calendar")
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .font(.system(size: 20, weight: .medium))
-            Text("Updated")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(loginRequest.formatDate(response.updated_at))")
+            Text(value)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -119,6 +87,3 @@ struct Account : View {
     }
 }
 
-#Preview {
-    Account()
-}
