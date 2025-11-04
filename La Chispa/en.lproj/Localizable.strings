@@ -66,6 +66,8 @@
 // MARK: - Settings
 
 "settings-view" = "Settings";
+"settings-security" = "Security";
+"settings-about" = "About Me";
 "settings-faceid" = "Face ID & Passcode";
 "settings-faceidenable" = "Enable Face ID";
 "settings-aboutme" = "About Me";

@@ -12,19 +12,31 @@ struct PaymentsList : View {
     @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     
+    let getPayments : GetPayments
+    
     var body : some View {
         List {
-            ForEach(loginRequest.getPayments, id: \.checking_id) { value in
-                if value.checking_id == loginRequest.getPayment {
-                    _getInvoice(value: value)
+            Section {
+                Section {
+                    VStack {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 40, weight: .medium))
+                            .foregroundStyle(colorScheme == .dark ? .green : .green)
+                        Text("Invoice Created")
+                            .font(.headline)
+                            .padding(2)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(Color.clear)
                 }
             }
-        }
-        .task {
-            await loginRequest.getPayments()
-        }
-        .refreshable {
-            await loginRequest.getPayments()
+            Section {
+                _payDetails(text: "Amount", icon: "archivebox", value: "\(loginRequest.formatSats(getPayments.amount))")
+                _payDetails(text: "Created", icon: "calendar", value: "\(loginRequest.formatDate(getPayments.created_at))")
+                _payDetails(text: "Hash", icon: "point.bottomleft.forward.to.point.topright.scurvepath", value: getPayments.payment_hash)
+                _payDetails(text: "Memo", icon: "arrow.down.backward.and.arrow.up.forward.square", value: getPayments.memo ?? "")
+                _payDetails(text: "Status", icon: "square.stack", value: getPayments.status)
+            }
         }
         .listStyle(.insetGrouped)
         .toolbar {
@@ -39,6 +51,23 @@ struct PaymentsList : View {
                 .fontWeight(.bold)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
         }
+    }
+    
+    @ViewBuilder
+    private func _payDetails(text: String, icon: String, value: String) -> some View {
+        HStack (alignment: .center, spacing: 5) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text(text)
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(value)
+                .lineLimit(1)
+                .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }.frame(maxWidth: .infinity, alignment: .leading)
     }
     
     @ViewBuilder
@@ -129,8 +158,5 @@ struct PaymentsList : View {
     }
 }
 
-#Preview {
-    PaymentsList()
-}
 
 

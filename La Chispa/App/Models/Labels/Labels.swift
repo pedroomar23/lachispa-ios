@@ -54,3 +54,10 @@ struct LabelPre: Identifiable {
     let text1: LocalizedStringKey
     let icon: String 
 }
+
+struct LabelIcons: Identifiable {
+    let id = UUID()
+    let text: LocalizedStringKey
+    let icon: String
+    let icon1: String 
+}

@@ -261,7 +261,6 @@ final class LoginRequests : ObservableObject {
                     isAuth = true
                     timeOut = true 
                     defaults.set(loginResponse.access_token, forKey: "authToken")
-                    
                     getPayment.removeAll()
                     for i in model {
                         getPayment.append(i.checking_id)

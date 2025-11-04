@@ -21,16 +21,21 @@ struct Settings : View {
                         _labelFaceId(label: LabelIcon(text: "settings-faceid", icon: "faceid"))
                     }
                 } header: {
-                    Text("Security").textCase(.none)
+                    Text("settings-security").textCase(.none)
                 }
                 Section {
+                    NavigationLink {
+                        AddWallet()
+                    } label: {
+                        _labelWallet(label: LabelIcons(text: "wallet-view", icon: "wallet.bifold", icon1: "creditcard"))
+                    }
                     NavigationLink {
                         About()
                     } label: {
                         _labelPolicy(label: LabelIcon(text: "settings-aboutme", icon: "exclamationmark.circle"))
                     }
                 } header: {
-                    Text("About Me").textCase(.none)
+                    Text("settings-about").textCase(.none)
                 }
             }
             .background(Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all))

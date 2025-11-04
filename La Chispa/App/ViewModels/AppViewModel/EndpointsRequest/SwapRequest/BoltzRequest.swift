@@ -18,6 +18,8 @@ final class BoltzRequest : ObservableObject {
     @Published var isSwap : Bool = false
     @Published var isCreateSwap : Bool = false
     @Published var alertMsg : Bool = false
+    @Published var wallet : String = ""
+    @Published var amount : String = ""
     
     @Published var message : String = ""
     
@@ -33,11 +35,17 @@ final class BoltzRequest : ObservableObject {
     }
     
     func createSwapPrivate() async {
-        await boltzApi.createSwap(wallet: createSwap.wallet, asset: createSwap.asset, refund_address: createSwap.refund_address, amount: createSwap.amount, direction: createSwap.direction, feerate: createSwap.feerate, feerate_value: createSwap.feerate_value) { result in
+        guard let newAmount = Int(amount), newAmount > 0 else {
+            isLoading = false
+            alertMsg = true
+            return
+        }
+        await boltzApi.createSwap(wallet: wallet, asset: createSwap.asset, refund_address: createSwap.refund_address, amount: newAmount, direction: createSwap.direction, feerate: createSwap.feerate, feerate_value: createSwap.feerate_value) { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
                     createSwapResponse = model
+                    wallet = model.wallet
                     isCreateSwap = true
                     isLoading = false
                     alertMsg = false

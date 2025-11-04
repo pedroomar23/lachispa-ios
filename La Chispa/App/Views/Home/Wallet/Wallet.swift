@@ -14,6 +14,7 @@ struct Wallet : View {
     @State var showInvoice : Bool = false
     @State var showPayments : Bool = false
     
+    
     var body : some View {
         ContentNavigation {
             if #available(iOS 16, *) {
@@ -21,6 +22,14 @@ struct Wallet : View {
                     if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
                         ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                             if value.id == loginRequest.wallets {
+                                Section {
+                                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                                        Text("\(value.name)").tag(value.id)
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    }
+                                    .pickerStyle(.menu)
+                                }
                                 Section {
                                     VStack {
                                         Text("wallet-balance")
@@ -56,12 +65,17 @@ struct Wallet : View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .font(.title2)
                                             .padding()
-                                        if loginRequest.historial.isEmpty {
+                                       
+                                        // Selected Wallet Pay
+                                        let selectedWalletId = loginRequest.wallets
+                                        let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
+                                      
+                                        if filteredPayments.isEmpty {
                                             _historialEmpty()
                                         } else {
-                                            ForEach(loginRequest.getPayments, id: \.self) { value in
+                                            ForEach(filteredPayments, id: \.self) { value in
                                                 NavigationLink {
-                                                    PaymentsList()
+                                                    PaymentsList(getPayments: value)
                                                 } label: {
                                                     _historial(value: value)
                                                 }
@@ -94,6 +108,14 @@ struct Wallet : View {
                     if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
                         ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                             if value.id == loginRequest.wallets {
+                                Section {
+                                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                                        Text("\(value.name)").tag(value.id)
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    }
+                                    .pickerStyle(.menu)
+                                }
                                 Section {
                                     VStack {
                                         Text("wallet-balance")
@@ -139,12 +161,17 @@ struct Wallet : View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .font(.title2)
                                             .padding()
-                                        if loginRequest.historial.isEmpty {
+                                        
+                                        // Selected Wallet Pay
+                                        let selectedWalletId = loginRequest.wallets
+                                        let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
+                                     
+                                        if filteredPayments.isEmpty {
                                             _historialEmpty()
                                         } else {
-                                            ForEach(loginRequest.getPayments, id: \.self) { value in
+                                            ForEach(filteredPayments, id: \.self) { value in
                                                 NavigationLink {
-                                                    PaymentsList()
+                                                    PaymentsList(getPayments: value)
                                                 } label: {
                                                     _historial(value: value)
                                                 }
@@ -189,18 +216,11 @@ struct Wallet : View {
                     .fontWeight(.bold)
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
-            Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                ForEach(loginRequest.loginAuth.wallets, id: \.name) { value in
-                    Text("\(value.name)").tag(value.name)
-                        .font(.subheadline)
-                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                }
-            }
         }
         
         ToolbarItem(placement: .topBarTrailing) {
             NavigationLink {
-                Account()
+                Account(loginAuth: loginRequest.loginAuth)
             } label: {
                 AsyncImage(url: URL(string: loginRequest.loginAuth.extra.picture ?? "")) { image in
                     image

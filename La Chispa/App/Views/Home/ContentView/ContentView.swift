@@ -12,39 +12,19 @@ struct ContentView : View {
     @EnvironmentObject var loginRequest : LoginRequests
     @Environment(\.screenSize) var screenSize
     @StateObject var security = Security()
+    @StateObject var swapRequest = BoltzRequest()
     @Environment(\.colorScheme) var colorScheme
     @State var selectedTab : Int = 0
     
     var body : some View {
         GeometryReader { geo in
-            if !loginRequest.timeOut {
-                if !loginRequest.isLoading {
-                    ProgressView("wallet-progress", value: 1.0)
-                        .progressViewStyle(.circular)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        .task {
-                            await loginRequest.getUserAuth()
-                        }
-                } else {
-                    HStack (alignment: .center, spacing: 5) {
-                        Button {
-                            Task {
-                                await loginRequest.getUserAuth()
-                            }
-                        } label: {
-                            _labelButton(label: LabelText(text: "Continue Sesion"))
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Button {
-                            loginRequest.closeSession()
-                        } label: {
-                            _labelButton(label: LabelText(text: "Login Out"))
-                        }
-                        .buttonStyle(.plain)
-                        
-                    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                }
+            if loginRequest.isLoading {
+                ProgressView("wallet-progress", value: 1.0)
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .task {
+                        await loginRequest.getUserAuth()
+                    }
             } else {
                 TabView(selection: $selectedTab) {
                     Wallet()
@@ -54,12 +34,19 @@ struct ContentView : View {
                         }
                         .tag(0)
                         .environmentObject(loginRequest)
+                    Swap()
+                        .tabItem {
+                            Image(systemName: Tab.swap.sistemImage)
+                            Text(Tab.swap.rawValue)
+                        }
+                        .tag(1)
+                        .environmentObject(swapRequest)
                     Settings()
                         .tabItem {
                             Image(systemName: Tab.settings.sistemImage)
                             Text(Tab.settings.rawValue)
                         }
-                        .tag(1)
+                        .tag(2)
                         .environmentObject(security)
                 }
                 .environment(\.screenSize, geo.size)
@@ -69,17 +56,19 @@ struct ContentView : View {
     }
     
     private enum Tab : LocalizedStringKey {
-        case wallet = "Wallet"
+        case wallet = "wallet-view"
+        case swap = "Swap"
         case settings = "wallet-settings"
         
         var sistemImage : String {
             switch self {
-            case .wallet: 
+            case .wallet:
                 if #available(iOS 16, *) {
                     return "wallet.bifold"
                 } else {
                     return "creditcard"
                 }
+            case .swap: return "arrow.up.arrow.down"
             case .settings: return "gearshape"
             }
         }
