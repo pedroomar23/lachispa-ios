@@ -264,10 +264,6 @@
 	<string>Esta aplicación necesita acceso para realizar llamadas USSD.</string>
 	<key>NSUserNotificationAlertStyle</key>
 	<string>banner</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This app have access to the camera</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>This app have access to the Face ID</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
