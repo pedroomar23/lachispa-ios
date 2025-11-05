@@ -21,7 +21,7 @@ struct PaymentsList : View {
                     VStack {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 40, weight: .medium))
-                            .foregroundStyle(colorScheme == .dark ? .green : .green)
+                            .foregroundStyle(colorScheme == .dark ? .blue : .blue)
                         Text("Invoice Created")
                             .font(.headline)
                             .padding(2)
@@ -37,6 +37,9 @@ struct PaymentsList : View {
                 _payDetails(text: "Memo", icon: "arrow.down.backward.and.arrow.up.forward.square", value: getPayments.memo ?? "")
                 _payDetails(text: "Status", icon: "square.stack", value: getPayments.status)
             }
+        }
+        .refreshable {
+            await loginRequest.getPayments()
         }
         .listStyle(.insetGrouped)
         .toolbar {

@@ -13,6 +13,8 @@ struct PayInvoice : View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
+    let getPayments : CreateInvoiceResponse
+    
     var body : some View {
         ContentNavigation {
             List {
@@ -20,27 +22,18 @@ struct PayInvoice : View {
                     _titleView(label: LabelText(text: "invoice-pay-success"))
                 }
                 Section {
-                    ForEach(loginRequest.getPayments, id: \.checking_id) { value in
-                        if value.checking_id == loginRequest.getPayment {
-                            _paymentResponse(response: value)
-                        }
-                    }
+                    _getPayments(text: "Amount", icon: "card", value: "\(loginRequest.formatSats(getPayments.amount))")
+                    _getPayments(text: "invoice-date", icon: "calendar", value: "\(loginRequest.formatDate(getPayments.time))")
+                    _getPayments(text: "Hash", icon: "purchased", value: getPayments.payment_hash)
+                    _getPayments(text: "Fee", icon: "staroflife.circle", value: "\(loginRequest.formatSats(getPayments.fee))")
+                    _getPayments(text: "invoice-status", icon: "checkmark.rectangle.stack.fill", value: getPayments.status)
                 }
-            }
-            .task {
-                await loginRequest.getPayments()
-            }
-            .refreshable {
-                await loginRequest.getPayments()
             }
             .toolbar {
                 _toolbar()
             }
             .listStyle(.insetGrouped)
             .navigationBarTitle("invoice-title-pay", displayMode: .inline)
-            .background {
-                Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all)
-            }
             .interactiveDismissDisabled()
         }
     }
@@ -75,58 +68,16 @@ struct PayInvoice : View {
     }
     
     @ViewBuilder
-    private func _paymentResponse(response: GetPayments) -> some View {
+    private func _getPayments(text: LocalizedStringKey, icon: String, value: String) -> some View {
         HStack (alignment: .center, spacing: 5) {
-            Image(systemName: "calendar")
+            Image(systemName: icon)
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("invoice-date")
+            Text(text)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(loginRequest.formatDate(response.time))")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center, spacing: 5) {
-            Image(systemName: "purchased")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("Hash:")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.payment_hash)
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center, spacing: 5) {
-            Image(systemName: "staroflife.circle")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("Fee:")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("\(loginRequest.formatSats(response.fee))")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .gray)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }.frame(maxWidth: .infinity, alignment: .leading)
-        
-        HStack (alignment: .center, spacing: 5) {
-            Image(systemName: "checkmark.rectangle.stack.fill")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-            Text("invoice-status")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(response.status)
+            Text(value)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .gray)
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -134,6 +85,4 @@ struct PayInvoice : View {
     }
 }
 
-#Preview {
-    PayInvoice()
-}
+

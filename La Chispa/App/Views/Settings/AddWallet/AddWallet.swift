@@ -12,55 +12,26 @@ struct AddWallet : View {
     @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     
+    let wallets : [Wallets]
+    
     var body : some View {
-        ContentNavigation {
-            if #available(iOS 16, *) {
-                List {
-                    if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
-                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                            if value.id == loginRequest.wallets {
-                                Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                                    Text(value.name).tag(value.id)
-                                }
-                                .pickerStyle(.inline)
-                                .labelsHidden()
-                            }
-                        }
+        List {
+            ForEach(wallets, id: \.id) { value in 
+                if value.id == loginRequest.wallets {
+                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                        Text(value.name).tag(value.id)
                     }
-                }
-                .listStyle(.insetGrouped)
-                .task {
-                    await loginRequest.getUserAuth()
-                }
-                .refreshable {
-                    await loginRequest.getUserAuth()
-                }
-                .toolbar {
-                    _toolbar(label: LabelIcon(text: "wallet-view", icon: "plus"))
-                }
-            } else {
-                if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
-                    List(loginRequest.loginAuth.wallets, id: \.id) { value in
-                        if value.id == loginRequest.wallets {
-                            Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                                Text(value.name).tag(value.id)
-                            }
-                            .pickerStyle(.inline)
-                            .labelsHidden()
-                        }
-                    }
-                    .listStyle(.insetGrouped)
-                    .task {
-                        await loginRequest.getUserAuth()
-                    }
-                    .refreshable {
-                        await loginRequest.getUserAuth()
-                    }
-                    .toolbar {
-                        _toolbar(label: LabelIcon(text: "wallet-view", icon: "plus"))
-                    }
+                    .pickerStyle(.inline)
+                    .labelsHidden()
                 }
             }
+        }
+        .listStyle(.insetGrouped)
+        .refreshable {
+            await loginRequest.getUserAuth()
+        }
+        .toolbar {
+            _toolbar(label: LabelIcon(text: "wallet-view", icon: "plus"))
         }
     }
     
@@ -83,6 +54,3 @@ struct AddWallet : View {
     }
 }
 
-#Preview {
-    AddWallet()
-}
