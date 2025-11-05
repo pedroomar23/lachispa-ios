@@ -14,7 +14,6 @@ struct Wallet : View {
     @State var showInvoice : Bool = false
     @State var showPayments : Bool = false
     
-    
     var body : some View {
         ContentNavigation {
             if #available(iOS 16, *) {
@@ -115,6 +114,8 @@ struct Wallet : View {
                                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                                     }
                                     .pickerStyle(.menu)
+                                    .listRowSeparator(.hidden)
+                                    .frame(maxWidth: .infinity, alignment: .center)
                                 }
                                 Section {
                                     VStack {
@@ -298,7 +299,7 @@ struct Wallet : View {
                     .font(.subheadline)
                     .frame(maxWidth: .infinity, alignment: .center)
             }
-            .padding(.horizontal)
+            .padding()
             .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
         }
     }

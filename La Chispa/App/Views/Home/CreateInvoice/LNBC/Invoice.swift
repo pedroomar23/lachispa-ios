@@ -47,7 +47,7 @@ struct Invoice : View {
                     }
                 }
                 .sheet(isPresented: $loginRequest.isInvoice) {
-                    PayInvoice()
+                    PayInvoice(getPayments: loginRequest.paymentResponse)
                 }
                 .alert("Error", isPresented: $loginRequest.alertMsg) {
                     

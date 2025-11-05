@@ -49,24 +49,6 @@ struct Account : View {
                 .fontWeight(.bold)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
         }
-        ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                Button {
-                    loginRequest.balance = true
-                } label: {
-                    if loginRequest.balance {
-                        Image(systemName: "eye")
-                    } else {
-                        Image(systemName: "eye.slash")
-                    }
-                    Text("View Balance")
-                }
-            } label: {
-                Image(systemName: "text.insert")
-                    .foregroundStyle(colorScheme == .dark ? .white : .black)
-                    .font(.system(size: 14, weight: .medium))
-            }
-        }
     }
     
     @ViewBuilder

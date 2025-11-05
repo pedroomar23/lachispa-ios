@@ -42,7 +42,7 @@ struct LNURL : View {
             }
             .buttonStyle(.plain)
             .sheet(isPresented: $loginRequest.isLNURL) {
-                PayLNURLInvoice()
+                PayLNURLInvoice(payment: loginRequest.payLNURLResponse)
             }
             .listRowSeparator(.hidden)
             .frame(maxWidth: .infinity, alignment: .center)
