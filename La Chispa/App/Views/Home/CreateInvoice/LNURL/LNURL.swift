@@ -16,7 +16,7 @@ struct LNURL : View {
     var body : some View {
         List {
             HStack (spacing: 1) {
-                LNTextfield(text: $loginRequest.payLNURLs, placeholder: "invoice-bolt11")
+                LNTextfield(text: $loginRequest.paymentbolt11, placeholder: "invoice-bolt11")
                     .frame(height: 53)
                     .padding()
                 Button {
@@ -26,7 +26,7 @@ struct LNURL : View {
                 }
                 .buttonStyle(.plain)
                 .fullScreenCover(isPresented: $payLNURL) {
-                    QRCodeScannerController(scannedCode: $loginRequest.payLNURLs, errorMessage: $loginRequest.message)
+                    QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                 }
                 .listRowSeparator(.hidden)
             }

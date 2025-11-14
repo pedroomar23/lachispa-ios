@@ -22,6 +22,7 @@ final class WalletRequest : ObservableObject {
     @Published var message : String = ""
     
     @Published var name : String = ""
+    @Published var selectedWallet : String = ""
     
     let walletApi = WalletsApi.shared
     
@@ -40,7 +41,6 @@ final class WalletRequest : ObservableObject {
                 switch result {
                 case let .success(model):
                     createWalletRespomse = model
-                    name = model.name
                     isWallet = true
                     isLoading = false
                 case let .failure(error):
@@ -55,29 +55,7 @@ final class WalletRequest : ObservableObject {
     
     // MARK: - Update Wallet
     
-    func updateWalletRequests() {
-        Task {
-            DispatchQueue.main.async { [self] in isLoading = false }
-            await updateWalletRequestPrivate()
-        }
-    }
+   
     
-    func updateWalletRequestPrivate() async {
-        await walletApi.updateWallet(name: name, icon: updateWalletRequest.icon, color: updateWalletResponse.extra.color, currency: updateWalletResponse.currency, pinned: updateWalletResponse.extra.pinned) { result in
-            DispatchQueue.main.async { [self] in
-                switch result {
-                case let .success(model):
-                    updateWalletResponse = model
-                    isLoading = false
-                    isUpdate = true
-                    name = model.name
-                case let .failure(error):
-                    message = error.localizedDescription
-                    alertMsg = true
-                    isLoading = false
-                    print("ErrorGetUpdateWallet: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
+    
 }

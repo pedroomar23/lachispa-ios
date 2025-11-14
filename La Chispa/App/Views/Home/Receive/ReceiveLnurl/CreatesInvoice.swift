@@ -30,12 +30,13 @@ struct CreatesInvoice : View {
                         Button {
                             loginRequest.getLNURLRequest()
                         } label: {
-                            if loginRequest.isLoading {
+                            if loginRequest.isLNURL {
                                 ProgressBar(color: .blue)
                             } else {
                                 _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
                             }
                         }
+                        .buttonStyle(.plain)
                         .alert("Error", isPresented: $loginRequest.alertMsg) {
                             
                         } message: {
@@ -66,12 +67,13 @@ struct CreatesInvoice : View {
                     Button {
                         loginRequest.getLNURLRequest()
                     } label: {
-                        if loginRequest.isLoading {
+                        if loginRequest.isLNURL {
                             ProgressBar(color: .blue)
                         } else {
                             _labelButton(label: LabelText(text: "invoice-lnurlconnect"))
                         }
                     }
+                    .buttonStyle(.plain)
                     .alert("Error", isPresented: $loginRequest.alertMsg) {
                         
                     } message: {

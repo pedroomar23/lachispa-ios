@@ -43,6 +43,8 @@
 // MARK: - Wallet
 
 "wallet-historial" = "Historial";
+"wallet-historials" = "Historial Vacío";
+"wallet-historialempty" = "No tienes pagos en tu historial";
 
 // MARK: - Invoice
 

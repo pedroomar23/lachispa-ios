@@ -51,22 +51,54 @@ struct Receive : View {
     private func _invoice(response: GetLNURLUsername) -> some View {
         VStack {
             if let qrImage = loginRequest.qrCodeImage {
-                Image(uiImage: qrImage)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .frame(width: 300, height: 300)
+                ZStack (alignment: .center) {
+                    Image(uiImage: qrImage)
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .frame(width: 300, height: 300)
+                    
+                    Image("LaunchImage")
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 70, height: 70)
+                }.ignoresSafeArea(edges: .all)
             } else {
                 ProgressBar(color: .blue)
                     .task {
-                        loginRequest.generateQRCode(from: loginRequest.getLNURLResponse.callback)
+                        loginRequest.generateQRCode(from: "\(loginRequest.getLNURLResponse.displayName)@lachispa.me")
                     }
             }
-            VStack (spacing: 2) {
-                Text("\(loginRequest.username)@lachispa.me")
-                    .lineLimit(1)
+            HStack (spacing: 1) {
+                Text("\(loginRequest.getLNURLResponse.displayName)@lachispa.me")
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
                     .padding()
+                Button {
+                    self.invoiceReceive.toggle()
+                    _copy(text: "\(loginRequest.getLNURLResponse.displayName)@lachispa.me")
+                } label: {
+                    Image(systemName: "document.on.document")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                }
+                .padding()
+                .buttonStyle(.plain)
+                .alert("Lightning Address Copied", isPresented: $invoiceReceive) {
+                    
+                } message: {
+                    Text("invoice-alert-copy")
+                }
+            }
+            .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .padding()
+            
+            NavigationLink {
+                ReceiveInvoice()
+            } label: {
+                _labelButton(label: LabelText(text: "invoice-request"))
             }
         }
         .frame(maxWidth: .infinity, alignment: .center)
@@ -74,7 +106,7 @@ struct Receive : View {
     }
     
     private func _copy(text: String) {
-        UIPasteboard.general.string = loginRequest.getLNURLResponse.callback
+        UIPasteboard.general.string = "\(loginRequest.getLNURLResponse.displayName)@lachispa.me"
     }
 }
 

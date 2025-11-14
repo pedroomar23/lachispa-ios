@@ -69,3 +69,15 @@ enum EndpointLNUrl {
         }
     }
 }
+
+enum EndpointWallet {
+    case getUpdateWallet(walletId: String)
+    
+    var urlUpdate: URL {
+        switch self {
+        case .getUpdateWallet(let walletId):
+            let urlString = "https://lachispa.me/api/v1/wallet/\(walletId)"
+            return URL(string: urlString)!
+        }
+    }
+}

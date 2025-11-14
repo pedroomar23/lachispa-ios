@@ -33,7 +33,7 @@ struct CreateWalletResponse: Decodable, Hashable, Encodable, Identifiable {
     let deleted: Bool
     let created_at: String
     let updated_at: String
-    let currency: String
+    let currency: String?
     let balance_msat: Int
     let extra: ExtraD
     
@@ -61,12 +61,12 @@ struct CreateWalletResponse: Decodable, Hashable, Encodable, Identifiable {
         self.deleted = try container.decode(Bool.self, forKey: .deleted)
         self.created_at = try container.decode(String.self, forKey: .created_at)
         self.updated_at = try container.decode(String.self, forKey: .updated_at)
-        self.currency = try container.decode(String.self, forKey: .currency)
+        self.currency = try container.decodeIfPresent(String.self, forKey: .currency) ?? ""
         self.balance_msat = try container.decode(Int.self, forKey: .balance_msat)
         self.extra = try container.decode(ExtraD.self, forKey: .extra)
     }
     
-    init(id: String, user: String, name: String, adminkey: String, inkey: String, deleted: Bool, created_at: String, updated_at: String, currency: String, balance_msat: Int, extra: ExtraD) {
+    init(id: String, user: String, name: String, adminkey: String, inkey: String, deleted: Bool, created_at: String, updated_at: String, currency: String?, balance_msat: Int, extra: ExtraD) {
         self.id = id
         self.user = user
         self.name = name
