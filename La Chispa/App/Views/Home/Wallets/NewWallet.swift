@@ -29,6 +29,9 @@ struct NewWallet : View {
                             _labelButton(label: LabelText(text: "Connect"))
                         }
                     }
+                    .sheet(isPresented: $walletRequest.isWallet) {
+                        WalletResponse(wallet: walletRequest.createWalletRespomse)
+                    }
                     .alert("Error", isPresented: $walletRequest.alertMsg) {
                         
                     } message: {
@@ -55,6 +58,9 @@ struct NewWallet : View {
                     } else {
                         _labelButton(label: LabelText(text: "Connect"))
                     }
+                }
+                .sheet(isPresented: $walletRequest.isWallet) {
+                    WalletResponse(wallet: walletRequest.createWalletRespomse)
                 }
                 .alert("Error", isPresented: $walletRequest.alertMsg) {
                     

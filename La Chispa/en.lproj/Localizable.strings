@@ -40,6 +40,10 @@
 "wallet-balance" = "Balance";
 "wallet-create" = "Wallet Created";
 
+"wallet-historial" = "Historial";
+"wallet-historials" = "Historial is Empty";
+"wallet-historialempty" = "Don't have payments in your historial";
+
 // MARK: - Wallet
 
 "wallet-historial" = "Historial";

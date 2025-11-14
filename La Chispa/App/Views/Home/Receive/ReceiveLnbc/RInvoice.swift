@@ -49,12 +49,21 @@ struct RInvoice : View {
     private func _invoiceResponse(response: CreateInvoiceResponse) -> some View {
         Section {
             if let qrImage = loginRequest.qrCodeImage {
-                Image(uiImage: qrImage)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .frame(width: 300, height: 300)
+                ZStack (alignment: .center) {
+                    Image(uiImage: qrImage)
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .frame(width: 300, height: 300)
+                   
+                    Image("LaunchImage")
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 60, height: 60)
+                }.ignoresSafeArea(edges: .all)
             } else {
                 ProgressBar(color: .blue)
                     .task {

@@ -13,6 +13,7 @@ struct Wallet : View {
     @StateObject var loginRequest = LoginRequests()
     @State var showInvoice : Bool = false
     @State var showPayments : Bool = false
+    @State var showInfoPayments : Bool = false
     
     var body : some View {
         ContentNavigation {
@@ -171,10 +172,13 @@ struct Wallet : View {
                                             _historialEmpty()
                                         } else {
                                             ForEach(filteredPayments, id: \.self) { value in
-                                                NavigationLink {
-                                                    PaymentsList(getPayments: value)
+                                                Button {
+                                                    self.showInfoPayments.toggle()
                                                 } label: {
                                                     _historial(value: value)
+                                                }
+                                                .fullScreenCover(isPresented: $showInfoPayments) {
+                                                    PaymentsList(getPayments: value)
                                                 }
                                                 .padding()
                                                 .background {
@@ -290,11 +294,11 @@ struct Wallet : View {
                         .foregroundStyle(colorScheme == .dark ? .orange : .white)
                         .font(.system(size: 20, weight: .medium))
                 }
-                Text("Historial is Empty")
+                Text("wallet-historials")
                     .lineLimit(1)
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .center)
-                Text("Don't have payments in your historial")
+                Text("wallet-historialempty")
                     .lineLimit(1)
                     .font(.subheadline)
                     .frame(maxWidth: .infinity, alignment: .center)

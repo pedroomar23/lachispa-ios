@@ -15,9 +15,10 @@ final class LoginRequests : ObservableObject {
     @Published var loginResponse : LoginResponse = LoginResponse(access_token: "", token_type: "")
     @Published var loginAuth : LoginAuth = LoginAuth(id: "", created_at: "", updated_at: "", email: "", username: "", pubkey: "", external_id: "", extensions: [""], wallets: [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 870852, extra: WalletExtra(icon: "", color: "", pinned: false))], admin: false, super_user: false, fiat_providers: [""], has_password: false, extra: Extra(email_verified: false, first_name: "", last_name: "", display_name: "", picture: "", provider: "", visible_wallet_count: 10))
     @Published var wallet = [Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 0, extra: WalletExtra(icon: "", color: "", pinned: false))]
+    @Published var newWallet : Wallets = Wallets(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 0, extra: WalletExtra(icon: "", color: "", pinned: false))
     @Published var historial : [HistorialResponse] = [HistorialResponse(date: "", income: 0, spending: 0, balance: 0)]
     @Published var createInvoice : CreateInvoice = CreateInvoice(bolt11: "", out: false, amount: 0, unit: "sat", memo: "")
-    @Published var createPayments : CreatePayments = CreatePayments(bolt11: "", out: true, amount: 0, unit: "")
+    @Published var createPayments : CreatePayments = CreatePayments(out: true, amount: 0, unit: "")
     @Published var paymentResponse : CreateInvoiceResponse = CreateInvoiceResponse(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: 0, preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     @Published var getPaymentsAllUsers : GetPaymentsAllUsers = GetPaymentsAllUsers(field: "", total: 0)
     @Published var getPayments : [GetPayments] = [GetPayments(cheking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 4.274, wallet_fiat_rate: 935.8396030346214, wallet_btc_rate: 106855.918125))]
@@ -26,17 +27,20 @@ final class LoginRequests : ObservableObject {
     @Published var payLNURL : PayLNURLRequest = PayLNURLRequest(description_hash: "", callback: "", amount: 0, comment: "", description: "", unit: "")
     @Published var payLNURLResponse : PayLNURLResponse = PayLNURLResponse(checking_id: "", payment_hash: "", wallet_id: "", amount: 0, fee: 0, bolt11: "", fiat_provider: "", status: "", memo: "", expiry: "", webhook: "", webhook_status: "", preimage: "", tag: "", extension: "", time: "", created_at: "", updated_at: "", extra: ExtraData(wallet_fiat_currency: "", wallet_fiat_amount: 0.0, wallet_fiat_rate: 0.0, wallet_btc_rate: 0.0))
     @Published var payLNUrlNFC : PaymentNFCRequest = PaymentNFCRequest(lnurl_w: "")
+    @Published var updateWalletResponse : UpdatedWalletResponse = UpdatedWalletResponse(id: "", user: "", name: "", adminkey: "", inkey: "", deleted: false, created_at: "", updated_at: "", currency: "", balance_msat: 0, extra: ExtraD(icon: "", color: "", pinned: false))
     
     @AppStorage("token") var token : String = ""
     @AppStorage("email") var email : String = ""
     @AppStorage("usuario") var username : String = ""
     @AppStorage("paymmentHash") var paymentbolt11 : String = ""
-    @AppStorage("wallets") var wallets: String = ""
+    @AppStorage("description") var description : String = ""
+    @AppStorage("wallets") var wallets : String = ""
     @AppStorage("getPayments") var getPayment : String = ""
     @AppStorage("account") var account : String = ""
     @Published var amount : String = ""
     @Published var paymentsUnit : String =  ""
     @Published var payLNURLs : String = ""
+    @Published var isUpdate : Bool = false
     
     @Published var isInvoice : Bool = false
     @Published var isLNURL : Bool = false
@@ -51,6 +55,7 @@ final class LoginRequests : ObservableObject {
     @AppStorage("balance") var balance : Bool = false
     
     let endpointApi = EndpointsApi.shared
+    let walletApi = WalletsApi.shared
     let defaults = UserDefaults.standard
     
     @Published var btcRate: Double = 0.0
@@ -206,23 +211,56 @@ final class LoginRequests : ObservableObject {
                     token = loginResponse.access_token
                     defaults.set(loginResponse.access_token, forKey: "authToken")
                     
-                    account = model.id
-                   
-                    wallet.removeAll()
-                    for i in model.wallets {
-                        wallets.append(i.id)
+                    if let firstWallet = model.wallets.first {
+                        wallets = firstWallet.id
                     }
                     
-                    wallets = model.wallets[0].id
-                    
                     Task {
-                        await getPayments()
+                        await getPayments(inkey: model.wallets[0].inkey)
                     }
                     
                 case let .failure(error):
                     self.message = error.localizedDescription
                     self.isLoading = false
                     print("ErrorGetAuthUserPrivate: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func getWallet(inkey: String) async {
+        let url = URL(string: "https://lachispa.me/api/v1/wallet")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue(inkey, forHTTPHeaderField: "X-Api-Key") // usa el inkey de la wallet
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+            }
+            let wallet = try JSONDecoder().decode(Wallets.self, from: data)
+            print("Wallet:", wallet)
+            newWallet = wallet
+        } catch {
+            print("ErrorGetWallet:", error.localizedDescription)
+        }
+    }
+    
+    func updateWalletRequestPrivate() async {
+        await walletApi.updateWallet(walletId: wallets) { result in
+            DispatchQueue.main.async { [self] in
+                switch result {
+                case let .success(model):
+                    newWallet = model
+                    isLoading = false
+                    isUpdate = true
+                case let .failure(error):
+                    message = error.localizedDescription
+                    alertMsg = true
+                    isLoading = false
+                    print("ErrorGetUpdateWallet: \(error.localizedDescription)")
                 }
             }
         }
@@ -251,7 +289,7 @@ final class LoginRequests : ObservableObject {
     
     // MARK: - GetPayments
     
-    func getPayments() async {
+    func getPayments(inkey: String) async {
         await endpointApi.getPayments { result in
             DispatchQueue.main.async { [self] in
                 switch result {
@@ -259,19 +297,13 @@ final class LoginRequests : ObservableObject {
                     getPayments = model
                     isLoading = false
                     isAuth = true
-                    timeOut = true 
+                    timeOut = true
                     defaults.set(loginResponse.access_token, forKey: "authToken")
-                    getPayment.removeAll()
-                    for i in model {
-                        getPayment.append(i.checking_id)
-                    }
                     
-                    getPayment = model[0].checking_id
-               
                 case let .failure(error):
                     message = error.localizedDescription
                     isLoading = false
-                    alertMsg = true 
+                    alertMsg = true
                     print("ErrorGetPaymentsPrivate: \(error.localizedDescription)")
                 }
             }
@@ -293,6 +325,7 @@ final class LoginRequests : ObservableObject {
                 switch result {
                 case let .success(model):
                     getLNURLResponse = model
+                    username = model.displayName
                     isLoading = false
                     isAuth = true
                     isLNURL = true
@@ -315,7 +348,10 @@ final class LoginRequests : ObservableObject {
     }
     
     func payLNURLRequestPrivate() async {
-        await endpointApi.payLNURL(description_hash: payLNURL.description_hash, callback: payLNURLs, amount: payLNURL.amount, comment: payLNURL.comment, description: payLNURL.description, unit: payLNURL.unit) { result in
+        guard let newAmount = Int(amount), newAmount > 0 else {
+            return 
+        }
+        await endpointApi.payLNURL(description_hash: payLNURL.description_hash, callback: payLNURLs, amount: newAmount, comment: payLNURL.comment, description: payLNURL.description, unit: payLNURL.unit) { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
@@ -346,13 +382,16 @@ final class LoginRequests : ObservableObject {
     }
     
     func paymentsRequestPrivate() async {
-        await endpointApi.createPayments(bolt11: paymentbolt11, out: createPayments.out, amount: createPayments.amount, unit: createPayments.unit) { result in
+        guard let newAmount = Int(amount), newAmount > 0 else {
+            return
+        }
+        await endpointApi.createPayments(bolt11: paymentbolt11, out: createPayments.out, amount: newAmount, unit: createPayments.unit) { result in
             DispatchQueue.main.async { [self] in
                 switch result {
                 case let .success(model):
                     paymentResponse = model
                     paymentsUnit = createPayments.unit
-                    paymentbolt11 = createPayments.bolt11
+                    paymentbolt11 = model.bolt11
                     isLoading = false
                     isAuth = true
                     isInvoice = true 

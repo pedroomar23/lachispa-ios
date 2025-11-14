@@ -9,27 +9,21 @@ import SwiftUI
 
 struct AddWallet : View {
     
+    @StateObject var walletRequest = WalletRequest()
     @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     
-    let wallets : [Wallets]
-    
     var body : some View {
         List {
-            ForEach(wallets, id: \.id) { value in 
-                if value.id == loginRequest.wallets {
-                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                        Text(value.name).tag(value.id)
-                    }
-                    .pickerStyle(.inline)
-                    .labelsHidden()
+            Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                    Text("\(value.name)").tag(value.id)
                 }
             }
+            .pickerStyle(.inline)
+            .labelsHidden()
         }
         .listStyle(.insetGrouped)
-        .refreshable {
-            await loginRequest.getUserAuth()
-        }
         .toolbar {
             _toolbar(label: LabelIcon(text: "wallet-view", icon: "plus"))
         }
@@ -51,6 +45,29 @@ struct AddWallet : View {
                     .foregroundStyle(colorScheme == .dark ? .white : .black)
             }
         }
+    }
+    
+    @ViewBuilder
+    private func _walletEmpty(label: LabelPre) -> some View {
+        VStack {
+            ZStack (alignment: .center) {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(colorScheme == .dark ? .black : .blue)
+                    .frame(width: 30, height: 30)
+                Image(systemName: label.icon)
+                    .foregroundStyle(colorScheme == .dark ? .blue : .white)
+                    .font(.system(size: 20, weight: .medium))
+            }
+            Text(label.text)
+                .font(.headline)
+                .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Text(label.text1)
+                .font(.subheadline)
+        }
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Color(.tertiarySystemGroupedBackground))
+        }
+        .padding()
     }
 }
 

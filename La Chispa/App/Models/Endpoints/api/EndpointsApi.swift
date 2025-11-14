@@ -78,7 +78,7 @@ class EndpointsApi {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer\(cookie_acccess_token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(cookie_acccess_token)", forHTTPHeaderField: "Authorization")
         request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud GET: \(EndpointUrl.userAuth.url.absoluteString)")

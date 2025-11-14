@@ -71,30 +71,17 @@ class WalletsApi {
     
     // MARK: - Update Wallet
     
-    func updateWallet(name: String, icon: String, color: String, currency: String, pinned: Bool, completion: @escaping @Sendable (Result<UpdatedWalletResponse, EndpointFailure>) -> Void) async {
+    func updateWallet(walletId: String, completion: @escaping @Sendable (Result<Wallets, EndpointFailure>) -> Void) async {
         let decoder = JSONDecoder()
-        var request = URLRequest(url: EndpointUrl.updateWallet.url)
+        let requestURL = EndpointWallet.getUpdateWallet(walletId: walletId).urlUpdate
+        var request = URLRequest(url: requestURL)
         request.httpMethod = "PATCH"
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
         
-        logger.info("Initializing Solicite: \(EndpointUrl.updateWallet.url.absoluteString)")
-        
-        let updateWallet = UpdatedWalletRequest(
-            name: name,
-            icon: icon,
-            color: color,
-            currency: currency,
-            pinned: pinned
-        )
-        print("JSON Response: \(updateWallet)")
-        
         do {
-            let jsonBody = try JSONEncoder().encode(updateWallet)
-            request.httpBody = jsonBody
-            
             let (data, response) = try await session.data(for: request)
             
             if let httpResponse = response as? HTTPURLResponse {
@@ -108,7 +95,7 @@ class WalletsApi {
                 
                 switch httpResponse.statusCode {
                 case 200:
-                    let updatedWalletResponse = try decoder.decode(UpdatedWalletResponse.self, from: data)
+                    let updatedWalletResponse = try decoder.decode(Wallets.self, from: data)
                     completion(.success(updatedWalletResponse))
                     print("JSON Response: \(updatedWalletResponse)")
                 case 422:
@@ -122,4 +109,6 @@ class WalletsApi {
             completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(error.localizedDescription)")))
         }
     }
+    
+    
 }
