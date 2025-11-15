@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import SwiftUICore
+
 
 fileprivate struct ScreenSize : EnvironmentKey {
     static let defaultValue : CGSize = .zero

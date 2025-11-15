@@ -112,6 +112,48 @@ class EndpointsApi {
         }
     }
     
+    // MARK: - Wallet
+    
+    func getWallet(walletId: String, completion: @escaping @Sendable (Result<[Wallets], EndpointFailure>) -> Void) async {
+        let decoder = JSONDecoder()
+        var request = URLRequest(url: EndpointUrl.wallet.url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 10
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("a8efab8aa61846fda7084dfb417af0a9", forHTTPHeaderField: "X-Api-Key")
+        
+        logger.info("Iniciando Solicitud a GET: \(EndpointUrl.wallet.url)")
+        
+        do {
+            let (data, response) = try await session.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Server Response: \(httpResponse.statusCode)")
+                
+                if let jsonData = String(data: data, encoding: .utf8) {
+                    print("Server Response: \(jsonData)")
+                } else {
+                    print("Server Failure Response")
+                }
+                
+                switch httpResponse.statusCode {
+                case 200:
+                    let wallet = try decoder.decode([Wallets].self, from: data)
+                    print("JSON Response: \(wallet)")
+                    completion(.success(wallet))
+                case 400:
+                    let errorDetails = String(data: data, encoding: .utf8)
+                    print("Error Details: \(String(describing: errorDetails))")
+                default:
+                    completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(httpResponse.statusCode)")))
+                }
+            }
+        } catch {
+            completion(.failure(EndpointFailure.jsonFailure(message: "Server Failure Response: \(error.localizedDescription)")))
+        }
+    }
+    
     // MARK: - Register
     
     func register(email: String, username: String, password: String, password_repeat: String, completion: @escaping @Sendable (Result<RegisterResponse, EndpointFailure>) -> Void) async {
@@ -226,7 +268,7 @@ class EndpointsApi {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        request.setValue("3a5c7c01da3546c3aa7c981f2fa2d7d0", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Initializing Solicite: \(EndpointUrl.payLNURL.url.absoluteString)")
         
@@ -279,7 +321,7 @@ class EndpointsApi {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        request.setValue("3a5c7c01da3546c3aa7c981f2fa2d7d0", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
         
@@ -330,7 +372,7 @@ class EndpointsApi {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        request.setValue("5880b209cb7547bc925bf14bdb214d99", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a POST: \(EndpointUrl.createPayments.url.absoluteString)")
         
@@ -383,7 +425,7 @@ class EndpointsApi {
         request.timeoutInterval = 10
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("c38ef8a288024b82a5951bcc06143999", forHTTPHeaderField: "X-Api-Key")
+        request.setValue("3a5c7c01da3546c3aa7c981f2fa2d7d0", forHTTPHeaderField: "X-Api-Key")
         
         logger.info("Iniciando Solicitud a GET: \(EndpointUrl.getPayments.url.absoluteString)")
         

@@ -19,18 +19,16 @@ struct PaymentsList : View {
         if #available(iOS 16, *) {
             List {
                 Section {
-                    Section {
-                        VStack {
-                            Image(systemName: "checkmark.seal.fill")
-                                .font(.system(size: 40, weight: .medium))
-                                .foregroundStyle(colorScheme == .dark ? .blue : .blue)
-                            Text("Invoice Created")
-                                .font(.headline)
-                                .padding(2)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .listRowBackground(Color.clear)
+                    VStack {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 40, weight: .medium))
+                            .foregroundStyle(colorScheme == .dark ? .blue : .blue)
+                        Text("Invoice Created")
+                            .font(.headline)
+                            .padding(2)
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(Color.clear)
                 }
                 Section {
                     _payDetails(text: "Amount", icon: "archivebox", value: "\(loginRequest.formatSats(getPayments.amount))")
@@ -39,9 +37,6 @@ struct PaymentsList : View {
                     _payDetails(text: "Memo", icon: "arrow.down.backward.and.arrow.up.forward.square", value: getPayments.memo ?? "")
                     _payDetails(text: "Status", icon: "square.stack", value: getPayments.status)
                 }
-            }
-            .refreshable {
-                await loginRequest.getPayments(inkey: loginRequest.loginAuth.wallets[0].inkey)
             }
             .listStyle(.insetGrouped)
             .toolbar {
@@ -50,18 +45,16 @@ struct PaymentsList : View {
         } else {
             List {
                 Section {
-                    Section {
-                        VStack {
-                            Image(systemName: "checkmark.seal.fill")
-                                .font(.system(size: 40, weight: .medium))
-                                .foregroundStyle(colorScheme == .dark ? .blue : .blue)
-                            Text("Invoice Created")
-                                .font(.headline)
-                                .padding(2)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .listRowBackground(Color.clear)
+                    VStack {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 40, weight: .medium))
+                            .foregroundStyle(colorScheme == .dark ? .blue : .blue)
+                        Text("Invoice Created")
+                            .font(.headline)
+                            .padding(2)
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(Color.clear)
                 }
                 Section {
                     _payDetails(text: "Amount", icon: "archivebox", value: "\(loginRequest.formatSats(getPayments.amount))")
@@ -70,9 +63,6 @@ struct PaymentsList : View {
                     _payDetails(text: "Memo", icon: "arrow.down.backward.and.arrow.up.forward.square", value: getPayments.memo ?? "")
                     _payDetails(text: "Status", icon: "square.stack", value: getPayments.status)
                 }
-            }
-            .refreshable {
-                await loginRequest.getPayments(inkey: loginRequest.loginAuth.wallets[0].inkey)
             }
             .listStyle(.insetGrouped)
             .toolbar {

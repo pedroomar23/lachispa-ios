@@ -19,75 +19,75 @@ struct Wallet : View {
         ContentNavigation {
             if #available(iOS 16, *) {
                 ScrollView (.vertical, showsIndicators: false) {
-                    if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
-                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                            if value.id == loginRequest.wallets {
-                                Section {
-                                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                                        Text("\(value.name)").tag(value.id)
-                                            .font(.headline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                    }
-                                    .pickerStyle(.menu)
+                    Section {
+                        Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                            ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                                Text(value.name).tag(value.id)
+                                    .font(.headline)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
+                    ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                        if value.id == loginRequest.wallets {
+                            Section {
+                                VStack {
+                                    Text("wallet-balance")
+                                        .font(.headline)
+                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                        .font(.subheadline)
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
                                 }
-                                Section {
-                                    VStack {
-                                        Text("wallet-balance")
-                                            .font(.headline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                            .font(.subheadline)
-                                            .font(.system(size: 40))
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            }
+                            
+                            Section {
+                                HStack (alignment: .center, spacing: 1) {
+                                    NavigationLink {
+                                        InvoiceView()
+                                    } label: {
+                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                    }
+                                    
+                                    NavigationLink {
+                                        ReceiveView()
+                                    } label: {
+                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                                     }
                                 }
-                                
-                                Section {
-                                    HStack (alignment: .center, spacing: 1) {
-                                        NavigationLink {
-                                            InvoiceView()
-                                        } label: {
-                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
-                                        }
-                                        
-                                        NavigationLink {
-                                            ReceiveView()
-                                        } label: {
-                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
-                                        }
-                                    }
-                                }
-                              
-                                Section {
-                                    VStack {
-                                        Text("Historial")
-                                            .fontWeight(.bold)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .font(.title2)
+                            }
+                            
+                            Section {
+                                VStack {
+                                    Text("Historial")
+                                        .fontWeight(.bold)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.title2)
+                                        .padding()
+                                    
+                                    // Selected Wallet Pay
+                                    let selectedWalletId = loginRequest.wallets
+                                    let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
+                                    
+                                    if filteredPayments.isEmpty {
+                                        _historialEmpty()
+                                    } else {
+                                        ForEach(filteredPayments, id: \.self) { value in
+                                            NavigationLink {
+                                                PaymentsList(getPayments: value)
+                                            } label: {
+                                                _historial(value: value)
+                                            }
                                             .padding()
-                                       
-                                        // Selected Wallet Pay
-                                        let selectedWalletId = loginRequest.wallets
-                                        let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
-                                      
-                                        if filteredPayments.isEmpty {
-                                            _historialEmpty()
-                                        } else {
-                                            ForEach(filteredPayments, id: \.self) { value in
-                                                NavigationLink {
-                                                    PaymentsList(getPayments: value)
-                                                } label: {
-                                                    _historial(value: value)
-                                                }
-                                                .padding()
-                                                .background {
-                                                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                                        .fill(Color(.tertiarySystemGroupedBackground))
-                                                }
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                    .fill(Color(.tertiarySystemGroupedBackground))
                                             }
                                         }
-                                    }.padding(.horizontal)
-                                }
+                                    }
+                                }.padding(.horizontal)
                             }
                         }
                     }
@@ -105,92 +105,90 @@ struct Wallet : View {
                 }
             } else {
                 List {
-                    if loginRequest.wallets == loginRequest.loginAuth.wallets.first?.id {
-                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                            if value.id == loginRequest.wallets {
-                                Section {
-                                    Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                                        Text("\(value.name)").tag(value.id)
-                                            .font(.headline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    Section {
+                        Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                            ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                                Text(value.name).tag(value.id)
+                                    .font(.headline)
+                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
+                    ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                        if value.id == loginRequest.wallets {
+                            Section {
+                                VStack {
+                                    Text("wallet-balance")
+                                        .font(.headline)
+                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                        .font(.subheadline)
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .listRowSeparator(.hidden)
+                            }
+                            
+                            Section {
+                                HStack (spacing: 1) {
+                                    Button {
+                                        self.showPayments.toggle()
+                                    } label: {
+                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
                                     }
-                                    .pickerStyle(.menu)
-                                    .listRowSeparator(.hidden)
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                }
-                                Section {
-                                    VStack {
-                                        Text("wallet-balance")
-                                            .font(.headline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                            .font(.subheadline)
-                                            .font(.system(size: 40))
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    .buttonStyle(PlainButtonStyle())
+                                    .sheet(isPresented: $showPayments) {
+                                        InvoiceView()
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .listRowSeparator(.hidden)
-                                }
-                                
-                                Section {
-                                    HStack (spacing: 1) {
-                                        Button {
-                                            self.showPayments.toggle()
-                                        } label: {
-                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                        .sheet(isPresented: $showPayments) {
-                                            InvoiceView()
-                                        }
-                                        
-                                        Button {
-                                            self.showInvoice.toggle()
-                                        } label: {
-                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                        .sheet(isPresented: $showInvoice) {
-                                            ReceiveView()
-                                        }
-                                    }.listRowSeparator(.hidden)
-                                }
-                              
-                                Section {
-                                    VStack {
-                                        Text("Historial")
-                                            .fontWeight(.bold)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .font(.title2)
+                                    
+                                    Button {
+                                        self.showInvoice.toggle()
+                                    } label: {
+                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                    .sheet(isPresented: $showInvoice) {
+                                        ReceiveView()
+                                    }
+                                }.listRowSeparator(.hidden)
+                            }
+                            
+                            Section {
+                                VStack {
+                                    Text("Historial")
+                                        .fontWeight(.bold)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(.title2)
+                                        .padding()
+                                    
+                                    // Selected Wallet Pay
+                                    let selectedWalletId = loginRequest.wallets
+                                    let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
+                                    
+                                    if filteredPayments.isEmpty {
+                                        _historialEmpty()
+                                    } else {
+                                        ForEach(filteredPayments, id: \.self) { value in
+                                            Button {
+                                                self.showInfoPayments.toggle()
+                                            } label: {
+                                                _historial(value: value)
+                                            }
+                                            .fullScreenCover(isPresented: $showInfoPayments) {
+                                                PaymentsList(getPayments: value)
+                                            }
                                             .padding()
-                                        
-                                        // Selected Wallet Pay
-                                        let selectedWalletId = loginRequest.wallets
-                                        let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
-                                     
-                                        if filteredPayments.isEmpty {
-                                            _historialEmpty()
-                                        } else {
-                                            ForEach(filteredPayments, id: \.self) { value in
-                                                Button {
-                                                    self.showInfoPayments.toggle()
-                                                } label: {
-                                                    _historial(value: value)
-                                                }
-                                                .fullScreenCover(isPresented: $showInfoPayments) {
-                                                    PaymentsList(getPayments: value)
-                                                }
-                                                .padding()
-                                                .background {
-                                                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                                        .fill(Color(.tertiarySystemGroupedBackground))
-                                                }
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                    .fill(Color(.tertiarySystemGroupedBackground))
                                             }
                                         }
                                     }
-                                    .padding(.horizontal)
-                                    .listRowSeparator(.hidden)
                                 }
+                                .padding(.horizontal)
+                                .listRowSeparator(.hidden)
                             }
                         }
                     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Settings : View {
     
-    @StateObject var walletRequest = WalletRequest()
+    @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     
     var body : some View {
@@ -27,11 +27,11 @@ struct Settings : View {
                 Section {
                     /*
                     NavigationLink {
-                       AddWallet()
+                        AddWallet(wallet: loginRequest.wallet)
                    } label: {
                         _labelWallet(label: LabelIcons(text: "wallet-view", icon: "wallet.bifold", icon1: "creditcard"))
                     }
-                    */
+                     */
                     NavigationLink {
                         About()
                     } label: {

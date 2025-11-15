@@ -26,31 +26,48 @@ struct ContentView : View {
                         await loginRequest.getUserAuth()
                     }
             } else {
-                TabView(selection: $selectedTab) {
-                    Wallet()
-                        .tabItem {
-                            Image(systemName: Tab.wallet.sistemImage)
-                            Text(Tab.wallet.rawValue)
-                        }
-                        .tag(0)
-                        .environmentObject(loginRequest)
-                   // Swap()
-                    //    .tabItem {
-                     //       Image(systemName: Tab.swap.sistemImage)
-                      //      Text(Tab.swap.rawValue)
-                     //   }
-                      //  .tag(1)
-                      //  .environmentObject(swapRequest)
-                    Settings()
-                        .tabItem {
-                            Image(systemName: Tab.settings.sistemImage)
-                            Text(Tab.settings.rawValue)
-                        }
-                        .tag(2)
-                        .environmentObject(security)
+                ZStack {
+                    LinearGradient(colors: [.blue.opacity(0.4), .purple.opacity(0.4)],
+                                   startPoint: .topLeading,
+                                   endPoint: .bottomTrailing)
+                    .ignoresSafeArea()
+                    TabView(selection: $selectedTab) {
+                        Wallet()
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: Tab.wallet.sistemImage)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .background(.ultraThinMaterial)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Text(Tab.wallet.rawValue)
+                                }
+                            }
+                            .tag(0)
+                            .environmentObject(loginRequest)
+                       // Swap()
+                        //    .tabItem {
+                         //       Image(systemName: Tab.swap.sistemImage)
+                          //      Text(Tab.swap.rawValue)
+                         //   }
+                          //  .tag(1)
+                          //  .environmentObject(swapRequest)
+                        Settings()
+                            .tabItem {
+                                VStack {
+                                    Image(systemName: Tab.settings.sistemImage)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .background(.ultraThinMaterial)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Text(Tab.settings.rawValue)
+                                }
+                            }
+                            .tag(2)
+                            .environmentObject(security)
+                    }
+                    .environment(\.screenSize, geo.size)
+                    .accentColor(colorScheme == .dark ? .white : .blue)
+                    .background(.regularMaterial)
                 }
-                .environment(\.screenSize, geo.size)
-                .accentColor(colorScheme == .dark ? .white : .blue)
             }
         }
     }
