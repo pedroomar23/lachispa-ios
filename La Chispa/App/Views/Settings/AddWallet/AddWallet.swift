@@ -13,10 +13,12 @@ struct AddWallet : View {
     @StateObject var loginRequest = LoginRequests()
     @Environment(\.colorScheme) var colorScheme
     
+    let wallet : [Wallets]
+    
     var body : some View {
         List {
             Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                ForEach(wallet, id: \.id) { value in
                     Text("\(value.name)").tag(value.id)
                 }
             }

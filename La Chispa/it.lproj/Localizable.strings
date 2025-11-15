@@ -7,11 +7,77 @@
 */
 
 // MARK: - Presentation
+"presentation-view1" = "LaChispa does is for you";
+"presentation-view2-text1" = "Favorite Server";
+"presentation-view2-text2" = "Init with your favorite server for a better experiencie with Bitcoin Lighting Network";
+"presentation-view3-text1" = "Send and Receive Satochis";
+"presentation-view3-text2" = "Send and Receive satochis with a better security, and pay with lightning network in diferents plataforms";
+"presentation-button" = "Next";
+
 
 // MARK: - Login
 
+"login-username" = "Username";
+"login-password" = "Password";
+"login-session" = "Sign In";
+"login-register" = "Registers";
+"login-account" = "¿Don't have account?";
+"login-register" = "Registers";
+"login-close" = "Login Out";
+"login-addWallet" = "Add Wallet";
+
 // MARK: - Change Password
 
-// MARK: - Register
+"forgot-password" = "¿Forgot Password?";
+"password-change" = "Change Passowrd";
 
-// MARK: - Settings 
+// MARK: - Home
+
+"wallet-view" = "Wallet";
+"wallet-settings" = "Settings";
+"wallet-progress" = "Loading Data...";
+"wallet-account" = "Account";
+"wallet-balance" = "Balance";
+"wallet-create" = "Wallet Created";
+
+"wallet-historial" = "Historial";
+"wallet-historials" = "Historial is Empty";
+"wallet-historialempty" = "Don't have payments in your historial";
+
+// MARK: - Wallet
+
+"wallet-historial" = "Historial";
+
+// MARK: - Invoice
+
+"invoice-lightning" = "Lightning Invoice";
+"invoice-view" = "Send";
+"invoice-receive" = "Receive";
+"invoice-pay" = "Pay";
+"invoice-bolt11" = "Invoice or Ligtning Network Address";
+"invoice-lnurlconnect" = "Connect";
+"invoice-pay-success" = "Pay Successfully";
+"invoice-title-pay" = "Payment Invoice";
+"invoice-date" = "Date";
+"invoice-status" = "Status";
+"invoice-request" = "Request Amount";
+"invoice-amount" = "Amount";
+"invoice-create" = "Create Invoice";
+"invoice-copy" = "Lightning Address Copied";
+"invoice-alert-copy" = "Your Lightning Address has been copied to clipboard";
+"invoice-lightning-address" = "Lightning Address";
+
+// MARK: - Settings
+
+"settings-view" = "Settings";
+"settings-security" = "Security";
+"settings-about" = "About Me";
+"settings-faceid" = "Face ID & Passcode";
+"settings-faceidenable" = "Enable Face ID";
+"settings-aboutme" = "About Me";
+"settings-privacy" = "Privacy Policy";
+"settings-biometric-immediatley" = "Immediatley";
+"settings-biometric-1" = "After 1 minute";
+"settings-biometric-5" = "After 5 minute";
+"settings-biometric-15" = "After 15 minute";
+"settings-biometric-30" = "After 30 minute";
