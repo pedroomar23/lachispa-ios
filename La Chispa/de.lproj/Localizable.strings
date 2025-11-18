@@ -7,42 +7,42 @@
 */
 
 // MARK: - Presentation
-"presentation-view1" = "LaChispa does is for you";
-"presentation-view2-text1" = "Favorite Server";
-"presentation-view2-text2" = "Init with your favorite server for a better experiencie with Bitcoin Lighting Network";
-"presentation-view3-text1" = "Send and Receive Satochis";
-"presentation-view3-text2" = "Send and Receive satochis with a better security, and pay with lightning network in diferents plataforms";
-"presentation-button" = "Next";
+"presentation-view1" = "LaChispa macht das für Sie";
+"presentation-view2-text1" = "Lieblingsserver";
+"presentation-view2-text2" = "Initialisieren Sie mit Ihrem bevorzugten Server, um eine bessere Erfahrung mit dem Bitcoin Lightning Network zu erzielen.";
+"presentation-view3-text1" = "Satochis senden und empfangen";
+"presentation-view3-text2" = "Satochis mit verbesserter Sicherheit senden und empfangen sowie mit dem Lightning-Netzwerk auf verschiedenen Plattformen bezahlen.";
+"presentation-button" = "Nächste";
 
 
 // MARK: - Login
 
-"login-username" = "Username";
-"login-password" = "Password";
-"login-session" = "Sign In";
-"login-register" = "Registers";
-"login-account" = "¿Don't have account?";
-"login-register" = "Registers";
-"login-close" = "Login Out";
-"login-addWallet" = "Add Wallet";
+"login-username" = "Benutzername";
+"login-password" = "Passwort";
+"login-session" = "Anmelden";
+"login-register" = "Registriert";
+"login-account" = "Sie haben noch kein Konto?";
+"login-register" = "Registriert";
+"login-close" = "Abmelden";
+"login-addWallet" = "Wallet hinzufügen";
 
 // MARK: - Change Password
 
-"forgot-password" = "¿Forgot Password?";
+"forgot-password" = "Passwort vergessen?";
 "password-change" = "Change Passowrd";
 
 // MARK: - Home
 
-"wallet-view" = "Wallet";
-"wallet-settings" = "Settings";
+"wallet-view" = "Geldbörse";
+"wallet-settings" = "Einstellungen";
 "wallet-progress" = "Loading Data...";
-"wallet-account" = "Account";
-"wallet-balance" = "Balance";
-"wallet-create" = "Wallet Created";
+"wallet-account" = "Konto";
+"wallet-balance" = "Gleichgewicht";
+"wallet-create" = "Wallet erstellt";
 
-"wallet-historial" = "Historial";
-"wallet-historials" = "Historial is Empty";
-"wallet-historialempty" = "Don't have payments in your historial";
+"wallet-historial" = "Historisch";
+"wallet-historials" = "Historial ist leer";
+"wallet-historialempty" = "Lassen Sie keine Zahlungen in Ihrem Verlauf stehen";
 
 // MARK: - Wallet
 
@@ -50,34 +50,34 @@
 
 // MARK: - Invoice
 
-"invoice-lightning" = "Lightning Invoice";
-"invoice-view" = "Send";
-"invoice-receive" = "Receive";
-"invoice-pay" = "Pay";
-"invoice-bolt11" = "Invoice or Ligtning Network Address";
-"invoice-lnurlconnect" = "Connect";
-"invoice-pay-success" = "Pay Successfully";
-"invoice-title-pay" = "Payment Invoice";
-"invoice-date" = "Date";
+"invoice-lightning" = "Blitzrechnung";
+"invoice-view" = "Schicken";
+"invoice-receive" = "Erhalten";
+"invoice-pay" = "Zahlen";
+"invoice-bolt11" = "Rechnungs- oder Blitznetzadresse";
+"invoice-lnurlconnect" = "Verbinden";
+"invoice-pay-success" = "Bezahlen Sie erfolgreich";
+"invoice-title-pay" = "Zahlungsrechnung";
+"invoice-date" = "Datum";
 "invoice-status" = "Status";
-"invoice-request" = "Request Amount";
-"invoice-amount" = "Amount";
-"invoice-create" = "Create Invoice";
-"invoice-copy" = "Lightning Address Copied";
-"invoice-alert-copy" = "Your Lightning Address has been copied to clipboard";
-"invoice-lightning-address" = "Lightning Address";
+"invoice-request" = "Betrag anfordern";
+"invoice-amount" = "Menge";
+"invoice-create" = "Rechnung erstellen";
+"invoice-copy" = "Lightning-Adresse kopiert";
+"invoice-alert-copy" = "Ihre Lightning-Adresse wurde in die Zwischenablage kopiert.";
+"invoice-lightning-address" = "Blitzadresse";
 
 // MARK: - Settings
 
-"settings-view" = "Settings";
-"settings-security" = "Security";
+"settings-view" = "Einstellungen";
+"settings-security" = "Sicherheit";
 "settings-about" = "About Me";
-"settings-faceid" = "Face ID & Passcode";
-"settings-faceidenable" = "Enable Face ID";
-"settings-aboutme" = "About Me";
-"settings-privacy" = "Privacy Policy";
-"settings-biometric-immediatley" = "Immediatley";
-"settings-biometric-1" = "After 1 minute";
-"settings-biometric-5" = "After 5 minute";
-"settings-biometric-15" = "After 15 minute";
-"settings-biometric-30" = "After 30 minute";
+"settings-faceid" = "Gesichtserkennung und Passcode";
+"settings-faceidenable" = "Aktivieren Sie Face ID";
+"settings-aboutme" = "Über mich";
+"settings-privacy" = "Datenschutzrichtlinie";
+"settings-biometric-immediatley" = "Sofort";
+"settings-biometric-1" = "Nach 1 Minute";
+"settings-biometric-5" = "Nach 5 Minute";
+"settings-biometric-15" = "Nach 15 Minute";
+"settings-biometric-30" = "Nach 30 Minute";

@@ -31,6 +31,7 @@ struct Invoice : View {
                         QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                     }
                 }
+                .buttonStyle(.plain)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .listRowSeparator(.hidden)
             }
@@ -46,6 +47,7 @@ struct Invoice : View {
                         _labelButton(label: LabelText(text: "invoice-pay"))
                     }
                 }
+                .buttonStyle(.plain)
                 .sheet(isPresented: $loginRequest.isInvoice) {
                     PayInvoice(getPayments: loginRequest.paymentResponse)
                 }

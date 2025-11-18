@@ -10,6 +10,7 @@ import Foundation
 enum EndpointUrl {
     private static let urlApi = "https://lachispa.me/api/v1"
     private static let urlBolts = "https://lachispa.me/boltz/api/v1"
+    private static let urlFF = "https://ff.io/api/v2"
     
     case wallet
     case updateWallet
@@ -27,6 +28,8 @@ enum EndpointUrl {
     
     case getListSwap
     case createSwap
+    
+    case createOrden
     
     var path: String {
         switch self {
@@ -46,6 +49,8 @@ enum EndpointUrl {
             
         case .getListSwap: return "/swap?all_wallets=false"
         case .createSwap: return "/swap"
+            
+        case .createOrden: return "/create"
         }
     }
     
@@ -55,6 +60,10 @@ enum EndpointUrl {
     
     var urlBoltz: URL {
         return URL(string: EndpointUrl.urlBolts + path)!
+    }
+    
+    var urlFF: URL {
+        return URL(string: EndpointUrl.urlFF + path)!
     }
 }
 

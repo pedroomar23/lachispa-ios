@@ -95,16 +95,16 @@ final class LoginRequests : ObservableObject {
     
     // MARK: - Convert Sats to Fiat
     
-    func convertSatsToFiat(sats: Int) -> String {
-        let amountInBTC = Double(sats) / 100_000_000.0
-        let amountInFiat = amountInBTC 
+    func convertSatsToFiat(_ sats: Int, btcRate: Double, currencyCode: String) -> String {
+        let btcAmount = Double(sats) / 100_000_000.0
+        let amountInFiat = btcAmount * btcRate
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = "USD"
+        formatter.currencyCode = currencyCode
         formatter.maximumFractionDigits = 2
         
-        return formatter.string(from: NSNumber(value: amountInFiat)) ?? "$0.00"
+        return formatter.string(from: NSNumber(value: amountInFiat)) ?? "\(currencyCode)0.00"
     }
     
     func updateRateFromPayment(_ paymentResponse: CreateInvoiceResponse) {
@@ -114,7 +114,7 @@ final class LoginRequests : ObservableObject {
     }
     
     func getCurrentRate() -> Double {
-        return Double(loginAuth.wallets[0].balance_msat)
+        return getPayments[0].extra?.wallet_fiat_amount ?? 0.0
     }
     
     // MARK: - Read QR

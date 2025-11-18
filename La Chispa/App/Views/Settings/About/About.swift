@@ -15,7 +15,7 @@ struct About : View {
     var body: some View {
         List {
             Section {
-                _image(label: LabelImages(icon: "LaunchImage", text: "LaChispa", text1: "v1.0 (1)"))
+                _image(label: LabelImages(icon: "LaunchImage", text: "LaChispa", text1: "v1.0 (1.0.3)"))
             }
             Section {
                 Button {

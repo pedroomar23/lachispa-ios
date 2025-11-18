@@ -44,13 +44,13 @@ struct ContentView : View {
                             }
                             .tag(0)
                             .environmentObject(loginRequest)
-                       // Swap()
-                        //    .tabItem {
-                         //       Image(systemName: Tab.swap.sistemImage)
-                          //      Text(Tab.swap.rawValue)
-                         //   }
-                          //  .tag(1)
-                          //  .environmentObject(swapRequest)
+                      // Swap()
+                       //   .tabItem {
+                        //       Image(systemName: Tab.swap.sistemImage)
+                         //       Text(Tab.swap.rawValue)
+                         //  }
+                         // .tag(1)
+                         // .environmentObject(swapRequest)
                         Settings()
                             .tabItem {
                                 VStack {
