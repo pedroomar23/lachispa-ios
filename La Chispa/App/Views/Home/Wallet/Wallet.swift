@@ -19,75 +19,67 @@ struct Wallet : View {
         ContentNavigation {
             if #available(iOS 16, *) {
                 ScrollView (.vertical, showsIndicators: false) {
-                    Section {
-                        Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
-                            ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                                Text(value.name).tag(value.id)
-                                    .font(.headline)
-                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
-                    ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
-                        if value.id == loginRequest.wallets {
-                            Section {
-                                VStack {
-                                    Text("wallet-balance")
-                                        .font(.headline)
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                        .font(.subheadline)
-                                        .font(.system(size: 40))
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                }
-                            }
-                            
-                            Section {
-                                HStack (alignment: .center, spacing: 1) {
-                                    NavigationLink {
-                                        InvoiceView()
-                                    } label: {
-                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
-                                    }
-                                    
-                                    NavigationLink {
-                                        ReceiveView()
-                                    } label: {
-                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+                    LazyVStack {
+                        ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                            if value.id == loginRequest.wallets {
+                                Section {
+                                    VStack {
+                                        Text("wallet-balance")
+                                            .fontWeight(.bold)
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                            .font(.subheadline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
                                     }
                                 }
-                            }
-                            
-                            Section {
-                                VStack {
-                                    Text("Historial")
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .font(.title2)
-                                        .padding()
-                                    
-                                    // Selected Wallet Pay
-                                    let selectedWalletId = loginRequest.wallets
-                                    let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
-                                    
-                                    if filteredPayments.isEmpty {
-                                        _historialEmpty()
-                                    } else {
-                                        ForEach(filteredPayments, id: \.self) { value in
-                                            NavigationLink {
-                                                PaymentsList(getPayments: value)
-                                            } label: {
-                                                _historial(value: value)
-                                            }
-                                            .padding()
-                                            .background {
-                                                RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                                    .fill(Color(.tertiarySystemGroupedBackground))
-                                            }
+                                
+                                Section {
+                                    HStack (alignment: .center, spacing: 1) {
+                                        NavigationLink {
+                                            InvoiceView()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                        }
+                                        
+                                        NavigationLink {
+                                            ReceiveView()
+                                        } label: {
+                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
                                         }
                                     }
-                                }.padding(.horizontal)
+                                }
+                                
+                                Section {
+                                    VStack {
+                                        Text("Historial")
+                                            .fontWeight(.bold)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .font(.title2)
+                                            .padding()
+                                        
+                                        // Selected Wallet Pay
+                                        let selectedWalletId = loginRequest.wallets
+                                        let filteredPayments = loginRequest.getPayments.filter { $0.wallet_id == selectedWalletId }
+                                        
+                                        if filteredPayments.isEmpty {
+                                            _historialEmpty()
+                                        } else {
+                                            ForEach(filteredPayments, id: \.self) { value in
+                                                NavigationLink {
+                                                    PaymentsList(getPayments: value)
+                                                } label: {
+                                                    _historial(value: value)
+                                                }
+                                                .padding()
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                                        .fill(Color(.tertiarySystemGroupedBackground))
+                                                }
+                                            }
+                                        }
+                                    }.padding(.horizontal)
+                                }
                             }
                         }
                     }
@@ -114,18 +106,20 @@ struct Wallet : View {
                             }
                         }
                         .pickerStyle(.menu)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                     ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                         if value.id == loginRequest.wallets {
                             Section {
                                 VStack {
                                     Text("wallet-balance")
+                                        .fontWeight(.bold)
                                         .font(.headline)
                                         .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    
                                     Text("\(loginRequest.formatSats(value.balance_msat)) sats")
                                         .font(.subheadline)
-                                        .font(.system(size: 40))
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                        .foregroundStyle(colorScheme == .dark ? .white : .gray)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .listRowSeparator(.hidden)
@@ -213,12 +207,14 @@ struct Wallet : View {
     @ToolbarContentBuilder
     private func _titleView(label: LabelIcon) -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            HStack (spacing: 5) {
-                Text(label.text)
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+            Picker("\(loginRequest.wallets)", selection: $loginRequest.wallets) {
+                ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
+                    Text(value.name).tag(value.id)
+                        .font(.headline)
+                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                }
             }
+            .pickerStyle(.menu)
         }
         
         ToolbarItem(placement: .topBarTrailing) {
@@ -273,10 +269,12 @@ struct Wallet : View {
                     .foregroundStyle(colorScheme == .dark ? .white : .gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            Text("\(loginRequest.formatSats(value.amount))")
-                .lineLimit(1)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+            VStack {
+                Text("\(loginRequest.formatSats(value.amount))")
+                    .lineLimit(1)
+                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
         }.frame(maxWidth: .infinity, alignment: .leading)
     }
     
