@@ -27,13 +27,11 @@ struct Invoice : View {
                     } label: {
                         _labelIcon(label: Labels(icon: "qrcode.viewfinder"))
                     }
+                    .buttonStyle(.plain)
                     .fullScreenCover(isPresented: $qrCode) {
                         QRCodeScannerController(scannedCode: $loginRequest.paymentbolt11, errorMessage: $loginRequest.message)
                     }
-                }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .listRowSeparator(.hidden)
+                }.listRowSeparator(.hidden)
             }
             Section {
                 Button {

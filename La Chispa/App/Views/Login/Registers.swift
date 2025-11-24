@@ -23,8 +23,8 @@ struct Registers : View {
                         .frame(height: 55)
                         .padding(.horizontal)
                     
-                    ZStack {
-                        HStack {
+                    HStack {
+                        ZStack {
                             if showPassword {
                                 MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "********", isSecure: true)
                             } else {
@@ -35,12 +35,14 @@ struct Registers : View {
                             } label: {
                                 _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
-                        }
-                        .frame(height: 55)
+                            .buttonStyle(.plain)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        }.frame(height: 55)
                     }.padding(.horizontal)
                     
-                    ZStack {
-                        HStack {
+                    HStack {
+                        ZStack {
                             if showPassword {
                                 MutiTextfield(text: $register.registerRequest.password, placeholder: "********", isSecure: true)
                             } else {
@@ -51,8 +53,10 @@ struct Registers : View {
                             } label: {
                                 _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
-                        }
-                        .frame(height: 55)
+                            .buttonStyle(.plain)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        }.frame(height: 55)
                     }.padding(.horizontal)
                     
                     Button {
@@ -100,36 +104,40 @@ struct Registers : View {
                     .frame(height: 55)
                     .padding(.horizontal)
                 
-                ZStack {
-                    HStack {
-                        if showPassword {
-                            MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "********", isSecure: true)
-                        } else {
-                            MutiTextfield(text: $register.registerRequest.password_repeat, placeholder: "Password", isSecure: false)
-                        }
-                        Button {
-                            self.showPassword.toggle()
-                        } label: {
-                            _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
-                        }
-                    }
-                    .frame(height: 55)
-                }.padding(.horizontal)
-                
-                ZStack {
-                    HStack {
+                HStack {
+                    ZStack {
                         if showPassword {
                             MutiTextfield(text: $register.registerRequest.password, placeholder: "********", isSecure: true)
                         } else {
-                            MutiTextfield(text: $register.registerRequest.password, placeholder: "Password", isSecure: false)
+                            MutiTextfield(text: $register.registerRequest.password, placeholder: "login-password", isSecure: false)
                         }
                         Button {
                             self.showPassword.toggle()
                         } label: {
                             _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                         }
-                    }
-                    .frame(height: 55)
+                        .buttonStyle(.plain)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    }.frame(height: 55)
+                }.padding(.horizontal)
+                
+                HStack {
+                    ZStack {
+                        if showPassword {
+                            MutiTextfield(text: $register.registerRequest.password, placeholder: "********", isSecure: true)
+                        } else {
+                            MutiTextfield(text: $register.registerRequest.password, placeholder: "login-password", isSecure: false)
+                        }
+                        Button {
+                            self.showPassword.toggle()
+                        } label: {
+                            _labelButton(label: LabelPass(icon: "eye.slash", icon1: "eye"))
+                        }
+                        .buttonStyle(.plain)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    }.frame(height: 55)
                 }.padding(.horizontal)
                 
                 Button {

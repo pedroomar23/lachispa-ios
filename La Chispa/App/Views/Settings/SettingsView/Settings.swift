@@ -51,9 +51,9 @@ struct Settings : View {
     
     @ToolbarContentBuilder
     private func _titleView(label: LabelText) -> some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItem(placement: .principal) {
             Text(label.text)
-                .font(.title)
+                .font(.title3)
                 .fontWeight(.bold)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
         }
