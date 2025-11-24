@@ -24,8 +24,8 @@ struct Login : View {
                         .frame(height: 55)
                         .padding(.horizontal)
                     
-                    ZStack {
-                        HStack {
+                    HStack {
+                        ZStack {
                             if showPassword {
                                 MutiTextfield(text: $loginRequest.loginModel.password, placeholder: "*********", isSecure: true)
                             } else {
@@ -36,6 +36,9 @@ struct Login : View {
                             } label: {
                                 _showPass(label: LabelPass(icon: "eye.slash", icon1: "eye"))
                             }
+                            .buttonStyle(.plain)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding()
                         }.frame(height: 53)
                     }.padding(.horizontal)
                     /*
@@ -49,7 +52,7 @@ struct Login : View {
                     Button {
                         loginRequest.loginRequest()
                     } label: {
-                        if loginRequest.isLoading {
+                        if loginRequest.isAuth {
                             ProgressBar(color: .blue)
                         } else {
                             _labelButton(label: LabelText(text: "login-session"))

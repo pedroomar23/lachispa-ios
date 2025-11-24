@@ -24,7 +24,7 @@ struct About : View {
                     _labelPolicy(label: LabelIcon(text: "settings-privacy", icon: "exclamationmark.shield"))
                 }
                 .sheet(isPresented: $policy) {
-                    SafariWebView(url: URL(string: "")!)
+                    SafariWebView(url: URL(string: "https://app.lachispa.me")!)
                 }
             }
         }

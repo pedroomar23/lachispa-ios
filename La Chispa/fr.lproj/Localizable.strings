@@ -7,24 +7,24 @@
 */
 
 // MARK: - Presentation
-"presentation-view1" = "LaChispa does is for you";
-"presentation-view2-text1" = "Favorite Server";
-"presentation-view2-text2" = "Init with your favorite server for a better experiencie with Bitcoin Lighting Network";
-"presentation-view3-text1" = "Send and Receive Satochis";
-"presentation-view3-text2" = "Send and Receive satochis with a better security, and pay with lightning network in diferents plataforms";
-"presentation-button" = "Next";
+"presentation-view1" = "LaChispa fait pour vous";
+"presentation-view2-text1" = "Serveur favori";
+"presentation-view2-text2" = "Initialisez-vous avec votre serveur préféré pour une meilleure expérience avec Bitcoin Lightning Network.";
+"presentation-view3-text1" = "Envoyer et recevoir des Satochis";
+"presentation-view3-text2" = "Envoyez et recevez des satoshis avec une sécurité renforcée et payez via le réseau Lightning sur différentes plateformes.";
+"presentation-button" = "Suivant";
 
 
 // MARK: - Login
 
-"login-username" = "Username";
-"login-password" = "Password";
-"login-session" = "Sign In";
-"login-register" = "Registers";
-"login-account" = "¿Don't have account?";
-"login-register" = "Registers";
-"login-close" = "Login Out";
-"login-addWallet" = "Add Wallet";
+"login-username" = "Nom d'utilisateur";
+"login-password" = "Mot de passe";
+"login-session" = "Se connecter";
+"login-register" = "Registres";
+"login-account" = "Vous n'avez pas de compte ?";
+"login-register" = "Registres";
+"login-close" = "Se déconnecter";
+"login-addWallet" = "Ajouter un portefeuille";
 
 // MARK: - Change Password
 
@@ -33,16 +33,16 @@
 
 // MARK: - Home
 
-"wallet-view" = "Wallet";
-"wallet-settings" = "Settings";
+"wallet-view" = "Portefeuille";
+"wallet-settings" = "Paramètres";
 "wallet-progress" = "Loading Data...";
-"wallet-account" = "Account";
-"wallet-balance" = "Balance";
-"wallet-create" = "Wallet Created";
+"wallet-account" = "Compte";
+"wallet-balance" = "Équilibre";
+"wallet-create" = "Portefeuille créé";
 
-"wallet-historial" = "Historial";
-"wallet-historials" = "Historial is Empty";
-"wallet-historialempty" = "Don't have payments in your historial";
+"wallet-historial" = "Historique";
+"wallet-historials" = "L'historique est vide";
+"wallet-historialempty" = "Vous n'avez pas de paiements dans votre historique";
 
 // MARK: - Wallet
 
@@ -50,34 +50,34 @@
 
 // MARK: - Invoice
 
-"invoice-lightning" = "Lightning Invoice";
-"invoice-view" = "Send";
-"invoice-receive" = "Receive";
-"invoice-pay" = "Pay";
-"invoice-bolt11" = "Invoice or Ligtning Network Address";
-"invoice-lnurlconnect" = "Connect";
-"invoice-pay-success" = "Pay Successfully";
-"invoice-title-pay" = "Payment Invoice";
+"invoice-lightning" = "Facture éclair";
+"invoice-view" = "Envoyer";
+"invoice-receive" = "Recevoir";
+"invoice-pay" = "Payer";
+"invoice-bolt11" = "Adresse du réseau de facturation ou d'éclairage";
+"invoice-lnurlconnect" = "Connecter";
+"invoice-pay-success" = "Payer avec succès";
+"invoice-title-pay" = "Facture de paiement";
 "invoice-date" = "Date";
-"invoice-status" = "Status";
-"invoice-request" = "Request Amount";
-"invoice-amount" = "Amount";
-"invoice-create" = "Create Invoice";
-"invoice-copy" = "Lightning Address Copied";
-"invoice-alert-copy" = "Your Lightning Address has been copied to clipboard";
-"invoice-lightning-address" = "Lightning Address";
+"invoice-status" = "Statut";
+"invoice-request" = "Montant de la demande";
+"invoice-amount" = "Montante(";
+"invoice-create" = "Créer une facture";
+"invoice-copy" = "Adresse Lightning copiée";
+"invoice-alert-copy" = "Votre adresse Lightning a été copiée dans le presse-papiers.";
+"invoice-lightning-address" = "Adresse éclair";
 
 // MARK: - Settings
 
-"settings-view" = "Settings";
-"settings-security" = "Security";
-"settings-about" = "About Me";
-"settings-faceid" = "Face ID & Passcode";
-"settings-faceidenable" = "Enable Face ID";
-"settings-aboutme" = "About Me";
-"settings-privacy" = "Privacy Policy";
-"settings-biometric-immediatley" = "Immediatley";
-"settings-biometric-1" = "After 1 minute";
-"settings-biometric-5" = "After 5 minute";
-"settings-biometric-15" = "After 15 minute";
-"settings-biometric-30" = "After 30 minute";
+"settings-view" = "Paramètres";
+"settings-security" = "Sécurité";
+"settings-about" = "Sur moi";
+"settings-faceid" = "Identification faciale et code d'accès";
+"settings-faceidenable" = "Activer l'identification faciale";
+"settings-aboutme" = "Sur moi";
+"settings-privacy" = "politique de confidentialité";
+"settings-biometric-immediatley" = "Immédiatement";
+"settings-biometric-1" = "Après 1 minute";
+"settings-biometric-5" = "Après 5 minute";
+"settings-biometric-15" = "Après 15 minute";
+"settings-biometric-30" = "Après 30 minute";
