@@ -39,13 +39,13 @@ struct Wallet : View {
                                         NavigationLink {
                                             InvoiceView()
                                         } label: {
-                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                            _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up"))
                                         }
                                         
                                         NavigationLink {
                                             ReceiveView()
                                         } label: {
-                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+                                            _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down"))
                                         }
                                     }
                                 }
@@ -130,7 +130,7 @@ struct Wallet : View {
                                     Button {
                                         self.showPayments.toggle()
                                     } label: {
-                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up.forward"))
+                                        _label(label: LabelIcon(text: "invoice-view", icon: "arrow.up"))
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                     .sheet(isPresented: $showPayments) {
@@ -140,7 +140,7 @@ struct Wallet : View {
                                     Button {
                                         self.showInvoice.toggle()
                                     } label: {
-                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down.right"))
+                                        _label(label: LabelIcon(text: "invoice-receive", icon: "arrow.down"))
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                     .sheet(isPresented: $showInvoice) {
@@ -307,10 +307,10 @@ struct Wallet : View {
     @ViewBuilder
     private func _label(label: LabelIcon) -> some View {
         HStack {
-            Text(label.text)
+            Image(systemName: label.icon)
                 .font(.headline)
                 .foregroundStyle(colorScheme == .dark ? .white : .white)
-            Image(systemName: label.icon)
+            Text(label.text)
                 .font(.headline)
                 .foregroundStyle(colorScheme == .dark ? .white : .white)
         }

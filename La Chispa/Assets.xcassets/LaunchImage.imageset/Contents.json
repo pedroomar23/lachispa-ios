@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "chispabordesredondos.png",
+      "filename" : "LaChispa Claro.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "LaChispa Oscuro.png",
       "idiom" : "universal"
     }
   ],

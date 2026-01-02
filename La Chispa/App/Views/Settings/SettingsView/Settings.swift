@@ -25,13 +25,11 @@ struct Settings : View {
                     Text("settings-security").textCase(.none)
                 }
                 Section {
-                    /*
                     NavigationLink {
-                        AddWallet(wallet: loginRequest.wallet)
-                   } label: {
-                        _labelWallet(label: LabelIcons(text: "wallet-view", icon: "wallet.bifold", icon1: "creditcard"))
+                        Currency()
+                    } label: {
+                        _labelCurrency(label: LabelIcon(text: "Currency", icon: "dollarsign"))
                     }
-                     */
                     NavigationLink {
                         About()
                     } label: {
@@ -43,20 +41,15 @@ struct Settings : View {
             }
             .background(Color(.secondarySystemGroupedBackground).ignoresSafeArea(edges: .all))
             .listStyle(.insetGrouped)
-            .toolbar {
-                _titleView(label: LabelText(text: "settings-view"))
-            }
+            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle(_titleView("settings-view"))
         }
     }
     
-    @ToolbarContentBuilder
-    private func _titleView(label: LabelText) -> some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Text(label.text)
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundStyle(colorScheme == .dark ? .white : .black)
-        }
+    private func _titleView(_ text: LocalizedStringKey) -> Text {
+        Text(text)
+            .fontWeight(.bold)
+            .foregroundColor(colorScheme == .dark ? .white : .black)
     }
 }
 
