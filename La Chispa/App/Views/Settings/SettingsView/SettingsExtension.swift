@@ -29,30 +29,24 @@ extension Settings {
         }.frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    // MARK: - Label Wallets
+    // MARK: - Label Currency
     
     @ViewBuilder
-    func _labelWallet(label: LabelIcons) -> some View {
+    func _labelCurrency(label: LabelIcon) -> some View {
         HStack (alignment: .center, spacing: 12) {
             ZStack (alignment: .center) {
                 RoundedRectangle(cornerRadius: 7, style: .continuous)
                     .fill(colorScheme == .dark ? .black : .blue)
                     .frame(width: 30, height: 30)
-                if #available(iOS 16, *) {
-                    Image(systemName: label.icon)
-                        .foregroundStyle(colorScheme == .dark ? .blue : .white)
-                        .font(.system(size: 20, weight: .medium))
-                } else {
-                    Image(systemName: label.icon1)
-                        .foregroundStyle(colorScheme == .dark ? .white : .blue)
-                        .font(.system(size: 20, weight: .medium))
-                }
+                Image(systemName: label.icon)
+                    .foregroundStyle(colorScheme == .dark ? .blue : .white)
+                    .font(.system(size: 20, weight: .medium))
             }
             Text(label.text)
                 .lineLimit(1)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-        }.frame(maxWidth: .infinity, alignment: .center)
+        }.frame(maxWidth: .infinity, alignment: .leading)
     }
     
     // MARK: - Label Privacy Policy
