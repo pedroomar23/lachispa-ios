@@ -23,15 +23,25 @@ struct Wallet : View {
                         ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                             if value.id == loginRequest.wallets {
                                 Section {
-                                    VStack {
-                                        Text("wallet-balance")
-                                            .fontWeight(.bold)
-                                            .font(.headline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                            .font(.subheadline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                    ZStack (alignment: .center) {
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                            .fill(Color(.tertiarySystemGroupedBackground))
+                                            .padding(.horizontal)
+                                            .frame(maxWidth: .infinity)
+                                        VStack {
+                                            Text("wallet-balance")
+                                                .fontWeight(.bold)
+                                                .font(.headline)
+                                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                                .padding(.top)
+                                            Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                                .font(.system(size: 20, weight: .medium))
+                                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                                
+                                        }.padding()
                                     }
+                                    .padding(.horizontal)
+                                    .ignoresSafeArea(edges: .all)
                                 }
                                 
                                 Section {
@@ -111,18 +121,25 @@ struct Wallet : View {
                     ForEach(loginRequest.loginAuth.wallets, id: \.id) { value in
                         if value.id == loginRequest.wallets {
                             Section {
-                                VStack {
-                                    Text("wallet-balance")
-                                        .fontWeight(.bold)
-                                        .font(.headline)
-                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
-                                    
-                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                        .font(.subheadline)
-                                        .foregroundStyle(colorScheme == .dark ? .white : .gray)
+                                ZStack (alignment: .center) {
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(Color(.tertiarySystemGroupedBackground))
+                                        .padding(.horizontal)
+                                        .frame(maxWidth: .infinity)
+                                    VStack {
+                                        Text("wallet-balance")
+                                            .fontWeight(.bold)
+                                            .font(.headline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            .padding(.top)
+                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                            .font(.subheadline)
+                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            
+                                    }.padding()
                                 }
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .listRowSeparator(.hidden)
+                                .padding(.horizontal)
+                                .ignoresSafeArea(edges: .all)
                             }
                             
                             Section {
