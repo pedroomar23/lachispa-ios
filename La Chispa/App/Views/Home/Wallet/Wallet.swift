@@ -14,6 +14,7 @@ struct Wallet : View {
     @State var showInvoice : Bool = false
     @State var showPayments : Bool = false
     @State var showInfoPayments : Bool = false
+    @State var showBalance : Bool = true
     
     var body : some View {
         ContentNavigation {
@@ -30,13 +31,26 @@ struct Wallet : View {
                                             .frame(maxWidth: .infinity)
                                         VStack {
                                             Text("wallet-balance")
-                                                .fontWeight(.bold)
-                                                .font(.headline)
+                                                .font(.system(size: 18, weight: .bold))
                                                 .foregroundStyle(colorScheme == .dark ? .white : .black)
                                                 .padding(.top)
-                                            Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                                .font(.system(size: 20, weight: .medium))
-                                                .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            HStack {
+                                                if showBalance {
+                                                    Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                                        .font(.system(size: 20, weight: .medium))
+                                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                                } else {
+                                                    Text("*******")
+                                                        .font(.system(size: 20, weight: .medium))
+                                                        .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                                }
+                                                Button {
+                                                    self.showBalance.toggle()
+                                                } label: {
+                                                    _labelBalance(label: LabelPass(icon: "eye", icon1: "eye.slash"))
+                                                }
+                                                .buttonStyle(.plain)
+                                            }.padding(.top, 1)
                                                 
                                         }.padding()
                                     }
@@ -128,13 +142,26 @@ struct Wallet : View {
                                         .frame(maxWidth: .infinity)
                                     VStack {
                                         Text("wallet-balance")
-                                            .fontWeight(.bold)
-                                            .font(.headline)
+                                            .font(.system(size: 18, weight: .bold))
                                             .foregroundStyle(colorScheme == .dark ? .white : .black)
                                             .padding(.top)
-                                        Text("\(loginRequest.formatSats(value.balance_msat)) sats")
-                                            .font(.subheadline)
-                                            .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                        HStack {
+                                            if showBalance {
+                                                Text("\(loginRequest.formatSats(value.balance_msat)) sats")
+                                                    .font(.system(size: 20, weight: .medium))
+                                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            } else {
+                                                Text("*******")
+                                                    .font(.system(size: 20, weight: .medium))
+                                                    .foregroundStyle(colorScheme == .dark ? .white : .black)
+                                            }
+                                            Button {
+                                                self.showBalance.toggle()
+                                            } label: {
+                                                _labelBalance(label: LabelPass(icon: "eye", icon1: "eye.slash"))
+                                            }
+                                            .buttonStyle(.plain)
+                                        }.padding(.top, 1)
                                             
                                     }.padding()
                                 }
@@ -323,7 +350,7 @@ struct Wallet : View {
     
     @ViewBuilder
     private func _label(label: LabelIcon) -> some View {
-        HStack {
+        HStack (alignment: .center, spacing: 5) {
             Image(systemName: label.icon)
                 .font(.headline)
                 .foregroundStyle(colorScheme == .dark ? .white : .white)
@@ -337,6 +364,13 @@ struct Wallet : View {
         .clipShape(Capsule())
         .padding()
         .contentShape(Rectangle())
+    }
+    
+    @ViewBuilder
+    private func _labelBalance(label: LabelPass) -> some View {
+        Image(systemName: showBalance ? label.icon : label.icon1)
+            .font(.system(size: 20, weight: .medium))
+            .foregroundStyle(colorScheme == .dark ? .white : .black)
     }
 }
 
